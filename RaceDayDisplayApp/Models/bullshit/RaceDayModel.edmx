@@ -1,0 +1,2071 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="RaceDataModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="CoatColor">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="15" Nullable="false" />
+          <Property Name="Code" Type="nvarchar" MaxLength="4" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Country">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="15" Nullable="false" />
+          <Property Name="Code" Type="nvarchar" MaxLength="4" Nullable="false" />
+          <Property Name="inUse" Type="bit" />
+          <Property Name="usesMetric" Type="bit" />
+          <Property Name="Flag" Type="varbinary(max)" />
+          <Property Name="SeasonStart" Type="datetime" />
+        </EntityType>
+        <EntityType Name="CourseVariant">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Code" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="255" />
+          <Property Name="RaceCourseId" Type="int" />
+          <Property Name="LengthHomeStraightm" Type="smallint" />
+          <Property Name="Circumferencem" Type="smallint" />
+        </EntityType>
+        <EntityType Name="Distance">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="smallint" Nullable="false" />
+          <Property Name="RaceCourseID" Type="int" />
+          <Property Name="JP_Distance_Category" Type="nvarchar" MaxLength="2" />
+        </EntityType>
+        <EntityType Name="Gear">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Code" Type="nvarchar" MaxLength="4" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="25" Nullable="false" />
+          <Property Name="CountryId" Type="int" />
+        </EntityType>
+        <EntityType Name="Going">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Code" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="64" />
+          <Property Name="CountryId" Type="int" />
+        </EntityType>
+        <EntityType Name="Horse">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="GUID" Type="uniqueidentifier" />
+          <Property Name="HorseCode" Type="varchar" MaxLength="6" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" />
+          <Property Name="PreviousName" Type="nvarchar" MaxLength="100" />
+          <Property Name="CountryOfOriginId" Type="int" />
+          <Property Name="HK_ChineseName" Type="nvarchar" MaxLength="100" />
+          <Property Name="HK_BrandNumber" Type="nvarchar" MaxLength="6" />
+          <Property Name="SG_hasBled" Type="bit" />
+          <Property Name="SexId" Type="int" />
+          <Property Name="CoatColorId" Type="int" />
+          <Property Name="DateOfBirth" Type="date" />
+          <Property Name="isActive" Type="bit" />
+          <Property Name="Z_MaxHcpRating" Type="smallint" />
+          <Property Name="Z_CurrentHcpRating" Type="smallint" />
+          <Property Name="Z_StartSeasonHcpRating" Type="smallint" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6013: The table/view 'RACEDATA.dbo.Horse$' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
+        <EntityType Name="Horse$">
+          <Property Name="HorseCode" Type="nvarchar" MaxLength="255" />
+          <Property Name="Name" Type="nvarchar" MaxLength="255" />
+          <Property Name="PreviousName" Type="nvarchar" MaxLength="255" />
+          <Property Name="CountryOfOriginId" Type="int" />
+          <Property Name="HK_ChineseName" Type="nvarchar" MaxLength="255" />
+          <Property Name="HK_BrandNumber" Type="nvarchar" MaxLength="255" />
+          <Property Name="SG_hasBled" Type="bit" />
+          <Property Name="SexId" Type="int" />
+          <Property Name="CoatColorId" Type="int" />
+          <Property Name="DateOfBirth" Type="date" />
+          <Property Name="isActive" Type="bit" />
+          <Property Name="Z_MaxHcpRating" Type="smallint" />
+          <Property Name="Z_CurrentHcpRating" Type="smallint" />
+          <Property Name="Z_StartSeasonHcpRating" Type="smallint" />
+        </EntityType>-->
+        <EntityType Name="HorseOdd">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RaceId" Type="int" />
+          <Property Name="CurrentTime" Type="datetime" />
+          <Property Name="HorseNumber" Type="int" />
+          <Property Name="HorseId" Type="int" />
+          <Property Name="WinOdds" Type="money" />
+          <Property Name="PlaceOdds" Type="money" />
+        </EntityType>
+        <EntityType Name="Jockey">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="GUID" Type="uniqueidentifier" />
+          <Property Name="Fullname" Type="nvarchar" MaxLength="32" />
+          <Property Name="Gender" Type="nvarchar" MaxLength="2" Nullable="false" />
+          <Property Name="isApprentice" Type="bit" />
+          <Property Name="CountryOfOriginId" Type="int" />
+          <Property Name="CountryOfRegistrationId" Type="int" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6013: The table/view 'RACEDATA.dbo.JockeyMeeting' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
+        <EntityType Name="JockeyMeeting">
+          <Property Name="MeetingId" Type="int" />
+          <Property Name="Jockeyid" Type="int" />
+          <Property Name="Points" Type="smallint" />
+        </EntityType>-->
+        <EntityType Name="Language">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ISOCode" Type="nvarchar" MaxLength="6" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="15" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Meeting">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CountryId" Type="int" />
+          <Property Name="MeetingDate" Type="date" Nullable="false" />
+          <Property Name="RaceCourseId" Type="int" />
+          <Property Name="WeatherId" Type="int" />
+          <Property Name="DefaultGoingId" Type="int" />
+          <Property Name="NumberOfRaces" Type="int" />
+          <Property Name="HK_isNightMeet" Type="bit" />
+          <Property Name="CourseVariantId" Type="int" />
+          <Property Name="Z_MeetingCode" Type="nvarchar" MaxLength="10" />
+        </EntityType>
+        <EntityType Name="Race">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MeetingId" Type="int" />
+          <Property Name="RaceNumber" Type="smallint" />
+          <Property Name="RaceName" Type="nvarchar" MaxLength="30" />
+          <Property Name="RaceTypeId" Type="int" />
+          <Property Name="DistanceId" Type="int" />
+          <Property Name="RaceJumpTimeLocal" Type="datetime" />
+          <Property Name="HK_RaceIndex" Type="int" />
+          <Property Name="RaceWinningTime" Type="time" Precision="7" />
+          <Property Name="RaceGoingId" Type="int" />
+          <Property Name="isTurf" Type="bit" />
+          <Property Name="NumberOfRunners" Type="smallint" />
+        </EntityType>
+        <EntityType Name="RaceCity">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Code" Type="nvarchar" MaxLength="4" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="10" />
+          <Property Name="CountryId" Type="int" />
+        </EntityType>
+        <EntityType Name="RaceCourse">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Code" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="25" />
+          <Property Name="NameVariant" Type="nvarchar" MaxLength="25" />
+          <Property Name="AUS_Grade" Type="nvarchar" MaxLength="10" />
+          <Property Name="AUS_State" Type="nvarchar" MaxLength="10" />
+          <Property Name="AUS_RaceCityId" Type="int" />
+          <Property Name="CountryId" Type="int" />
+        </EntityType>
+        <EntityType Name="RaceType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="64" Nullable="false" />
+          <Property Name="CountryId" Type="int" />
+          <Property Name="isGroup" Type="bit" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6013: The table/view 'RACEDATA.dbo.RCOURSEMEETINGURLS_2012$' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
+        <EntityType Name="RCOURSEMEETINGURLS_2012$">
+          <Property Name="RaceCourse" Type="nvarchar" MaxLength="50" />
+          <Property Name="MeetingURL" Type="nvarchar" MaxLength="255" />
+        </EntityType>-->
+        <EntityType Name="Runner">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RaceId" Type="int" />
+          <Property Name="HorseNumber" Type="smallint" />
+          <Property Name="Place" Type="nvarchar" MaxLength="4" />
+          <Property Name="Barrier" Type="smallint" />
+          <Property Name="HorseId" Type="int" />
+          <Property Name="JockeyId" Type="int" />
+          <Property Name="TrainerId" Type="int" />
+          <Property Name="AUS_HcpWt" Type="float" />
+          <Property Name="HK_ActualWtLbs" Type="float" />
+          <Property Name="HK_DeclaredHorseWtLbs" Type="float" />
+          <Property Name="AUS_HcpRatingAtJump" Type="smallint" />
+          <Property Name="HK_Rating" Type="smallint" />
+          <Property Name="AUS_BM" Type="float" />
+          <Property Name="HK_LBW" Type="nvarchar" MaxLength="5" />
+          <Property Name="HK_FinishTime" Type="float" />
+          <Property Name="AUS_SPW" Type="money" />
+          <Property Name="AUS_SPP" Type="money" />
+          <Property Name="HK_WinOdds" Type="money" />
+          <Property Name="RP2000" Type="smallint" />
+          <Property Name="RP1600" Type="smallint" />
+          <Property Name="RP1200" Type="smallint" />
+          <Property Name="RP800" Type="smallint" />
+          <Property Name="RP400" Type="smallint" />
+          <Property Name="AUS_RP200" Type="smallint" />
+          <Property Name="GearId" Type="int" />
+          <Property Name="Z_AUS_FinishTime" Type="float" />
+          <Property Name="Z_newTrainerSinceLastStart" Type="bit" />
+          <Property Name="Z_WinOdds" Type="smallint" />
+          <Property Name="Z_BPAdvFactor" Type="smallint" />
+        </EntityType>
+        <EntityType Name="Settings">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="int" />
+          <Property Name="CountryId" Type="int" />
+          <Property Name="Barrier" Type="bit" />
+          <Property Name="HorseName" Type="bit" />
+          <Property Name="JockeyName" Type="bit" />
+          <Property Name="TrainerName" Type="bit" />
+          <Property Name="AUSHcpWT" Type="bit" />
+          <Property Name="HcpRatingAtJump" Type="bit" />
+          <Property Name="Aus_SPW" Type="bit" />
+          <Property Name="AUS_SPP" Type="bit" />
+          <Property Name="Gear" Type="bit" />
+          <Property Name="Z_AUS_FinishTime" Type="bit" />
+          <Property Name="Z_NewTrainerSinceLastStart" Type="bit" />
+          <Property Name="Z_BPAdvFactor" Type="bit" />
+          <Property Name="HorseAge" Type="bit" />
+          <Property Name="HorseSex" Type="bit" />
+          <Property Name="HorseColor" Type="bit" />
+          <Property Name="JockeyMeetingPoints" Type="int" />
+          <Property Name="Statistical1" Type="bit" />
+          <Property Name="Statistical2" Type="bit" />
+          <Property Name="Statistical3" Type="bit" />
+          <Property Name="Statistical4" Type="bit" />
+          <Property Name="OddsLast1" Type="bit" />
+          <Property Name="OddsLast2" Type="bit" />
+          <Property Name="OddsLast3" Type="bit" />
+          <Property Name="Z_AUS_CurrentOdds" Type="bit" />
+          <Property Name="HK_ActualWtLbs" Type="bit" />
+          <Property Name="HK_DeclaredHorseWtLbs" Type="bit" />
+          <Property Name="HK_Rating" Type="bit" />
+          <Property Name="HK_WinOdds" Type="bit" />
+          <Property Name="HK_FinishTime" Type="bit" />
+        </EntityType>
+        <EntityType Name="Sex">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="15" Nullable="false" />
+          <Property Name="Code" Type="nvarchar" MaxLength="4" Nullable="false" />
+          <Property Name="CountryId" Type="int" />
+        </EntityType>
+        <EntityType Name="Trainer">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="GUID" Type="uniqueidentifier" />
+          <Property Name="Fullname" Type="nvarchar" MaxLength="64" Nullable="false" />
+          <Property Name="HomeTrackId" Type="int" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="25" />
+          <Property Name="Email" Type="nvarchar" MaxLength="25" />
+        </EntityType>
+        <EntityType Name="Weather">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <Association Name="fk_CourseCountry">
+          <End Role="RaceCourse" Type="Self.RaceCourse" Multiplicity="0..1" />
+          <End Role="CourseVariant" Type="Self.CourseVariant" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RaceCourse">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CourseVariant">
+              <PropertyRef Name="RaceCourseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_GearCountry">
+          <End Role="Country" Type="Self.Country" Multiplicity="0..1" />
+          <End Role="Gear" Type="Self.Gear" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Country">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Gear">
+              <PropertyRef Name="CountryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_GoingCountry">
+          <End Role="Country" Type="Self.Country" Multiplicity="0..1" />
+          <End Role="Going" Type="Self.Going" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Country">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Going">
+              <PropertyRef Name="CountryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_HorseColor">
+          <End Role="CoatColor" Type="Self.CoatColor" Multiplicity="0..1" />
+          <End Role="Horse" Type="Self.Horse" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CoatColor">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Horse">
+              <PropertyRef Name="CoatColorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_HorseCountry">
+          <End Role="Country" Type="Self.Country" Multiplicity="0..1" />
+          <End Role="Horse" Type="Self.Horse" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Country">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Horse">
+              <PropertyRef Name="CountryOfOriginId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_HorseOddHorse">
+          <End Role="Horse" Type="Self.Horse" Multiplicity="0..1" />
+          <End Role="HorseOdd" Type="Self.HorseOdd" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Horse">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="HorseOdd">
+              <PropertyRef Name="HorseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_HorseOddRace">
+          <End Role="Race" Type="Self.Race" Multiplicity="0..1" />
+          <End Role="HorseOdd" Type="Self.HorseOdd" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Race">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="HorseOdd">
+              <PropertyRef Name="RaceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_HorseSex">
+          <End Role="Sex" Type="Self.Sex" Multiplicity="0..1" />
+          <End Role="Horse" Type="Self.Horse" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Sex">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Horse">
+              <PropertyRef Name="SexId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <!--Errors Found During Generation:
+error 6004: The table 'RACEDATA.dbo.JockeyMeeting' is referenced by a relationship, but cannot be found.
+        <Association Name="fk_JMJockey" />-->
+        <!--Errors Found During Generation:
+error 6004: The table 'RACEDATA.dbo.JockeyMeeting' is referenced by a relationship, but cannot be found.
+        <Association Name="fk_JMMeetings" />-->
+        <Association Name="fk_JockeyCountryOrigin">
+          <End Role="Country" Type="Self.Country" Multiplicity="0..1" />
+          <End Role="Jockey" Type="Self.Jockey" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Country">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Jockey">
+              <PropertyRef Name="CountryOfOriginId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_JockeyCountryRegistration">
+          <End Role="Country" Type="Self.Country" Multiplicity="0..1" />
+          <End Role="Jockey" Type="Self.Jockey" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Country">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Jockey">
+              <PropertyRef Name="CountryOfRegistrationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_MeetingCountry">
+          <End Role="Country" Type="Self.Country" Multiplicity="0..1" />
+          <End Role="Meeting" Type="Self.Meeting" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Country">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Meeting">
+              <PropertyRef Name="CountryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_MeetingCourseVar">
+          <End Role="CourseVariant" Type="Self.CourseVariant" Multiplicity="0..1" />
+          <End Role="Meeting" Type="Self.Meeting" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CourseVariant">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Meeting">
+              <PropertyRef Name="CourseVariantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_MeetingGoings">
+          <End Role="Going" Type="Self.Going" Multiplicity="0..1" />
+          <End Role="Meeting" Type="Self.Meeting" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Going">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Meeting">
+              <PropertyRef Name="DefaultGoingId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_MeetingRaceCourse">
+          <End Role="RaceCourse" Type="Self.RaceCourse" Multiplicity="0..1" />
+          <End Role="Meeting" Type="Self.Meeting" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RaceCourse">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Meeting">
+              <PropertyRef Name="RaceCourseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_MeetingWeather">
+          <End Role="Weather" Type="Self.Weather" Multiplicity="0..1" />
+          <End Role="Meeting" Type="Self.Meeting" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Weather">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Meeting">
+              <PropertyRef Name="WeatherId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RaceCityCountry">
+          <End Role="Country" Type="Self.Country" Multiplicity="0..1" />
+          <End Role="RaceCity" Type="Self.RaceCity" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Country">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RaceCity">
+              <PropertyRef Name="CountryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_RaceCourseCity">
+          <End Role="RaceCity" Type="Self.RaceCity" Multiplicity="0..1" />
+          <End Role="RaceCourse" Type="Self.RaceCourse" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RaceCity">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RaceCourse">
+              <PropertyRef Name="AUS_RaceCityId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_RaceCourseCountry">
+          <End Role="Country" Type="Self.Country" Multiplicity="0..1" />
+          <End Role="RaceCourse" Type="Self.RaceCourse" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Country">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RaceCourse">
+              <PropertyRef Name="CountryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_RaceDistance">
+          <End Role="Distance" Type="Self.Distance" Multiplicity="0..1" />
+          <End Role="Race" Type="Self.Race" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Distance">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Race">
+              <PropertyRef Name="DistanceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_RaceGear">
+          <End Role="Gear" Type="Self.Gear" Multiplicity="0..1" />
+          <End Role="Runner" Type="Self.Runner" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Gear">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Runner">
+              <PropertyRef Name="GearId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_RaceGoing">
+          <End Role="Going" Type="Self.Going" Multiplicity="0..1" />
+          <End Role="Race" Type="Self.Race" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Going">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Race">
+              <PropertyRef Name="RaceGoingId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_RaceMeeting">
+          <End Role="Meeting" Type="Self.Meeting" Multiplicity="0..1" />
+          <End Role="Race" Type="Self.Race" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Meeting">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Race">
+              <PropertyRef Name="MeetingId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_RaceRaceType">
+          <End Role="RaceType" Type="Self.RaceType" Multiplicity="0..1" />
+          <End Role="Race" Type="Self.Race" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RaceType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Race">
+              <PropertyRef Name="RaceTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_RaceTypesCourse">
+          <End Role="Country" Type="Self.Country" Multiplicity="0..1" />
+          <End Role="RaceType" Type="Self.RaceType" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Country">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RaceType">
+              <PropertyRef Name="CountryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_RunnersHorse">
+          <End Role="Horse" Type="Self.Horse" Multiplicity="0..1" />
+          <End Role="Runner" Type="Self.Runner" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Horse">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Runner">
+              <PropertyRef Name="HorseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_RunnersJockey">
+          <End Role="Jockey" Type="Self.Jockey" Multiplicity="0..1" />
+          <End Role="Runner" Type="Self.Runner" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Jockey">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Runner">
+              <PropertyRef Name="JockeyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_RunnersRace">
+          <End Role="Race" Type="Self.Race" Multiplicity="0..1" />
+          <End Role="Runner" Type="Self.Runner" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Race">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Runner">
+              <PropertyRef Name="RaceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_RunnersTrainer">
+          <End Role="Trainer" Type="Self.Trainer" Multiplicity="0..1" />
+          <End Role="Runner" Type="Self.Runner" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Trainer">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Runner">
+              <PropertyRef Name="TrainerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_SettingsCountry">
+          <End Role="Country" Type="Self.Country" Multiplicity="0..1" />
+          <End Role="Settings" Type="Self.Settings" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Country">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Settings">
+              <PropertyRef Name="CountryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_SettingsUser">
+          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+          <End Role="Settings" Type="Self.Settings" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Settings">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_SexCountries">
+          <End Role="Country" Type="Self.Country" Multiplicity="0..1" />
+          <End Role="Sex" Type="Self.Sex" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Country">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Sex">
+              <PropertyRef Name="CountryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_TrainerHomeTrack">
+          <End Role="RaceCourse" Type="Self.RaceCourse" Multiplicity="0..1" />
+          <End Role="Trainer" Type="Self.Trainer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RaceCourse">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Trainer">
+              <PropertyRef Name="HomeTrackId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="RaceDataModelStoreContainer">
+          <EntitySet Name="CoatColor" EntityType="Self.CoatColor" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Country" EntityType="Self.Country" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CourseVariant" EntityType="Self.CourseVariant" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Distance" EntityType="Self.Distance" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Gear" EntityType="Self.Gear" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Going" EntityType="Self.Going" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Horse" EntityType="Self.Horse" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="HorseOdd" EntityType="Self.HorseOdd" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Jockey" EntityType="Self.Jockey" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Language" EntityType="Self.Language" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Meeting" EntityType="Self.Meeting" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Race" EntityType="Self.Race" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RaceCity" EntityType="Self.RaceCity" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RaceCourse" EntityType="Self.RaceCourse" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RaceType" EntityType="Self.RaceType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Runner" EntityType="Self.Runner" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Settings" EntityType="Self.Settings" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Sex" EntityType="Self.Sex" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Trainer" EntityType="Self.Trainer" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Weather" EntityType="Self.Weather" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="fk_CourseCountry" Association="Self.fk_CourseCountry">
+            <End Role="RaceCourse" EntitySet="RaceCourse" />
+            <End Role="CourseVariant" EntitySet="CourseVariant" />
+          </AssociationSet>
+          <AssociationSet Name="fk_GearCountry" Association="Self.fk_GearCountry">
+            <End Role="Country" EntitySet="Country" />
+            <End Role="Gear" EntitySet="Gear" />
+          </AssociationSet>
+          <AssociationSet Name="fk_GoingCountry" Association="Self.fk_GoingCountry">
+            <End Role="Country" EntitySet="Country" />
+            <End Role="Going" EntitySet="Going" />
+          </AssociationSet>
+          <AssociationSet Name="fk_HorseColor" Association="Self.fk_HorseColor">
+            <End Role="CoatColor" EntitySet="CoatColor" />
+            <End Role="Horse" EntitySet="Horse" />
+          </AssociationSet>
+          <AssociationSet Name="fk_HorseCountry" Association="Self.fk_HorseCountry">
+            <End Role="Country" EntitySet="Country" />
+            <End Role="Horse" EntitySet="Horse" />
+          </AssociationSet>
+          <AssociationSet Name="fk_HorseOddHorse" Association="Self.fk_HorseOddHorse">
+            <End Role="Horse" EntitySet="Horse" />
+            <End Role="HorseOdd" EntitySet="HorseOdd" />
+          </AssociationSet>
+          <AssociationSet Name="fk_HorseOddRace" Association="Self.fk_HorseOddRace">
+            <End Role="Race" EntitySet="Race" />
+            <End Role="HorseOdd" EntitySet="HorseOdd" />
+          </AssociationSet>
+          <AssociationSet Name="fk_HorseSex" Association="Self.fk_HorseSex">
+            <End Role="Sex" EntitySet="Sex" />
+            <End Role="Horse" EntitySet="Horse" />
+          </AssociationSet>
+          <AssociationSet Name="fk_JockeyCountryOrigin" Association="Self.fk_JockeyCountryOrigin">
+            <End Role="Country" EntitySet="Country" />
+            <End Role="Jockey" EntitySet="Jockey" />
+          </AssociationSet>
+          <AssociationSet Name="fk_JockeyCountryRegistration" Association="Self.fk_JockeyCountryRegistration">
+            <End Role="Country" EntitySet="Country" />
+            <End Role="Jockey" EntitySet="Jockey" />
+          </AssociationSet>
+          <AssociationSet Name="fk_MeetingCountry" Association="Self.fk_MeetingCountry">
+            <End Role="Country" EntitySet="Country" />
+            <End Role="Meeting" EntitySet="Meeting" />
+          </AssociationSet>
+          <AssociationSet Name="fk_MeetingCourseVar" Association="Self.fk_MeetingCourseVar">
+            <End Role="CourseVariant" EntitySet="CourseVariant" />
+            <End Role="Meeting" EntitySet="Meeting" />
+          </AssociationSet>
+          <AssociationSet Name="fk_MeetingGoings" Association="Self.fk_MeetingGoings">
+            <End Role="Going" EntitySet="Going" />
+            <End Role="Meeting" EntitySet="Meeting" />
+          </AssociationSet>
+          <AssociationSet Name="fk_MeetingRaceCourse" Association="Self.fk_MeetingRaceCourse">
+            <End Role="RaceCourse" EntitySet="RaceCourse" />
+            <End Role="Meeting" EntitySet="Meeting" />
+          </AssociationSet>
+          <AssociationSet Name="fk_MeetingWeather" Association="Self.fk_MeetingWeather">
+            <End Role="Weather" EntitySet="Weather" />
+            <End Role="Meeting" EntitySet="Meeting" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RaceCityCountry" Association="Self.FK_RaceCityCountry">
+            <End Role="Country" EntitySet="Country" />
+            <End Role="RaceCity" EntitySet="RaceCity" />
+          </AssociationSet>
+          <AssociationSet Name="fk_RaceCourseCity" Association="Self.fk_RaceCourseCity">
+            <End Role="RaceCity" EntitySet="RaceCity" />
+            <End Role="RaceCourse" EntitySet="RaceCourse" />
+          </AssociationSet>
+          <AssociationSet Name="fk_RaceCourseCountry" Association="Self.fk_RaceCourseCountry">
+            <End Role="Country" EntitySet="Country" />
+            <End Role="RaceCourse" EntitySet="RaceCourse" />
+          </AssociationSet>
+          <AssociationSet Name="fk_RaceDistance" Association="Self.fk_RaceDistance">
+            <End Role="Distance" EntitySet="Distance" />
+            <End Role="Race" EntitySet="Race" />
+          </AssociationSet>
+          <AssociationSet Name="fk_RaceGear" Association="Self.fk_RaceGear">
+            <End Role="Gear" EntitySet="Gear" />
+            <End Role="Runner" EntitySet="Runner" />
+          </AssociationSet>
+          <AssociationSet Name="fk_RaceGoing" Association="Self.fk_RaceGoing">
+            <End Role="Going" EntitySet="Going" />
+            <End Role="Race" EntitySet="Race" />
+          </AssociationSet>
+          <AssociationSet Name="fk_RaceMeeting" Association="Self.fk_RaceMeeting">
+            <End Role="Meeting" EntitySet="Meeting" />
+            <End Role="Race" EntitySet="Race" />
+          </AssociationSet>
+          <AssociationSet Name="fk_RaceRaceType" Association="Self.fk_RaceRaceType">
+            <End Role="RaceType" EntitySet="RaceType" />
+            <End Role="Race" EntitySet="Race" />
+          </AssociationSet>
+          <AssociationSet Name="fk_RaceTypesCourse" Association="Self.fk_RaceTypesCourse">
+            <End Role="Country" EntitySet="Country" />
+            <End Role="RaceType" EntitySet="RaceType" />
+          </AssociationSet>
+          <AssociationSet Name="fk_RunnersHorse" Association="Self.fk_RunnersHorse">
+            <End Role="Horse" EntitySet="Horse" />
+            <End Role="Runner" EntitySet="Runner" />
+          </AssociationSet>
+          <AssociationSet Name="fk_RunnersJockey" Association="Self.fk_RunnersJockey">
+            <End Role="Jockey" EntitySet="Jockey" />
+            <End Role="Runner" EntitySet="Runner" />
+          </AssociationSet>
+          <AssociationSet Name="fk_RunnersRace" Association="Self.fk_RunnersRace">
+            <End Role="Race" EntitySet="Race" />
+            <End Role="Runner" EntitySet="Runner" />
+          </AssociationSet>
+          <AssociationSet Name="fk_RunnersTrainer" Association="Self.fk_RunnersTrainer">
+            <End Role="Trainer" EntitySet="Trainer" />
+            <End Role="Runner" EntitySet="Runner" />
+          </AssociationSet>
+          <AssociationSet Name="fk_SettingsCountry" Association="Self.fk_SettingsCountry">
+            <End Role="Country" EntitySet="Country" />
+            <End Role="Settings" EntitySet="Settings" />
+          </AssociationSet>
+          <AssociationSet Name="fk_SettingsUser" Association="Self.fk_SettingsUser">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Settings" EntitySet="Settings" />
+          </AssociationSet>
+          <AssociationSet Name="fk_SexCountries" Association="Self.fk_SexCountries">
+            <End Role="Country" EntitySet="Country" />
+            <End Role="Sex" EntitySet="Sex" />
+          </AssociationSet>
+          <AssociationSet Name="fk_TrainerHomeTrack" Association="Self.fk_TrainerHomeTrack">
+            <End Role="RaceCourse" EntitySet="RaceCourse" />
+            <End Role="Trainer" EntitySet="Trainer" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="RaceDataModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="CoatColor">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="15" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Code" Type="String" MaxLength="4" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Horse" Relationship="Self.fk_HorseColor" FromRole="CoatColor" ToRole="Horse" />
+        </EntityType>
+        <EntityType Name="Country">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="15" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Code" Type="String" MaxLength="4" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="inUse" Type="Boolean" />
+          <Property Name="usesMetric" Type="Boolean" />
+          <Property Name="Flag" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="SeasonStart" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Gear" Relationship="Self.fk_GearCountry" FromRole="Country" ToRole="Gear" />
+          <NavigationProperty Name="Going" Relationship="Self.fk_GoingCountry" FromRole="Country" ToRole="Going" />
+          <NavigationProperty Name="Horse" Relationship="Self.fk_HorseCountry" FromRole="Country" ToRole="Horse" />
+          <NavigationProperty Name="Jockey" Relationship="Self.fk_JockeyCountryOrigin" FromRole="Country" ToRole="Jockey" />
+          <NavigationProperty Name="Jockey1" Relationship="Self.fk_JockeyCountryRegistration" FromRole="Country" ToRole="Jockey" />
+          <NavigationProperty Name="Meeting" Relationship="Self.fk_MeetingCountry" FromRole="Country" ToRole="Meeting" />
+          <NavigationProperty Name="RaceCity" Relationship="Self.FK_RaceCityCountry" FromRole="Country" ToRole="RaceCity" />
+          <NavigationProperty Name="RaceCourse" Relationship="Self.fk_RaceCourseCountry" FromRole="Country" ToRole="RaceCourse" />
+          <NavigationProperty Name="RaceType" Relationship="Self.fk_RaceTypesCourse" FromRole="Country" ToRole="RaceType" />
+          <NavigationProperty Name="Settings" Relationship="Self.fk_SettingsCountry" FromRole="Country" ToRole="Settings" />
+          <NavigationProperty Name="Sex" Relationship="Self.fk_SexCountries" FromRole="Country" ToRole="Sex" />
+        </EntityType>
+        <EntityType Name="CourseVariant">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Code" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="RaceCourseId" Type="Int32" />
+          <Property Name="LengthHomeStraightm" Type="Int16" />
+          <Property Name="Circumferencem" Type="Int16" />
+          <NavigationProperty Name="RaceCourse" Relationship="Self.fk_CourseCountry" FromRole="CourseVariant" ToRole="RaceCourse" />
+          <NavigationProperty Name="Meeting" Relationship="Self.fk_MeetingCourseVar" FromRole="CourseVariant" ToRole="Meeting" />
+        </EntityType>
+        <EntityType Name="Distance">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="Int16" Nullable="false" />
+          <Property Name="RaceCourseID" Type="Int32" />
+          <Property Name="JP_Distance_Category" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Race" Relationship="Self.fk_RaceDistance" FromRole="Distance" ToRole="Race" />
+        </EntityType>
+        <EntityType Name="Gear">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Code" Type="String" MaxLength="4" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="25" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CountryId" Type="Int32" />
+          <NavigationProperty Name="Country" Relationship="Self.fk_GearCountry" FromRole="Gear" ToRole="Country" />
+          <NavigationProperty Name="Runner" Relationship="Self.fk_RaceGear" FromRole="Gear" ToRole="Runner" />
+        </EntityType>
+        <EntityType Name="Going">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Code" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="CountryId" Type="Int32" />
+          <NavigationProperty Name="Country" Relationship="Self.fk_GoingCountry" FromRole="Going" ToRole="Country" />
+          <NavigationProperty Name="Meeting" Relationship="Self.fk_MeetingGoings" FromRole="Going" ToRole="Meeting" />
+          <NavigationProperty Name="Race" Relationship="Self.fk_RaceGoing" FromRole="Going" ToRole="Race" />
+        </EntityType>
+        <EntityType Name="Horse">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="GUID" Type="Guid" />
+          <Property Name="HorseCode" Type="String" MaxLength="6" FixedLength="false" Unicode="false" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="PreviousName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="CountryOfOriginId" Type="Int32" />
+          <Property Name="HK_ChineseName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="HK_BrandNumber" Type="String" MaxLength="6" FixedLength="false" Unicode="true" />
+          <Property Name="SG_hasBled" Type="Boolean" />
+          <Property Name="SexId" Type="Int32" />
+          <Property Name="CoatColorId" Type="Int32" />
+          <Property Name="DateOfBirth" Type="DateTime" Precision="0" />
+          <Property Name="isActive" Type="Boolean" />
+          <Property Name="Z_MaxHcpRating" Type="Int16" />
+          <Property Name="Z_CurrentHcpRating" Type="Int16" />
+          <Property Name="Z_StartSeasonHcpRating" Type="Int16" />
+          <NavigationProperty Name="CoatColor" Relationship="Self.fk_HorseColor" FromRole="Horse" ToRole="CoatColor" />
+          <NavigationProperty Name="Country" Relationship="Self.fk_HorseCountry" FromRole="Horse" ToRole="Country" />
+          <NavigationProperty Name="HorseOdd" Relationship="Self.fk_HorseOddHorse" FromRole="Horse" ToRole="HorseOdd" />
+          <NavigationProperty Name="Sex" Relationship="Self.fk_HorseSex" FromRole="Horse" ToRole="Sex" />
+          <NavigationProperty Name="Runner" Relationship="Self.fk_RunnersHorse" FromRole="Horse" ToRole="Runner" />
+        </EntityType>
+        <EntityType Name="HorseOdd">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RaceId" Type="Int32" />
+          <Property Name="CurrentTime" Type="DateTime" Precision="3" />
+          <Property Name="HorseNumber" Type="Int32" />
+          <Property Name="HorseId" Type="Int32" />
+          <Property Name="WinOdds" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="PlaceOdds" Type="Decimal" Precision="19" Scale="4" />
+          <NavigationProperty Name="Horse" Relationship="Self.fk_HorseOddHorse" FromRole="HorseOdd" ToRole="Horse" />
+          <NavigationProperty Name="Race" Relationship="Self.fk_HorseOddRace" FromRole="HorseOdd" ToRole="Race" />
+        </EntityType>
+        <EntityType Name="Jockey">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="GUID" Type="Guid" />
+          <Property Name="Fullname" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="Gender" Type="String" MaxLength="2" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="isApprentice" Type="Boolean" />
+          <Property Name="CountryOfOriginId" Type="Int32" />
+          <Property Name="CountryOfRegistrationId" Type="Int32" />
+          <NavigationProperty Name="Country" Relationship="Self.fk_JockeyCountryOrigin" FromRole="Jockey" ToRole="Country" />
+          <NavigationProperty Name="Country1" Relationship="Self.fk_JockeyCountryRegistration" FromRole="Jockey" ToRole="Country" />
+          <NavigationProperty Name="Runner" Relationship="Self.fk_RunnersJockey" FromRole="Jockey" ToRole="Runner" />
+        </EntityType>
+        <EntityType Name="Language">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ISOCode" Type="String" MaxLength="6" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="15" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Meeting">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CountryId" Type="Int32" />
+          <Property Name="MeetingDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="RaceCourseId" Type="Int32" />
+          <Property Name="WeatherId" Type="Int32" />
+          <Property Name="DefaultGoingId" Type="Int32" />
+          <Property Name="NumberOfRaces" Type="Int32" />
+          <Property Name="HK_isNightMeet" Type="Boolean" />
+          <Property Name="CourseVariantId" Type="Int32" />
+          <Property Name="Z_MeetingCode" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Country" Relationship="Self.fk_MeetingCountry" FromRole="Meeting" ToRole="Country" />
+          <NavigationProperty Name="CourseVariant" Relationship="Self.fk_MeetingCourseVar" FromRole="Meeting" ToRole="CourseVariant" />
+          <NavigationProperty Name="Going" Relationship="Self.fk_MeetingGoings" FromRole="Meeting" ToRole="Going" />
+          <NavigationProperty Name="RaceCourse" Relationship="Self.fk_MeetingRaceCourse" FromRole="Meeting" ToRole="RaceCourse" />
+          <NavigationProperty Name="Weather" Relationship="Self.fk_MeetingWeather" FromRole="Meeting" ToRole="Weather" />
+          <NavigationProperty Name="Race" Relationship="Self.fk_RaceMeeting" FromRole="Meeting" ToRole="Race" />
+        </EntityType>
+        <EntityType Name="Race">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MeetingId" Type="Int32" />
+          <Property Name="RaceNumber" Type="Int16" />
+          <Property Name="RaceName" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="RaceTypeId" Type="Int32" />
+          <Property Name="DistanceId" Type="Int32" />
+          <Property Name="RaceJumpTimeLocal" Type="DateTime" Precision="3" />
+          <Property Name="HK_RaceIndex" Type="Int32" />
+          <Property Name="RaceWinningTime" Type="Time" Precision="7" />
+          <Property Name="RaceGoingId" Type="Int32" />
+          <Property Name="isTurf" Type="Boolean" />
+          <Property Name="NumberOfRunners" Type="Int16" />
+          <NavigationProperty Name="Distance" Relationship="Self.fk_RaceDistance" FromRole="Race" ToRole="Distance" />
+          <NavigationProperty Name="Going" Relationship="Self.fk_RaceGoing" FromRole="Race" ToRole="Going" />
+          <NavigationProperty Name="HorseOdd" Relationship="Self.fk_HorseOddRace" FromRole="Race" ToRole="HorseOdd" />
+          <NavigationProperty Name="Meeting" Relationship="Self.fk_RaceMeeting" FromRole="Race" ToRole="Meeting" />
+          <NavigationProperty Name="RaceType" Relationship="Self.fk_RaceRaceType" FromRole="Race" ToRole="RaceType" />
+          <NavigationProperty Name="Runner" Relationship="Self.fk_RunnersRace" FromRole="Race" ToRole="Runner" />
+        </EntityType>
+        <EntityType Name="RaceCity">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Code" Type="String" MaxLength="4" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="CountryId" Type="Int32" />
+          <NavigationProperty Name="Country" Relationship="Self.FK_RaceCityCountry" FromRole="RaceCity" ToRole="Country" />
+          <NavigationProperty Name="RaceCourse" Relationship="Self.fk_RaceCourseCity" FromRole="RaceCity" ToRole="RaceCourse" />
+        </EntityType>
+        <EntityType Name="RaceCourse">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Code" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="25" FixedLength="false" Unicode="true" />
+          <Property Name="NameVariant" Type="String" MaxLength="25" FixedLength="false" Unicode="true" />
+          <Property Name="AUS_Grade" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="AUS_State" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="AUS_RaceCityId" Type="Int32" />
+          <Property Name="CountryId" Type="Int32" />
+          <NavigationProperty Name="Country" Relationship="Self.fk_RaceCourseCountry" FromRole="RaceCourse" ToRole="Country" />
+          <NavigationProperty Name="CourseVariant" Relationship="Self.fk_CourseCountry" FromRole="RaceCourse" ToRole="CourseVariant" />
+          <NavigationProperty Name="Meeting" Relationship="Self.fk_MeetingRaceCourse" FromRole="RaceCourse" ToRole="Meeting" />
+          <NavigationProperty Name="RaceCity" Relationship="Self.fk_RaceCourseCity" FromRole="RaceCourse" ToRole="RaceCity" />
+          <NavigationProperty Name="Trainer" Relationship="Self.fk_TrainerHomeTrack" FromRole="RaceCourse" ToRole="Trainer" />
+        </EntityType>
+        <EntityType Name="RaceType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="64" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CountryId" Type="Int32" />
+          <Property Name="isGroup" Type="Boolean" />
+          <NavigationProperty Name="Country" Relationship="Self.fk_RaceTypesCourse" FromRole="RaceType" ToRole="Country" />
+          <NavigationProperty Name="Race" Relationship="Self.fk_RaceRaceType" FromRole="RaceType" ToRole="Race" />
+        </EntityType>
+        <EntityType Name="Runner">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RaceId" Type="Int32" />
+          <Property Name="HorseNumber" Type="Int16" />
+          <Property Name="Place" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
+          <Property Name="Barrier" Type="Int16" />
+          <Property Name="HorseId" Type="Int32" />
+          <Property Name="JockeyId" Type="Int32" />
+          <Property Name="TrainerId" Type="Int32" />
+          <Property Name="AUS_HcpWt" Type="Double" />
+          <Property Name="HK_ActualWtLbs" Type="Double" />
+          <Property Name="HK_DeclaredHorseWtLbs" Type="Double" />
+          <Property Name="AUS_HcpRatingAtJump" Type="Int16" />
+          <Property Name="HK_Rating" Type="Int16" />
+          <Property Name="AUS_BM" Type="Double" />
+          <Property Name="HK_LBW" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="HK_FinishTime" Type="Double" />
+          <Property Name="AUS_SPW" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="AUS_SPP" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="HK_WinOdds" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="RP2000" Type="Int16" />
+          <Property Name="RP1600" Type="Int16" />
+          <Property Name="RP1200" Type="Int16" />
+          <Property Name="RP800" Type="Int16" />
+          <Property Name="RP400" Type="Int16" />
+          <Property Name="AUS_RP200" Type="Int16" />
+          <Property Name="GearId" Type="Int32" />
+          <Property Name="Z_AUS_FinishTime" Type="Double" />
+          <Property Name="Z_newTrainerSinceLastStart" Type="Boolean" />
+          <Property Name="Z_WinOdds" Type="Int16" />
+          <Property Name="Z_BPAdvFactor" Type="Int16" />
+          <NavigationProperty Name="Gear" Relationship="Self.fk_RaceGear" FromRole="Runner" ToRole="Gear" />
+          <NavigationProperty Name="Horse" Relationship="Self.fk_RunnersHorse" FromRole="Runner" ToRole="Horse" />
+          <NavigationProperty Name="Jockey" Relationship="Self.fk_RunnersJockey" FromRole="Runner" ToRole="Jockey" />
+          <NavigationProperty Name="Race" Relationship="Self.fk_RunnersRace" FromRole="Runner" ToRole="Race" />
+          <NavigationProperty Name="Trainer" Relationship="Self.fk_RunnersTrainer" FromRole="Runner" ToRole="Trainer" />
+        </EntityType>
+        <EntityType Name="Settings">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="Int32" />
+          <Property Name="CountryId" Type="Int32" />
+          <Property Name="Barrier" Type="Boolean" />
+          <Property Name="HorseName" Type="Boolean" />
+          <Property Name="JockeyName" Type="Boolean" />
+          <Property Name="TrainerName" Type="Boolean" />
+          <Property Name="AUSHcpWT" Type="Boolean" />
+          <Property Name="HcpRatingAtJump" Type="Boolean" />
+          <Property Name="Aus_SPW" Type="Boolean" />
+          <Property Name="AUS_SPP" Type="Boolean" />
+          <Property Name="Gear" Type="Boolean" />
+          <Property Name="Z_AUS_FinishTime" Type="Boolean" />
+          <Property Name="Z_NewTrainerSinceLastStart" Type="Boolean" />
+          <Property Name="Z_BPAdvFactor" Type="Boolean" />
+          <Property Name="HorseAge" Type="Boolean" />
+          <Property Name="HorseSex" Type="Boolean" />
+          <Property Name="HorseColor" Type="Boolean" />
+          <Property Name="JockeyMeetingPoints" Type="Int32" />
+          <Property Name="Statistical1" Type="Boolean" />
+          <Property Name="Statistical2" Type="Boolean" />
+          <Property Name="Statistical3" Type="Boolean" />
+          <Property Name="Statistical4" Type="Boolean" />
+          <Property Name="OddsLast1" Type="Boolean" />
+          <Property Name="OddsLast2" Type="Boolean" />
+          <Property Name="OddsLast3" Type="Boolean" />
+          <Property Name="Z_AUS_CurrentOdds" Type="Boolean" />
+          <Property Name="HK_ActualWtLbs" Type="Boolean" />
+          <Property Name="HK_DeclaredHorseWtLbs" Type="Boolean" />
+          <Property Name="HK_Rating" Type="Boolean" />
+          <Property Name="HK_WinOdds" Type="Boolean" />
+          <Property Name="HK_FinishTime" Type="Boolean" />
+          <NavigationProperty Name="Country" Relationship="Self.fk_SettingsCountry" FromRole="Settings" ToRole="Country" />
+          <NavigationProperty Name="Users" Relationship="Self.fk_SettingsUser" FromRole="Settings" ToRole="Users" />
+        </EntityType>
+        <EntityType Name="Sex">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="15" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Code" Type="String" MaxLength="4" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CountryId" Type="Int32" />
+          <NavigationProperty Name="Country" Relationship="Self.fk_SexCountries" FromRole="Sex" ToRole="Country" />
+          <NavigationProperty Name="Horse" Relationship="Self.fk_HorseSex" FromRole="Sex" ToRole="Horse" />
+        </EntityType>
+        <EntityType Name="Trainer">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="GUID" Type="Guid" />
+          <Property Name="Fullname" Type="String" MaxLength="64" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="HomeTrackId" Type="Int32" />
+          <NavigationProperty Name="RaceCourse" Relationship="Self.fk_TrainerHomeTrack" FromRole="Trainer" ToRole="RaceCourse" />
+          <NavigationProperty Name="Runner" Relationship="Self.fk_RunnersTrainer" FromRole="Trainer" ToRole="Runner" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="25" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="25" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Settings" Relationship="Self.fk_SettingsUser" FromRole="Users" ToRole="Settings" />
+        </EntityType>
+        <EntityType Name="Weather">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Meeting" Relationship="Self.fk_MeetingWeather" FromRole="Weather" ToRole="Meeting" />
+        </EntityType>
+        <Association Name="fk_HorseColor">
+          <End Role="CoatColor" Type="Self.CoatColor" Multiplicity="0..1" />
+          <End Role="Horse" Type="Self.Horse" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CoatColor">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Horse">
+              <PropertyRef Name="CoatColorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_GearCountry">
+          <End Role="Country" Type="Self.Country" Multiplicity="0..1" />
+          <End Role="Gear" Type="Self.Gear" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Country">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Gear">
+              <PropertyRef Name="CountryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_GoingCountry">
+          <End Role="Country" Type="Self.Country" Multiplicity="0..1" />
+          <End Role="Going" Type="Self.Going" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Country">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Going">
+              <PropertyRef Name="CountryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_HorseCountry">
+          <End Role="Country" Type="Self.Country" Multiplicity="0..1" />
+          <End Role="Horse" Type="Self.Horse" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Country">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Horse">
+              <PropertyRef Name="CountryOfOriginId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_JockeyCountryOrigin">
+          <End Role="Country" Type="Self.Country" Multiplicity="0..1" />
+          <End Role="Jockey" Type="Self.Jockey" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Country">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Jockey">
+              <PropertyRef Name="CountryOfOriginId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_JockeyCountryRegistration">
+          <End Role="Country" Type="Self.Country" Multiplicity="0..1" />
+          <End Role="Jockey" Type="Self.Jockey" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Country">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Jockey">
+              <PropertyRef Name="CountryOfRegistrationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_MeetingCountry">
+          <End Role="Country" Type="Self.Country" Multiplicity="0..1" />
+          <End Role="Meeting" Type="Self.Meeting" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Country">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Meeting">
+              <PropertyRef Name="CountryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RaceCityCountry">
+          <End Role="Country" Type="Self.Country" Multiplicity="0..1" />
+          <End Role="RaceCity" Type="Self.RaceCity" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Country">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RaceCity">
+              <PropertyRef Name="CountryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_RaceCourseCountry">
+          <End Role="Country" Type="Self.Country" Multiplicity="0..1" />
+          <End Role="RaceCourse" Type="Self.RaceCourse" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Country">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RaceCourse">
+              <PropertyRef Name="CountryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_RaceTypesCourse">
+          <End Role="Country" Type="Self.Country" Multiplicity="0..1" />
+          <End Role="RaceType" Type="Self.RaceType" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Country">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RaceType">
+              <PropertyRef Name="CountryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_SettingsCountry">
+          <End Role="Country" Type="Self.Country" Multiplicity="0..1" />
+          <End Role="Settings" Type="Self.Settings" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Country">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Settings">
+              <PropertyRef Name="CountryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_SexCountries">
+          <End Role="Country" Type="Self.Country" Multiplicity="0..1" />
+          <End Role="Sex" Type="Self.Sex" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Country">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Sex">
+              <PropertyRef Name="CountryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_CourseCountry">
+          <End Role="RaceCourse" Type="Self.RaceCourse" Multiplicity="0..1" />
+          <End Role="CourseVariant" Type="Self.CourseVariant" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RaceCourse">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CourseVariant">
+              <PropertyRef Name="RaceCourseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_MeetingCourseVar">
+          <End Role="CourseVariant" Type="Self.CourseVariant" Multiplicity="0..1" />
+          <End Role="Meeting" Type="Self.Meeting" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CourseVariant">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Meeting">
+              <PropertyRef Name="CourseVariantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_RaceDistance">
+          <End Role="Distance" Type="Self.Distance" Multiplicity="0..1" />
+          <End Role="Race" Type="Self.Race" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Distance">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Race">
+              <PropertyRef Name="DistanceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_RaceGear">
+          <End Role="Gear" Type="Self.Gear" Multiplicity="0..1" />
+          <End Role="Runner" Type="Self.Runner" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Gear">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Runner">
+              <PropertyRef Name="GearId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_MeetingGoings">
+          <End Role="Going" Type="Self.Going" Multiplicity="0..1" />
+          <End Role="Meeting" Type="Self.Meeting" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Going">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Meeting">
+              <PropertyRef Name="DefaultGoingId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_RaceGoing">
+          <End Role="Going" Type="Self.Going" Multiplicity="0..1" />
+          <End Role="Race" Type="Self.Race" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Going">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Race">
+              <PropertyRef Name="RaceGoingId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_HorseOddHorse">
+          <End Role="Horse" Type="Self.Horse" Multiplicity="0..1" />
+          <End Role="HorseOdd" Type="Self.HorseOdd" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Horse">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="HorseOdd">
+              <PropertyRef Name="HorseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_HorseSex">
+          <End Role="Sex" Type="Self.Sex" Multiplicity="0..1" />
+          <End Role="Horse" Type="Self.Horse" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Sex">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Horse">
+              <PropertyRef Name="SexId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_RunnersHorse">
+          <End Role="Horse" Type="Self.Horse" Multiplicity="0..1" />
+          <End Role="Runner" Type="Self.Runner" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Horse">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Runner">
+              <PropertyRef Name="HorseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_HorseOddRace">
+          <End Role="Race" Type="Self.Race" Multiplicity="0..1" />
+          <End Role="HorseOdd" Type="Self.HorseOdd" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Race">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="HorseOdd">
+              <PropertyRef Name="RaceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_RunnersJockey">
+          <End Role="Jockey" Type="Self.Jockey" Multiplicity="0..1" />
+          <End Role="Runner" Type="Self.Runner" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Jockey">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Runner">
+              <PropertyRef Name="JockeyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_MeetingRaceCourse">
+          <End Role="RaceCourse" Type="Self.RaceCourse" Multiplicity="0..1" />
+          <End Role="Meeting" Type="Self.Meeting" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RaceCourse">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Meeting">
+              <PropertyRef Name="RaceCourseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_MeetingWeather">
+          <End Role="Weather" Type="Self.Weather" Multiplicity="0..1" />
+          <End Role="Meeting" Type="Self.Meeting" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Weather">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Meeting">
+              <PropertyRef Name="WeatherId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_RaceMeeting">
+          <End Role="Meeting" Type="Self.Meeting" Multiplicity="0..1" />
+          <End Role="Race" Type="Self.Race" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Meeting">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Race">
+              <PropertyRef Name="MeetingId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_RaceRaceType">
+          <End Role="RaceType" Type="Self.RaceType" Multiplicity="0..1" />
+          <End Role="Race" Type="Self.Race" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RaceType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Race">
+              <PropertyRef Name="RaceTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_RunnersRace">
+          <End Role="Race" Type="Self.Race" Multiplicity="0..1" />
+          <End Role="Runner" Type="Self.Runner" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Race">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Runner">
+              <PropertyRef Name="RaceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_RaceCourseCity">
+          <End Role="RaceCity" Type="Self.RaceCity" Multiplicity="0..1" />
+          <End Role="RaceCourse" Type="Self.RaceCourse" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RaceCity">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RaceCourse">
+              <PropertyRef Name="AUS_RaceCityId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_TrainerHomeTrack">
+          <End Role="RaceCourse" Type="Self.RaceCourse" Multiplicity="0..1" />
+          <End Role="Trainer" Type="Self.Trainer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RaceCourse">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Trainer">
+              <PropertyRef Name="HomeTrackId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_RunnersTrainer">
+          <End Role="Trainer" Type="Self.Trainer" Multiplicity="0..1" />
+          <End Role="Runner" Type="Self.Runner" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Trainer">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Runner">
+              <PropertyRef Name="TrainerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_SettingsUser">
+          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+          <End Role="Settings" Type="Self.Settings" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Settings">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="CoatColor" EntityType="Self.CoatColor" />
+          <EntitySet Name="Country" EntityType="Self.Country" />
+          <EntitySet Name="CourseVariant" EntityType="Self.CourseVariant" />
+          <EntitySet Name="Distance" EntityType="Self.Distance" />
+          <EntitySet Name="Gear" EntityType="Self.Gear" />
+          <EntitySet Name="Going" EntityType="Self.Going" />
+          <EntitySet Name="Horse" EntityType="Self.Horse" />
+          <EntitySet Name="HorseOdd" EntityType="Self.HorseOdd" />
+          <EntitySet Name="Jockey" EntityType="Self.Jockey" />
+          <EntitySet Name="Language" EntityType="Self.Language" />
+          <EntitySet Name="Meeting" EntityType="Self.Meeting" />
+          <EntitySet Name="Race" EntityType="Self.Race" />
+          <EntitySet Name="RaceCity" EntityType="Self.RaceCity" />
+          <EntitySet Name="RaceCourse" EntityType="Self.RaceCourse" />
+          <EntitySet Name="RaceType" EntityType="Self.RaceType" />
+          <EntitySet Name="Runner" EntityType="Self.Runner" />
+          <EntitySet Name="Settings" EntityType="Self.Settings" />
+          <EntitySet Name="Sex" EntityType="Self.Sex" />
+          <EntitySet Name="Trainer" EntityType="Self.Trainer" />
+          <EntitySet Name="Users" EntityType="Self.Users" />
+          <EntitySet Name="Weather" EntityType="Self.Weather" />
+          <AssociationSet Name="fk_HorseColor" Association="Self.fk_HorseColor">
+            <End Role="CoatColor" EntitySet="CoatColor" />
+            <End Role="Horse" EntitySet="Horse" />
+          </AssociationSet>
+          <AssociationSet Name="fk_GearCountry" Association="Self.fk_GearCountry">
+            <End Role="Country" EntitySet="Country" />
+            <End Role="Gear" EntitySet="Gear" />
+          </AssociationSet>
+          <AssociationSet Name="fk_GoingCountry" Association="Self.fk_GoingCountry">
+            <End Role="Country" EntitySet="Country" />
+            <End Role="Going" EntitySet="Going" />
+          </AssociationSet>
+          <AssociationSet Name="fk_HorseCountry" Association="Self.fk_HorseCountry">
+            <End Role="Country" EntitySet="Country" />
+            <End Role="Horse" EntitySet="Horse" />
+          </AssociationSet>
+          <AssociationSet Name="fk_JockeyCountryOrigin" Association="Self.fk_JockeyCountryOrigin">
+            <End Role="Country" EntitySet="Country" />
+            <End Role="Jockey" EntitySet="Jockey" />
+          </AssociationSet>
+          <AssociationSet Name="fk_JockeyCountryRegistration" Association="Self.fk_JockeyCountryRegistration">
+            <End Role="Country" EntitySet="Country" />
+            <End Role="Jockey" EntitySet="Jockey" />
+          </AssociationSet>
+          <AssociationSet Name="fk_MeetingCountry" Association="Self.fk_MeetingCountry">
+            <End Role="Country" EntitySet="Country" />
+            <End Role="Meeting" EntitySet="Meeting" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RaceCityCountry" Association="Self.FK_RaceCityCountry">
+            <End Role="Country" EntitySet="Country" />
+            <End Role="RaceCity" EntitySet="RaceCity" />
+          </AssociationSet>
+          <AssociationSet Name="fk_RaceCourseCountry" Association="Self.fk_RaceCourseCountry">
+            <End Role="Country" EntitySet="Country" />
+            <End Role="RaceCourse" EntitySet="RaceCourse" />
+          </AssociationSet>
+          <AssociationSet Name="fk_RaceTypesCourse" Association="Self.fk_RaceTypesCourse">
+            <End Role="Country" EntitySet="Country" />
+            <End Role="RaceType" EntitySet="RaceType" />
+          </AssociationSet>
+          <AssociationSet Name="fk_SettingsCountry" Association="Self.fk_SettingsCountry">
+            <End Role="Country" EntitySet="Country" />
+            <End Role="Settings" EntitySet="Settings" />
+          </AssociationSet>
+          <AssociationSet Name="fk_SexCountries" Association="Self.fk_SexCountries">
+            <End Role="Country" EntitySet="Country" />
+            <End Role="Sex" EntitySet="Sex" />
+          </AssociationSet>
+          <AssociationSet Name="fk_CourseCountry" Association="Self.fk_CourseCountry">
+            <End Role="RaceCourse" EntitySet="RaceCourse" />
+            <End Role="CourseVariant" EntitySet="CourseVariant" />
+          </AssociationSet>
+          <AssociationSet Name="fk_MeetingCourseVar" Association="Self.fk_MeetingCourseVar">
+            <End Role="CourseVariant" EntitySet="CourseVariant" />
+            <End Role="Meeting" EntitySet="Meeting" />
+          </AssociationSet>
+          <AssociationSet Name="fk_RaceDistance" Association="Self.fk_RaceDistance">
+            <End Role="Distance" EntitySet="Distance" />
+            <End Role="Race" EntitySet="Race" />
+          </AssociationSet>
+          <AssociationSet Name="fk_RaceGear" Association="Self.fk_RaceGear">
+            <End Role="Gear" EntitySet="Gear" />
+            <End Role="Runner" EntitySet="Runner" />
+          </AssociationSet>
+          <AssociationSet Name="fk_MeetingGoings" Association="Self.fk_MeetingGoings">
+            <End Role="Going" EntitySet="Going" />
+            <End Role="Meeting" EntitySet="Meeting" />
+          </AssociationSet>
+          <AssociationSet Name="fk_RaceGoing" Association="Self.fk_RaceGoing">
+            <End Role="Going" EntitySet="Going" />
+            <End Role="Race" EntitySet="Race" />
+          </AssociationSet>
+          <AssociationSet Name="fk_HorseOddHorse" Association="Self.fk_HorseOddHorse">
+            <End Role="Horse" EntitySet="Horse" />
+            <End Role="HorseOdd" EntitySet="HorseOdd" />
+          </AssociationSet>
+          <AssociationSet Name="fk_HorseSex" Association="Self.fk_HorseSex">
+            <End Role="Sex" EntitySet="Sex" />
+            <End Role="Horse" EntitySet="Horse" />
+          </AssociationSet>
+          <AssociationSet Name="fk_RunnersHorse" Association="Self.fk_RunnersHorse">
+            <End Role="Horse" EntitySet="Horse" />
+            <End Role="Runner" EntitySet="Runner" />
+          </AssociationSet>
+          <AssociationSet Name="fk_HorseOddRace" Association="Self.fk_HorseOddRace">
+            <End Role="Race" EntitySet="Race" />
+            <End Role="HorseOdd" EntitySet="HorseOdd" />
+          </AssociationSet>
+          <AssociationSet Name="fk_RunnersJockey" Association="Self.fk_RunnersJockey">
+            <End Role="Jockey" EntitySet="Jockey" />
+            <End Role="Runner" EntitySet="Runner" />
+          </AssociationSet>
+          <AssociationSet Name="fk_MeetingRaceCourse" Association="Self.fk_MeetingRaceCourse">
+            <End Role="RaceCourse" EntitySet="RaceCourse" />
+            <End Role="Meeting" EntitySet="Meeting" />
+          </AssociationSet>
+          <AssociationSet Name="fk_MeetingWeather" Association="Self.fk_MeetingWeather">
+            <End Role="Weather" EntitySet="Weather" />
+            <End Role="Meeting" EntitySet="Meeting" />
+          </AssociationSet>
+          <AssociationSet Name="fk_RaceMeeting" Association="Self.fk_RaceMeeting">
+            <End Role="Meeting" EntitySet="Meeting" />
+            <End Role="Race" EntitySet="Race" />
+          </AssociationSet>
+          <AssociationSet Name="fk_RaceRaceType" Association="Self.fk_RaceRaceType">
+            <End Role="RaceType" EntitySet="RaceType" />
+            <End Role="Race" EntitySet="Race" />
+          </AssociationSet>
+          <AssociationSet Name="fk_RunnersRace" Association="Self.fk_RunnersRace">
+            <End Role="Race" EntitySet="Race" />
+            <End Role="Runner" EntitySet="Runner" />
+          </AssociationSet>
+          <AssociationSet Name="fk_RaceCourseCity" Association="Self.fk_RaceCourseCity">
+            <End Role="RaceCity" EntitySet="RaceCity" />
+            <End Role="RaceCourse" EntitySet="RaceCourse" />
+          </AssociationSet>
+          <AssociationSet Name="fk_TrainerHomeTrack" Association="Self.fk_TrainerHomeTrack">
+            <End Role="RaceCourse" EntitySet="RaceCourse" />
+            <End Role="Trainer" EntitySet="Trainer" />
+          </AssociationSet>
+          <AssociationSet Name="fk_RunnersTrainer" Association="Self.fk_RunnersTrainer">
+            <End Role="Trainer" EntitySet="Trainer" />
+            <End Role="Runner" EntitySet="Runner" />
+          </AssociationSet>
+          <AssociationSet Name="fk_SettingsUser" Association="Self.fk_SettingsUser">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Settings" EntitySet="Settings" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="RaceDataModelStoreContainer" CdmEntityContainer="Entities">
+          <EntitySetMapping Name="CoatColor">
+            <EntityTypeMapping TypeName="RaceDataModel.CoatColor">
+              <MappingFragment StoreEntitySet="CoatColor">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Country">
+            <EntityTypeMapping TypeName="RaceDataModel.Country">
+              <MappingFragment StoreEntitySet="Country">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
+                <ScalarProperty Name="inUse" ColumnName="inUse" />
+                <ScalarProperty Name="usesMetric" ColumnName="usesMetric" />
+                <ScalarProperty Name="Flag" ColumnName="Flag" />
+                <ScalarProperty Name="SeasonStart" ColumnName="SeasonStart" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CourseVariant">
+            <EntityTypeMapping TypeName="RaceDataModel.CourseVariant">
+              <MappingFragment StoreEntitySet="CourseVariant">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="RaceCourseId" ColumnName="RaceCourseId" />
+                <ScalarProperty Name="LengthHomeStraightm" ColumnName="LengthHomeStraightm" />
+                <ScalarProperty Name="Circumferencem" ColumnName="Circumferencem" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Distance">
+            <EntityTypeMapping TypeName="RaceDataModel.Distance">
+              <MappingFragment StoreEntitySet="Distance">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="RaceCourseID" ColumnName="RaceCourseID" />
+                <ScalarProperty Name="JP_Distance_Category" ColumnName="JP_Distance_Category" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Gear">
+            <EntityTypeMapping TypeName="RaceDataModel.Gear">
+              <MappingFragment StoreEntitySet="Gear">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="CountryId" ColumnName="CountryId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Going">
+            <EntityTypeMapping TypeName="RaceDataModel.Going">
+              <MappingFragment StoreEntitySet="Going">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="CountryId" ColumnName="CountryId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Horse">
+            <EntityTypeMapping TypeName="RaceDataModel.Horse">
+              <MappingFragment StoreEntitySet="Horse">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="GUID" ColumnName="GUID" />
+                <ScalarProperty Name="HorseCode" ColumnName="HorseCode" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="PreviousName" ColumnName="PreviousName" />
+                <ScalarProperty Name="CountryOfOriginId" ColumnName="CountryOfOriginId" />
+                <ScalarProperty Name="HK_ChineseName" ColumnName="HK_ChineseName" />
+                <ScalarProperty Name="HK_BrandNumber" ColumnName="HK_BrandNumber" />
+                <ScalarProperty Name="SG_hasBled" ColumnName="SG_hasBled" />
+                <ScalarProperty Name="SexId" ColumnName="SexId" />
+                <ScalarProperty Name="CoatColorId" ColumnName="CoatColorId" />
+                <ScalarProperty Name="DateOfBirth" ColumnName="DateOfBirth" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="Z_MaxHcpRating" ColumnName="Z_MaxHcpRating" />
+                <ScalarProperty Name="Z_CurrentHcpRating" ColumnName="Z_CurrentHcpRating" />
+                <ScalarProperty Name="Z_StartSeasonHcpRating" ColumnName="Z_StartSeasonHcpRating" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="HorseOdd">
+            <EntityTypeMapping TypeName="RaceDataModel.HorseOdd">
+              <MappingFragment StoreEntitySet="HorseOdd">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="RaceId" ColumnName="RaceId" />
+                <ScalarProperty Name="CurrentTime" ColumnName="CurrentTime" />
+                <ScalarProperty Name="HorseNumber" ColumnName="HorseNumber" />
+                <ScalarProperty Name="HorseId" ColumnName="HorseId" />
+                <ScalarProperty Name="WinOdds" ColumnName="WinOdds" />
+                <ScalarProperty Name="PlaceOdds" ColumnName="PlaceOdds" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Jockey">
+            <EntityTypeMapping TypeName="RaceDataModel.Jockey">
+              <MappingFragment StoreEntitySet="Jockey">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="GUID" ColumnName="GUID" />
+                <ScalarProperty Name="Fullname" ColumnName="Fullname" />
+                <ScalarProperty Name="Gender" ColumnName="Gender" />
+                <ScalarProperty Name="isApprentice" ColumnName="isApprentice" />
+                <ScalarProperty Name="CountryOfOriginId" ColumnName="CountryOfOriginId" />
+                <ScalarProperty Name="CountryOfRegistrationId" ColumnName="CountryOfRegistrationId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Language">
+            <EntityTypeMapping TypeName="RaceDataModel.Language">
+              <MappingFragment StoreEntitySet="Language">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ISOCode" ColumnName="ISOCode" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Meeting">
+            <EntityTypeMapping TypeName="RaceDataModel.Meeting">
+              <MappingFragment StoreEntitySet="Meeting">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="CountryId" ColumnName="CountryId" />
+                <ScalarProperty Name="MeetingDate" ColumnName="MeetingDate" />
+                <ScalarProperty Name="RaceCourseId" ColumnName="RaceCourseId" />
+                <ScalarProperty Name="WeatherId" ColumnName="WeatherId" />
+                <ScalarProperty Name="DefaultGoingId" ColumnName="DefaultGoingId" />
+                <ScalarProperty Name="NumberOfRaces" ColumnName="NumberOfRaces" />
+                <ScalarProperty Name="HK_isNightMeet" ColumnName="HK_isNightMeet" />
+                <ScalarProperty Name="CourseVariantId" ColumnName="CourseVariantId" />
+                <ScalarProperty Name="Z_MeetingCode" ColumnName="Z_MeetingCode" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Race">
+            <EntityTypeMapping TypeName="RaceDataModel.Race">
+              <MappingFragment StoreEntitySet="Race">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="MeetingId" ColumnName="MeetingId" />
+                <ScalarProperty Name="RaceNumber" ColumnName="RaceNumber" />
+                <ScalarProperty Name="RaceName" ColumnName="RaceName" />
+                <ScalarProperty Name="RaceTypeId" ColumnName="RaceTypeId" />
+                <ScalarProperty Name="DistanceId" ColumnName="DistanceId" />
+                <ScalarProperty Name="RaceJumpTimeLocal" ColumnName="RaceJumpTimeLocal" />
+                <ScalarProperty Name="HK_RaceIndex" ColumnName="HK_RaceIndex" />
+                <ScalarProperty Name="RaceWinningTime" ColumnName="RaceWinningTime" />
+                <ScalarProperty Name="RaceGoingId" ColumnName="RaceGoingId" />
+                <ScalarProperty Name="isTurf" ColumnName="isTurf" />
+                <ScalarProperty Name="NumberOfRunners" ColumnName="NumberOfRunners" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RaceCity">
+            <EntityTypeMapping TypeName="RaceDataModel.RaceCity">
+              <MappingFragment StoreEntitySet="RaceCity">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="CountryId" ColumnName="CountryId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RaceCourse">
+            <EntityTypeMapping TypeName="RaceDataModel.RaceCourse">
+              <MappingFragment StoreEntitySet="RaceCourse">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="NameVariant" ColumnName="NameVariant" />
+                <ScalarProperty Name="AUS_Grade" ColumnName="AUS_Grade" />
+                <ScalarProperty Name="AUS_State" ColumnName="AUS_State" />
+                <ScalarProperty Name="AUS_RaceCityId" ColumnName="AUS_RaceCityId" />
+                <ScalarProperty Name="CountryId" ColumnName="CountryId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RaceType">
+            <EntityTypeMapping TypeName="RaceDataModel.RaceType">
+              <MappingFragment StoreEntitySet="RaceType">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="CountryId" ColumnName="CountryId" />
+                <ScalarProperty Name="isGroup" ColumnName="isGroup" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Runner">
+            <EntityTypeMapping TypeName="RaceDataModel.Runner">
+              <MappingFragment StoreEntitySet="Runner">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="RaceId" ColumnName="RaceId" />
+                <ScalarProperty Name="HorseNumber" ColumnName="HorseNumber" />
+                <ScalarProperty Name="Place" ColumnName="Place" />
+                <ScalarProperty Name="Barrier" ColumnName="Barrier" />
+                <ScalarProperty Name="HorseId" ColumnName="HorseId" />
+                <ScalarProperty Name="JockeyId" ColumnName="JockeyId" />
+                <ScalarProperty Name="TrainerId" ColumnName="TrainerId" />
+                <ScalarProperty Name="AUS_HcpWt" ColumnName="AUS_HcpWt" />
+                <ScalarProperty Name="HK_ActualWtLbs" ColumnName="HK_ActualWtLbs" />
+                <ScalarProperty Name="HK_DeclaredHorseWtLbs" ColumnName="HK_DeclaredHorseWtLbs" />
+                <ScalarProperty Name="AUS_HcpRatingAtJump" ColumnName="AUS_HcpRatingAtJump" />
+                <ScalarProperty Name="HK_Rating" ColumnName="HK_Rating" />
+                <ScalarProperty Name="AUS_BM" ColumnName="AUS_BM" />
+                <ScalarProperty Name="HK_LBW" ColumnName="HK_LBW" />
+                <ScalarProperty Name="HK_FinishTime" ColumnName="HK_FinishTime" />
+                <ScalarProperty Name="AUS_SPW" ColumnName="AUS_SPW" />
+                <ScalarProperty Name="AUS_SPP" ColumnName="AUS_SPP" />
+                <ScalarProperty Name="HK_WinOdds" ColumnName="HK_WinOdds" />
+                <ScalarProperty Name="RP2000" ColumnName="RP2000" />
+                <ScalarProperty Name="RP1600" ColumnName="RP1600" />
+                <ScalarProperty Name="RP1200" ColumnName="RP1200" />
+                <ScalarProperty Name="RP800" ColumnName="RP800" />
+                <ScalarProperty Name="RP400" ColumnName="RP400" />
+                <ScalarProperty Name="AUS_RP200" ColumnName="AUS_RP200" />
+                <ScalarProperty Name="GearId" ColumnName="GearId" />
+                <ScalarProperty Name="Z_AUS_FinishTime" ColumnName="Z_AUS_FinishTime" />
+                <ScalarProperty Name="Z_newTrainerSinceLastStart" ColumnName="Z_newTrainerSinceLastStart" />
+                <ScalarProperty Name="Z_WinOdds" ColumnName="Z_WinOdds" />
+                <ScalarProperty Name="Z_BPAdvFactor" ColumnName="Z_BPAdvFactor" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Settings">
+            <EntityTypeMapping TypeName="RaceDataModel.Settings">
+              <MappingFragment StoreEntitySet="Settings">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="CountryId" ColumnName="CountryId" />
+                <ScalarProperty Name="Barrier" ColumnName="Barrier" />
+                <ScalarProperty Name="HorseName" ColumnName="HorseName" />
+                <ScalarProperty Name="JockeyName" ColumnName="JockeyName" />
+                <ScalarProperty Name="TrainerName" ColumnName="TrainerName" />
+                <ScalarProperty Name="AUSHcpWT" ColumnName="AUSHcpWT" />
+                <ScalarProperty Name="HcpRatingAtJump" ColumnName="HcpRatingAtJump" />
+                <ScalarProperty Name="Aus_SPW" ColumnName="Aus_SPW" />
+                <ScalarProperty Name="AUS_SPP" ColumnName="AUS_SPP" />
+                <ScalarProperty Name="Gear" ColumnName="Gear" />
+                <ScalarProperty Name="Z_AUS_FinishTime" ColumnName="Z_AUS_FinishTime" />
+                <ScalarProperty Name="Z_NewTrainerSinceLastStart" ColumnName="Z_NewTrainerSinceLastStart" />
+                <ScalarProperty Name="Z_BPAdvFactor" ColumnName="Z_BPAdvFactor" />
+                <ScalarProperty Name="HorseAge" ColumnName="HorseAge" />
+                <ScalarProperty Name="HorseSex" ColumnName="HorseSex" />
+                <ScalarProperty Name="HorseColor" ColumnName="HorseColor" />
+                <ScalarProperty Name="JockeyMeetingPoints" ColumnName="JockeyMeetingPoints" />
+                <ScalarProperty Name="Statistical1" ColumnName="Statistical1" />
+                <ScalarProperty Name="Statistical2" ColumnName="Statistical2" />
+                <ScalarProperty Name="Statistical3" ColumnName="Statistical3" />
+                <ScalarProperty Name="Statistical4" ColumnName="Statistical4" />
+                <ScalarProperty Name="OddsLast1" ColumnName="OddsLast1" />
+                <ScalarProperty Name="OddsLast2" ColumnName="OddsLast2" />
+                <ScalarProperty Name="OddsLast3" ColumnName="OddsLast3" />
+                <ScalarProperty Name="Z_AUS_CurrentOdds" ColumnName="Z_AUS_CurrentOdds" />
+                <ScalarProperty Name="HK_ActualWtLbs" ColumnName="HK_ActualWtLbs" />
+                <ScalarProperty Name="HK_DeclaredHorseWtLbs" ColumnName="HK_DeclaredHorseWtLbs" />
+                <ScalarProperty Name="HK_Rating" ColumnName="HK_Rating" />
+                <ScalarProperty Name="HK_WinOdds" ColumnName="HK_WinOdds" />
+                <ScalarProperty Name="HK_FinishTime" ColumnName="HK_FinishTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Sex">
+            <EntityTypeMapping TypeName="RaceDataModel.Sex">
+              <MappingFragment StoreEntitySet="Sex">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
+                <ScalarProperty Name="CountryId" ColumnName="CountryId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Trainer">
+            <EntityTypeMapping TypeName="RaceDataModel.Trainer">
+              <MappingFragment StoreEntitySet="Trainer">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="GUID" ColumnName="GUID" />
+                <ScalarProperty Name="Fullname" ColumnName="Fullname" />
+                <ScalarProperty Name="HomeTrackId" ColumnName="HomeTrackId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="RaceDataModel.Users">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Weather">
+            <EntityTypeMapping TypeName="RaceDataModel.Weather">
+              <MappingFragment StoreEntitySet="Weather">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="true" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

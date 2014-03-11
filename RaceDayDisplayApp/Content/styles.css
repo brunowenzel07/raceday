@@ -1,0 +1,287 @@
+﻿
+/************** MEETING DETAILS PAGE **************/
+
+.select,
+#meeting_details,
+#race_details,
+#form-box,
+#gbox_jqgrid
+{
+    float:left;
+    width:100%;
+    /*border:1px solid #000;*/ 
+    margin-bottom: 10px;
+}
+
+#form-box,
+#gbox_jqgrid {
+    width:98%;
+}
+
+.select
+{
+    /*width:100%;*/
+    padding-top:20px;
+}
+
+.select_div
+{
+    width:50%;
+    float:left;
+}
+
+.btn_container
+{
+    float:right!important;
+}
+
+#btns_div
+{
+    display:none;
+}
+
+#meeting_details, #race_details
+{
+    float:left;
+    width:96%;
+    background-color:#fff;
+    padding:0px 10px;
+}
+
+/*#meeting_details
+{
+    margin-right:10px;
+}*/
+
+.details_attrs
+{
+    float:left;
+    width:100%;
+    padding:10px 0px;
+}
+
+.details_attrs_wrapper
+{
+    float:left;
+    width:50%;
+    /*padding:0.3em;*/
+}
+
+.chks_container
+{
+    float:left;
+    width:96%;
+    display:none;
+    background-color:#fff;
+    padding:10px;
+}
+
+.chks_container h3
+{
+    margin-top: 0px;
+    padding-bottom: 10px;
+}
+
+.check_list
+{
+    float:left;
+    width:100%; 
+    padding:0.3em;
+}
+
+.check_list h3
+{
+    /*padding-top:0px;*/
+    margin-top:0px;
+    margin-bottom:10px;
+}
+
+.check_wrapper
+{
+    float:left;
+    width:20%; 	
+    padding: 0px 0px ;
+}
+
+.lbl_checkbox
+{
+    display:inline;
+    color: #333;
+    font-size: 1.1em;
+    font-family: "Segoe UI", Verdana, Helvetica, Sans-Serif;
+    font-weight:400;
+}
+
+#form-box
+{
+    padding-top:15px;
+}
+
+.alt_rows
+{
+    background: #e4e4e4;
+}
+
+#race_grid td 
+{
+    text-align:center; 
+    vertical-align:middle;
+}
+
+.scratched{
+    text-decoration:line-through;
+    font-style:italic;
+    color:red;
+}
+
+/************** RIGHT PANEL **************/
+
+#panel_left 
+{
+    float:left; 
+    width:77%;
+}
+#panel_right 
+{
+    float:left; 
+    width:17%;  
+    padding-left:1em; 
+    margin-left:1em;
+    padding-right:1em; 
+    margin-right:1em;     
+    background-color:#e1e0e1; 
+    height:600px;  
+    border-left: solid #fff 2px; 
+    background-image:url("../Images/arrow.png"); 
+    background-repeat: no-repeat;
+    display:none;
+}
+#panel_right p 
+{ 
+    padding:0.85em; 
+    margin-top:2em; 
+    background-color: #fff;  
+}
+#panel_right h2 
+{ 
+    padding-left:0.6em;
+}
+
+/************** RACE DETAILS PAGE **************/
+#nextPreviousRace {
+    float:left; 
+    width:100%;
+    background-color: #fff;
+    height:50px;
+
+}
+    #nextPreviousRace .prev {
+         float:left; 
+         width:40%;
+         background-image:url("../Images/arrow_prev.jpg"); 
+         background-repeat: no-repeat;
+         background-position: left;
+         padding-left:35px;
+         
+    }
+    #nextPreviousRace .next {
+         float:left; 
+         width:51.2%;
+         background-image:url("../Images/arrow_next.jpg"); 
+         background-repeat: no-repeat;
+         background-position: right;
+         text-align:right;
+         padding-right:30px;
+      
+    }
+
+        #nextPreviousRace .next ,
+        #nextPreviousRace .prev  {
+            height: 34px;
+            padding-top: 16px;
+        }
+        #nextPreviousRace .next a,
+        #nextPreviousRace .prev a {
+            color: #666;
+            font-size: 0.85em;
+            font-family: "Segoe UI", Verdana, Helvetica, Sans-Serif;
+            font-weight: bold;
+            
+        }
+
+/************** LIST OF COUNTRIES / MEETINGS PAGE **************/
+
+.index_head{
+    float:left; 
+    width:100%
+}
+.index_link1{
+    float:left; 
+    padding-top:10px;
+    padding-bottom:10px;
+}
+
+.index_link2{
+    float:right; 
+    padding-top:10px;
+    padding-bottom:10px;
+}
+
+.countries_list{
+    /*float:left;*/
+    width:100%; 
+    /*padding:0.3em;*/
+}
+
+.country{
+    float:left;
+    width:45%;
+    background-color:#fff;
+    margin:10px;
+    padding:10px;
+    /*border-right: 1px dotted #666;*/
+}
+
+.country p{
+    font-size:large;
+}
+
+.country ul{
+    list-style-type: none;
+}
+
+.country ul li{
+    font-size:medium;
+}
+
+/************** LIST OF RACES PAGE**************/
+
+.race_table{
+    float:left;
+    /*max-width: 650px;*/
+    width:100%;
+    background-color:#fff;
+    padding:0px 10px;
+}
+.race_table table{
+    width:100%;
+}
+.race_table th{
+    line-height:30px;
+    background: #e4e4e4;
+}
+.visible{
+    display:block!important;
+}
+
+/************** ALL PAGES **************/
+
+h2, h3 {
+    color: #666;
+}
+
+ul
+{
+    list-style-type: none;
+}
+

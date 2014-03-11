@@ -1,0 +1,18 @@
+﻿@using RaceDayDisplayApp.Models
+
+@{
+    Layout = null;
+}
+
+@model IEnumerable<ViewUserSetting>
+
+<h3>Table Controls</h3>
+@foreach (ViewUserSetting setting in Model)
+{
+    <div class="check_wrapper">
+        @Html.CheckBox("chk_" + setting.PropertyName,
+                            setting.Checked,
+                            new { @class = "chk_settings" })
+        @Html.LabelForModel(setting.DisplayName, new { @for = "chk_" + setting.PropertyName, @class = "lbl_checkbox" })
+    </div>
+}

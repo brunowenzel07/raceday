@@ -1,0 +1,9 @@
+﻿@{
+    Layout = null;
+}
+
+@model RaceDayDisplayApp.Models.Race
+
+@{Html.RenderPartial("_RaceData", Model);}
+<!--GRID STARTS HERE-->
+@{Html.RenderPartial("_GridData", Model);}

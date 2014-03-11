@@ -1,0 +1,82 @@
+﻿@using RaceDayDisplayApp.Models
+
+@model RaceDayDisplayApp.Models.Meeting
+
+@{
+    ViewBag.Title = "Meeting Details";
+}
+
+@Html.HiddenFor(m => m.MeetingId)
+@Html.HiddenFor(m => m.IsHK)
+@*Hidden fields that control the autorefresh of the grid*@
+@Html.Hidden("MinutesBeforeJumpTimeToStartRefresh", (string)ViewBag.MinutesBeforeJumpTimeToStartRefresh)
+@Html.Hidden("RefreshIntervalSeconds", (string)ViewBag.RefreshIntervalSeconds),
+
+
+<div class="main_container">
+    <div id="panel_left">
+        <div id="nextPreviousRace">
+            @{ var prev = ViewBag.Previous as RaceDisplay; }
+            @{ var next = ViewBag.Next as RaceDisplay; }
+            <div class="prev">
+                @if (prev != null)
+                { 
+                    @Html.ActionLink(String.Format("Previous ({0} No {1})", prev.RaceName, prev.RaceNumber),
+                                 "RaceDetails", new { id = prev.RaceId, today = ViewBag.Today });
+                }
+            </div>
+            <div class="next">
+                @if (next != null)
+                {
+                    @Html.ActionLink(String.Format("Next ({0} No {1})", next.RaceName, next.RaceNumber),
+                                 "RaceDetails", new { id = next.RaceId, today = ViewBag.Today });
+                }
+            </div>
+        </div>
+        <div class="select">
+            <div class="select_div">
+                <h2>Race Details</h2>
+            </div>
+            <div class="select_div visible" id="btns_div">
+                <div class="btn_container">
+                    <input id="btn_refresh" type="button" value="Refresh" onclick="refreshGrid()" />
+                </div>
+                <div class="btn_container">
+                    <input id="btn_default" type="button" value="Default" onclick="defaultSettings()" />
+                </div>
+            </div>
+        </div>
+        <div class="details_container">
+            <div id="meeting_details">
+                <h3>Meeting Details</h3>
+                <div class="details_attrs">
+                    @foreach (var field in ModelHelper.ToNameValuePairs(Model, Model.IsHK))
+                    {
+                        if (field.Value != "")
+                        {
+                            <div>
+                                @field.DisplayName:
+                                @field.Value
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+            <div id="race_details">
+                @{Html.RenderPartial("_RaceData", Model.Races[0]);}
+            </div>
+        </div>
+        <div id="chks_container" class="chks_container visible">
+            @{Html.RenderPartial("_GridSettings", (IEnumerable<ViewUserSetting>)ViewBag.UserSettings);}
+        </div>
+        <div id="form-box">
+            @{Html.RenderPartial("_GridData", Model.Races[0]);}
+        </div>
+    </div>
+    <div id="panel_right" class="visible">
+        <h2>Chart Details</h2>
+        <p>Drag & Drop grid items to this area</p>
+
+    </div>
+</div>
+

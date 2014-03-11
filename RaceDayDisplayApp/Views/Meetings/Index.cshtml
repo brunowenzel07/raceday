@@ -1,0 +1,63 @@
+﻿@model IEnumerable<RaceDayDisplayApp.Models.Country>
+
+@{
+    ViewBag.Title = ViewBag.Today? "Today's Meetings" : "All meetings";
+}
+
+<div class="index_head">
+    @if (ViewBag.Today)
+    {
+        <h2>@String.Format("Meetings on {0}, {1}", DateTime.Today.DayOfWeek.ToString(), DateTime.Today.ToShortDateString())</h2>
+        <div class="index_link1">
+            @Html.ActionLink("View All Meetings", "Index", new { today = false })
+        </div>
+    }
+    else
+    {
+        <h2>All Meetings</h2>
+        <div class="index_link1">
+            @Html.ActionLink("View only Today's Meetings", "Index", new { today = true })
+        </div>
+    }
+    <div class="index_link2">
+        @Html.ActionLink("Change to Races view", "RaceIndex")
+    </div>
+</div>
+
+<div class="countries_list">
+    @foreach (var country in Model)
+    {
+        <div class="country">
+            <p>@Html.DisplayFor(modelItem => country.Name):</p>
+
+            @if (country.Meetings != null && country.Meetings.Any())
+            {
+                <table>
+                    @*<tr>
+                        @if (!ViewBag.Today) {
+                        <th>Date</th>
+                        }
+                        <th>Jump time</th>
+                        <th>Racecourse</th>
+                    </tr>*@
+                    @foreach (var meeting in country.Meetings)
+                    {
+                        @*var linkText = string.Format("{0}{1} - {2}", 
+                                ViewBag.Today? "" : meeting.MeetingDate.ToShortDateString() + " - ", 
+                                meeting.MinRaceJumpTimeLocal.ToShortTimeString(), meeting.RaceCourseName);
+                        <li>@Html.ActionLink(linkText, "Details", new { id = meeting.MeetingId })</li>*@
+
+                        <tr>
+                            @if (!ViewBag.Today) {
+                                <td>@meeting.MeetingDate.ToShortDateString()</td>
+                            }
+                            <td>@meeting.MinRaceJumpDateTimeUTC.ToString()+" UTC"</td>
+                            <td>@Html.ActionLink(meeting.RaceCourseName??"(no race course name provided)", "Details", new { id = meeting.MeetingId })</td>
+                        </tr>
+                    
+                    }
+                </table>
+            }
+        </div>
+    }
+</div>

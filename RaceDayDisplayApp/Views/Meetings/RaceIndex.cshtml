@@ -1,0 +1,55 @@
+﻿@model IEnumerable<RaceDayDisplayApp.Models.RaceDisplay>
+
+@{
+    ViewBag.Title = ViewBag.Today? "Today's Races" : "All races";
+}
+
+<div class="index_head">
+    @if (ViewBag.Today) {
+        <h2>@String.Format("Races on {0}, {1}", DateTime.Today.DayOfWeek.ToString(), DateTime.Today.ToShortDateString())</h2>
+        <div class="index_link1">
+            @Html.ActionLink("View All Races", "RaceIndex", new { today = false })
+        </div>
+    }
+    else
+    {
+        <h2>All Races</h2>
+        <div class="index_link1">
+            @Html.ActionLink("View only Today's Races", "RaceIndex", new { today = true })
+        </div>
+    }
+    <div class="index_link2">
+        @Html.ActionLink("Change to Meetings view", "Index")
+    </div>
+</div>
+
+    @if (Model.Count() > 0)
+{
+    <div class="race_table">
+        <table>
+            <tr>
+                @if (!ViewBag.Today) {
+            <th>Date</th>
+            }
+                <th>Jump time</th>
+                <th>Racecourse</th>
+                <th>Race</th>
+                <th>No</th>
+            </tr>
+
+            @foreach (var race in Model)
+            {
+            <tr>
+                @if (!ViewBag.Today) {
+                    <td>@race.MeetingDate.ToShortDateString()</td>
+                }
+                <td>@race.RaceJumpDateTimeUTC.ToString() + " UTC"</td>
+                <td>@race.RaceCourseName</td>
+                <td>@Html.ActionLink(race.RaceName ?? "(no name)", "RaceDetails", new { id = race.RaceId, today = ViewBag.Today })</td>
+                <td>@race.RaceNumber</td>
+            </tr>
+            }
+        </table>
+
+    </div>
+}

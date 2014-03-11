@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>MvcJqGrid</id>
+    <version>1.0.13</version>
+    <title>MvcJqGrid</title>
+    <authors>Robin van der Knaap, Daan le Duc</authors>
+    <owners>Robin van der Knaap, Daan le Duc</owners>
+    <licenseUrl>https://github.com/robinvanderknaap/MvcJqGrid</licenseUrl>
+    <projectUrl>https://github.com/robinvanderknaap/MvcJqGrid</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A fluent html helper which eases the the implementation of jqGrid in ASP.NET MVC applications. JqGrid modelbinder included. ORM independent</description>
+    <releaseNotes />
+    <copyright />
+    <language />
+    <tags>jqGrid htmlhelper asp.net mvc fluent modelbinder aspnetmvc</tags>
+  </metadata>
+</package>

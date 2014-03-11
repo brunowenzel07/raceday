@@ -1,0 +1,35 @@
+﻿@using RaceDayDisplayApp.Models
+@using MvcJqGrid
+
+@{
+    Layout = null;
+}
+
+@model Race
+
+@*Control fields to let JavaScript know if it has to auto-reload the grid*@
+@Html.HiddenFor(r => r.RaceId)
+@Html.Hidden("RaceJumpTimeLocal", Model.RaceJumpDateTimeUTC.ToString("hh:mm:ss")) @*TODO change this to a time to refresh*@ 
+@Html.HiddenFor(r => r.isStarted)
+@Html.HiddenFor(r => r.isDone)
+
+
+@(Html.Grid("race_grid")
+.SetDataType(MvcJqGrid.Enums.DataType.Json)
+.OnAfterInsertRow("gridAfterInsertRow(rowid,rowdata,rowelem)")
+.OnGridComplete("hideColumnsFirstTime()")
+.SetAltRows(true)
+.SetAltClass("alt_rows")
+.AddColumns(ViewBag.GridColumns)
+.SetUrl(Url.Action("GridData", "Meetings", new { id = Model.RaceId, 
+                                                    isStarted = Model.isStarted, 
+                                                    isDone = Model.isDone }))
+//.SetUrl("Meetings/GridData/" + Model.RaceId + "?isStarted='+$('#isStarted').val()+'&isDone='+$('#isDone').val()+'")
+.SetAutoWidth(true)
+.SetLoadUi(MvcJqGrid.Enums.LoadUi.Block)
+.SetViewRecords(true)
+.SetEmptyRecords("No Runners Found")
+.SetShowAllSortIcons(true)
+.SetShrinkToFit(true))
+
+
