@@ -217,10 +217,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\RaceDayLocal.mdf" />
-    <Content Include="App_Data\RaceDayLocal_log.ldf">
-      <DependentUpon>RaceDayLocal.mdf</DependentUpon>
-    </Content>
     <Content Include="Content\jquery.jqGrid\ellipsis-xbl.xml" />
     <Content Include="Content\jquery.jqGrid\ui.jqgrid.css" />
     <Content Include="Content\styles.css" />
@@ -402,6 +398,7 @@
     <Content Include="Views\Meetings\_GridData.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="App_Data\" />
     <Folder Include="SQL\" />
   </ItemGroup>
   <ItemGroup>

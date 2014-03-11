@@ -8,11 +8,14 @@ EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Dropbox|Any CPU = Dropbox|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{B399A92C-FA7E-49EE-80E9-A44B839CF656}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B399A92C-FA7E-49EE-80E9-A44B839CF656}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B399A92C-FA7E-49EE-80E9-A44B839CF656}.Dropbox|Any CPU.ActiveCfg = Debug|Any CPU
+		{B399A92C-FA7E-49EE-80E9-A44B839CF656}.Dropbox|Any CPU.Build.0 = Debug|Any CPU
 		{B399A92C-FA7E-49EE-80E9-A44B839CF656}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B399A92C-FA7E-49EE-80E9-A44B839CF656}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection

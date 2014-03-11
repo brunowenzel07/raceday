@@ -8,9 +8,6 @@
 
 @Html.HiddenFor(m => m.MeetingId)
 @Html.HiddenFor(m => m.IsHK)
-@*Hidden fields that control the autorefresh of the grid*@
-@Html.Hidden("MinutesBeforeJumpTimeToStartRefresh", (string)ViewBag.MinutesBeforeJumpTimeToStartRefresh)
-@Html.Hidden("RefreshIntervalSeconds", (string)ViewBag.RefreshIntervalSeconds),
 
 
 <div class="main_container">

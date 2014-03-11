@@ -9,7 +9,7 @@
 
 @*Control fields to let JavaScript know if it has to auto-reload the grid*@
 @Html.HiddenFor(r => r.RaceId)
-@Html.Hidden("RaceJumpTimeLocal", Model.RaceJumpDateTimeUTC.ToString("hh:mm:ss")) @*TODO change this to a time to refresh*@ 
+@Html.Hidden("SecsToNextRefresh", (string)ViewBag.SecsToNextRefresh)
 @Html.HiddenFor(r => r.isStarted)
 @Html.HiddenFor(r => r.isDone)
 
