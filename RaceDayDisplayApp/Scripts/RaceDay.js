@@ -23,31 +23,17 @@ function bindCheckboxes() {
     });
 }
 
-//this event handler updates the value of isDone when the grid is refreshed
-var isFirstRow = true; //just for performance
-function gridAfterInsertRow(rowid, rowdata, rowelem) {
-    if (isFirstRow) {
-        var isDone = $('#isDone').val() == "True";
-        if (!isDone && rowelem.isDone)
-            $('#isDone').val("True"); //the race has just finished, so we save it in the hidden field
-    }
-    if (rowelem.isScratched)
-        $('#'+rowid).addClass("scratched");
-
-    isFirstRow = false;
-}
-
 function currencyFormatter(cellvalue, options, rowObject) {
-    return "$"+ cellvalue;
+    return "$" + cellvalue;
 }
 
-function percentageFormatter(cellvalue, options, rowObject)
-{
+function percentageFormatter(cellvalue, options, rowObject) {
     return cellvalue + "%";
 }
 
+
 function startRefresh() {
-    var refreshIntervalStr = $("#RefreshIntervalSeconds").val();
+    var refreshIntervalStr = $("#RefreshIntervalSeconds").val(); //todo
     if (typeof refreshIntervalStr != "undefined") {
 
         //Every 30 seconds the grid is reloaded
@@ -69,7 +55,7 @@ function startRefresh() {
                     if (typeof jumpTimeStr != "undefined") {
 
                         var jumpTime = convertDateTime(jumpTimeStr);
-                        var minutes = parseInt($("#MinutesBeforeJumpTimeToStartRefresh").val(), 10);
+                        var minutes = parseInt($("#MinutesBeforeJumpTimeToStartRefresh").val(), 10); //todo
 
                         //substract 25 minutes from jumpTime
                         var MS_PER_MINUTE = 60000;
@@ -102,6 +88,23 @@ function refreshGrid() {
     $("#race_grid").setGridParam({ url: '/Meetings/GridData/'+raceId+'?isStarted='+isStarted+'&isDone='+isDone, page:1 });
     $("#race_grid").trigger("reloadGrid");
 }
+
+//this event handler updates the value of isDone when the grid is refreshed
+var isFirstRow = true; //just for performance
+function gridAfterInsertRow(rowid, rowdata, rowelem) {
+    if (isFirstRow) {
+        var isDone = $('#isDone').val() == "True";
+        if (!isDone && rowelem.isDone)
+            $('#isDone').val("True"); //the race has just finished, so we save it in the hidden field
+    }
+
+    if (rowelem.isScratched)
+        $('#' + rowid).addClass("scratched");
+
+    isFirstRow = false;
+}
+
+
 
 //when the Races select changes, new race details and grid are loaded and the checkboxes shown/hidden
 $(function () {

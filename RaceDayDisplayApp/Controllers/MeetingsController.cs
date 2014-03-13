@@ -9,6 +9,7 @@ using RaceDayDisplayApp.Models;
 using MvcJqGrid;
 using System.Configuration;
 using RaceDayDisplayApp.Filters;
+using RaceDayDisplayApp.DAL;
 
 namespace RaceDayDisplayApp.Controllers
 {
@@ -16,7 +17,7 @@ namespace RaceDayDisplayApp.Controllers
     [InitializeSimpleMembership]
     public class MeetingsController : Controller
     {
-        private MeetingDB entities = new MeetingDB();
+        private DBGateway entities = new DBGateway();
 
         //
         // GET: /Meetings/
@@ -50,21 +51,20 @@ namespace RaceDayDisplayApp.Controllers
             ViewBag.UserSettings = entities.GetUserSettings(userId, meeting.MeetingId, meeting.IsHK) ??
                 ModelHelper.ToViewUserSettings(UserSettings.DEFAULT, meeting.IsHK);
 
-            //hidden fields to control the auto-refresh of the grid
-            ViewBag.MinutesBeforeJumpTimeToStartRefresh = ConfigurationManager.AppSettings["MinutesBeforeJumpTimeToStartRefresh"];
-            ViewBag.RefreshIntervalSeconds = ConfigurationManager.AppSettings["RefreshIntervalSeconds"];
-
             return View(meeting);
         }
 
         public ActionResult RaceDetails(int id = 0, bool today = true)
         {
             //get the meeting and Race info
-            Meeting meeting = entities.GetRaceWithMeeting(id);
+            Meeting meeting = entities.GetMeetingByRaceId(id);
             if (meeting == null)
             {
                 return HttpNotFound();
             }
+
+            //get race info from cache
+            meeting.Races = new List<RaceBase>(new[] { RacesCache.Instance[id] });
 
             //set previous and next race in the sequence
             var racesList = entities.GetRacesList(today).ToList();
@@ -78,26 +78,21 @@ namespace RaceDayDisplayApp.Controllers
             ViewBag.UserSettings = entities.GetUserSettings(userId, meeting.MeetingId, meeting.IsHK) ??
                 ModelHelper.ToViewUserSettings(UserSettings.DEFAULT, meeting.IsHK);
 
-            //hidden fields to control the auto-refresh of the grid
-            ViewBag.MinutesBeforeJumpTimeToStartRefresh = ConfigurationManager.AppSettings["MinutesBeforeJumpTimeToStartRefresh"];
-            ViewBag.RefreshIntervalSeconds = ConfigurationManager.AppSettings["RefreshIntervalSeconds"];
-
             //columns to display for this race
-            ViewBag.GridColumns = entities.GetGridColumns(meeting.Races[0] as Race);
+            ViewBag.GridColumns = ModelHelper.GetGridColumns(meeting.Races[0] as Race);
 
             return View(meeting);
         }
 
         public ActionResult Race(int id)
         {
-            Race r = entities.GetRace(id);
+            var r = RacesCache.Instance[id];
             if (r == null)
             {
                 return HttpNotFound();
             }
 
-            ViewBag.GridColumns = entities.GetGridColumns(r);
-            //r.RaceJumpTimeLocal = DateTime.Now; //for testing purposes
+            ViewBag.GridColumns = ModelHelper.GetGridColumns(r);
             return View("_Race", r);
         }
 
@@ -105,20 +100,11 @@ namespace RaceDayDisplayApp.Controllers
         /// Called async by the jqGrid on details view
         /// </summary>
         /// <returns>A list of runners</returns>
-        public JsonResult GridData(int id, bool isStarted, bool isDone, GridSettings gridSettings)
+        public JsonResult GridData(int id, GridSettings gridSettings)
         {
-            //retrieve the static fields
-            var runners = entities.GetRunnersStat(id);
-
-            //TODO when implementing cache, this can be improved
-            if (isDone || isStarted)
-            {
-                //update the runners info with the dynamic fields
-                var runnersDyn = entities.GetRunnersDyn(id);
-                runners.ToList().ForEach(r => r.Update(runnersDyn.First(rd => rd.RunnerId == r.RunnerId)));
-            }
-
-            //var runners = Runner.DummyRunnerList; //for testing purposes
+            var race = RacesCache.Instance[id];
+            var runners = race.Runners;
+            //int secsToNextRefresh; //TODO
 
             if (runners == null)
             {
@@ -139,6 +125,9 @@ namespace RaceDayDisplayApp.Controllers
                 }
                 else
                     runners = runners.OrderBy(o => o.AUS_SPW).ToList(); //default sorting criteria
+            
+                //dynamic obj = runners.First();
+                //obj. //todo
             }
 
             return Json(runners, JsonRequestBehavior.AllowGet);

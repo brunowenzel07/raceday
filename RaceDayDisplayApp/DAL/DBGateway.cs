@@ -1,22 +1,21 @@
-﻿using System;
+﻿using RaceDayDisplayApp.Models;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Data.SqlClient;
 using Dapper;
 
-namespace RaceDayDisplayApp.Models
+namespace RaceDayDisplayApp.DAL
 {
-    public class MeetingDB
+    public class DBGateway
     {
         readonly string connectionString =
             ConfigurationManager.ConnectionStrings["RaceDayDB"].ConnectionString;
 
-        public IEnumerable<Country> GetCountries()
-        {
-            return GetCountries(false);
-        }
-
+        /// <summary>
+        /// Used in the Index page
+        /// </summary>
         public IEnumerable<Country> GetCountries(bool filterByToday)
         {
             using (var conn = new SqlConnection(connectionString))
@@ -56,6 +55,28 @@ namespace RaceDayDisplayApp.Models
             }
         }
 
+        /// <summary>
+        /// RaceIndex and RaceDetails page
+        /// </summary>
+        public IEnumerable<RaceDisplay> GetRacesList(bool today)
+        {
+            using (var conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                return conn.Query<RaceDisplay>(@"
+                    SELECT Race.Id AS RaceId, Race.RaceNumber, Race.RaceName, Race.RaceJumpDateTimeUTC, Meeting.MeetingDate, RaceCourse.Name AS RaceCourseName
+                    FROM Race INNER JOIN Meeting on Meeting.Id = Race.MeetingId
+		                      INNER JOIN RaceCourse on Meeting.RaceCourseId = RaceCourse.Id
+                    WHERE RaceJumpDateTimeUTC IS NOT NULL" + (today ? " AND Meeting.MeetingDate = CONVERT(date, getdate())" : "") + @"
+                    ORDER BY MeetingDate, RaceJumpDateTimeUTC");
+                //TODO review the WHERE condition            
+            }
+        }
+
+        /// <summary>
+        /// Used in the meeting details page
+        /// </summary>
         public Meeting GetMeeting(int meetingId)
         {
             //return Meeting.DummyMeeting;
@@ -97,7 +118,33 @@ namespace RaceDayDisplayApp.Models
             }
         }
 
-        public Race GetRace(int raceId)
+        /// <summary>
+        /// used in the RaceDetails page
+        /// </summary>
+        internal Meeting GetMeetingByRaceId(int raceId)
+        {
+            using (var conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                var resultList = conn.Query<Meeting>(@"
+                    Select Meeting.Id as MeetingId, RaceCourse.Name as RaceCourseName, Weather.Name as WeatherName, 
+	                       Going.Id as DefaultGoingName, CourseVariant.Name as CourseVariantName, Country.Code as CountryCode,
+                    from Race left join Meeting       on Meeting.Id=Race.MeetingId
+							  left join RaceCourse    on Meeting.RaceCourseId=RaceCourse.Id
+			                  left join Weather       on Meeting.WeatherId=Weather.Id
+			                  left join CourseVariant on Meeting.CourseVariantId=CourseVariant.Id
+                    where Race.Id = @RaceId",
+                    new { RaceId = raceId });
+
+                return resultList.FirstOrDefault();
+            }
+        }
+
+        /// <summary>
+        /// used in the cache layer
+        /// </summary>
+        public RaceCache GetRaceWithRunners(int raceId)
         {
             //return Race.DummyRace;
 
@@ -105,7 +152,7 @@ namespace RaceDayDisplayApp.Models
             {
                 conn.Open();
 
-                var resultList = conn.Query<Race>(@"
+                var race = conn.Query<RaceCache>(@"
                     Select Race.Id as RaceId, RaceNumber, RaceType.Name as RaceTypeName, 
                            Distance.Name as DistanceName, RaceJumpDateTimeUTC, 
 	                       HK_RaceIndex, Going.Name as RaceGoingName, isTurf, 
@@ -116,12 +163,71 @@ namespace RaceDayDisplayApp.Models
                                 left join Meeting on Race.MeetingId=Race.Id
                                 left join Country on Meeting.CountryId=Country.Id
                     where Race.Id = @RaceId",
-                   new {  RaceId = raceId });
+                    new { RaceId = raceId }).FirstOrDefault();
 
+                if (race != null)
+                {
+                    var runners = conn.Query<Runner>(@"
+                        SELECT	RunnerId, RaceId, HorseNumber, Barrier, RunnerId, Name, HK_ChineseName,
+		                        Jockey, Trainer, Gear, Z_newTrainerSinceLastStart,
+		                        Z_BPAdvFactor, Age, Sex, Color,
+		                        AUS_HcpWt, CarriedWt, HK_DeclaredHorseWtLbs, AUS_HcpRatingAtJump, HK_ActualWtLbs,
+		                        HK_Rating, isScratched, Place, AUS_SPW, AUS_SPP,
+		                        HK_WinOdds, Z_AUS_FinishTime, HK_FinishTime, JockeyPoints,
+		                        STATISTICS1, STATISTICS2, STATISTICS3, STATISTICS4
+                        from DataGrid_sta
+                        where RaceId = @RaceId",
+                        new { RaceId = raceId });
+
+                    race.Runners = runners.ToList();
+                }
+
+                return race;
+            }
+        }
+
+        /// <summary>
+        /// used in the cache layer
+        /// </summary>
+        public IEnumerable<RunnerBase> GetRunnersDyn(int raceId)
+        {
+            //return RunnerBase.DummyRunnerList;
+            using (var conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                var resultList = conn.Query<RunnerBase>(@"
+                    select RunnerId, RaceId, isScratched, isDone, RaceId, ODDSLAST1, ODDSLAST2, ODDSLAST3
+                    from DataGrid_dyn2
+                    where RaceId=@RaceId",
+                   new { RaceId = raceId });
+
+                return resultList;
+            }
+        }
+
+        /// <summary>
+        /// used in the cache layer
+        /// </summary>
+        internal int GetSecondsSinceLastUpdate(int raceId)
+        {
+            using (var conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                var resultList = conn.Query<int>(@"
+                        Select DATEDIFF(second, [DateTime], getdate())
+                        from LastUpdates
+                        where RaceId = @raceId", 
+                    new { countryCode = raceId });
+                
                 return resultList.FirstOrDefault();
             }
         }
 
+        /// <summary>
+        /// used in meeting details page, race details page and _GridSettings partial view
+        /// </summary>
         public IEnumerable<ViewUserSetting> GetUserSettings(int userId, int meetingId, bool isHK)
         {
             using (var conn = new SqlConnection(connectionString))
@@ -149,59 +255,20 @@ namespace RaceDayDisplayApp.Models
 
                 string aux;
                 var statSettings = resultList2.Select(rs => new ViewUserSetting
-                                        {
-                                            PropertyName = aux = "STATISTICS" + rs.Ordering,
-                                            DisplayName = rs.LongName,
-                                            Checked = (bool)typeof(UserSettings).GetProperty(aux).GetValue(settings)
-                                        });
-                
+                {
+                    PropertyName = aux = "STATISTICS" + rs.Ordering,
+                    DisplayName = rs.LongName,
+                    Checked = (bool)typeof(UserSettings).GetProperty(aux).GetValue(settings)
+                });
+
                 //concat user settings and statistical columns
                 return viewSettings.Concat(statSettings);
             }
         }
 
-        public IEnumerable<RunnerBase> GetRunnersDyn(int raceId)
-        {
-            //return RunnerBase.DummyRunnerList;
-            using (var conn = new SqlConnection(connectionString))
-            {
-                conn.Open();
-
-                var resultList = conn.Query<RunnerBase>(@"
-                    select RunnerId, RaceId, isScratched, isDone, RaceId, ODDSLAST1, ODDSLAST2, ODDSLAST3
-                    from DataGrid_dyn2
-                    where RaceId=@RaceId",
-                   new { RaceId = raceId });
-
-                return resultList;
-            }
-        }
-
-        public IEnumerable<Runner> GetRunnersStat(int raceId)
-        {
-            //return Runner.DummyRunnerList; //for testing purposes
-
-            using (var conn = new SqlConnection(connectionString))
-            {
-                conn.Open();
-
-                var resultList = conn.Query<Runner>(@"
-                    SELECT	RunnerId, RaceId, HorseNumber, Barrier, RunnerId, Name, HK_ChineseName,
-		                    Jockey, Trainer, Gear, Z_newTrainerSinceLastStart,
-		                    Z_BPAdvFactor, Age, Sex, Color,
-		                    AUS_HcpWt, CarriedWt, HK_DeclaredHorseWtLbs, AUS_HcpRatingAtJump, HK_ActualWtLbs,
-		                    HK_Rating, isScratched, Place, AUS_SPW, AUS_SPP,
-		                    HK_WinOdds, Z_AUS_FinishTime, HK_FinishTime, JockeyPoints,
-		                    STATISTICS1, STATISTICS2, STATISTICS3, STATISTICS4
-                    from DataGrid_sta
-                    where RaceId = @RaceId",
-                    new { RaceId = raceId });
-
-                return resultList;
-            }
-
-        }
-
+        /// <summary>
+        /// Used in RaceDetails page and _Race partial view
+        /// </summary>
         public IEnumerable<MvcJqGrid.Column> GetGridColumns(Race race)
         {
             using (var conn = new SqlConnection(connectionString))
@@ -214,90 +281,35 @@ namespace RaceDayDisplayApp.Models
                     SELECT rs.LongName, rs.Ordering
                     FROM RaceStatistics rs
                     WHERE rs.RaceId = @RaceId",
-                    new {RaceId = race.RaceId});
+                    new { RaceId = race.RaceId });
 
-                var statColumns = resultList.Select(e => new MvcJqGrid.Column("STATISTICS" + e.Ordering)
-                                  .SetLabel(e.LongName)).Cast<MvcJqGrid.Column>();
-                
-                return ModelHelper.GetGridColumns(race.IsHK).Concat(statColumns);
+                return resultList.Select(e => new MvcJqGrid.Column("STATISTICS" + e.Ordering)
+                       .SetLabel(e.LongName)).Cast<MvcJqGrid.Column>();
             }
         }
 
 
-//        /// <summary>
-//        /// True if the race is held in Hong Kong
-//        /// </summary>
-//        public bool IsHK(int raceId)
-//        {
-//            using (var conn = new SqlConnection(connectionString))
-//            {
-//                conn.Open();
+        //        /// <summary>
+        //        /// True if the race is held in Hong Kong
+        //        /// </summary>
+        //        public bool IsHK(int raceId)
+        //        {
+        //            using (var conn = new SqlConnection(connectionString))
+        //            {
+        //                conn.Open();
 
-//                var code = conn.Query<string>(@"
-//                    select Country.Code
-//                    from Race inner join Meeting on Race.MeetingId = Meeting.Id
-//		                      inner join Country on Meeting.CountryId = Country.Id
-//                    where Race.Id = @RaceId",
-//                   new { RaceId = raceId }).FirstOrDefault();
+        //                var code = conn.Query<string>(@"
+        //                    select Country.Code
+        //                    from Race inner join Meeting on Race.MeetingId = Meeting.Id
+        //		                      inner join Country on Meeting.CountryId = Country.Id
+        //                    where Race.Id = @RaceId",
+        //                   new { RaceId = raceId }).FirstOrDefault();
 
-//                return code == "HKG";
-//            }
-//        }
+        //                return code == "HKG";
+        //            }
+        //        }
 
 
-        public IEnumerable<RaceDisplay> GetRacesList(bool today)
-        {
-            using (var conn = new SqlConnection(connectionString))
-            {
-                conn.Open();
-
-                return conn.Query<RaceDisplay>(@"
-                    SELECT Race.Id AS RaceId, Race.RaceNumber, Race.RaceName, Race.RaceJumpDateTimeUTC, Meeting.MeetingDate, RaceCourse.Name AS RaceCourseName
-                    FROM Race INNER JOIN Meeting on Meeting.Id = Race.MeetingId
-		                      INNER JOIN RaceCourse on Meeting.RaceCourseId = RaceCourse.Id
-                    WHERE RaceJumpDateTimeUTC IS NOT NULL" + (today ? " AND Meeting.MeetingDate = CONVERT(date, getdate())" : "") + @"
-                    ORDER BY MeetingDate, RaceJumpDateTimeUTC");
-                    //TODO review the WHERE condition            
-            }
-        }
-
-        internal Meeting GetRaceWithMeeting(int raceId)
-        {
-
-            using (var conn = new SqlConnection(connectionString))
-            {
-                conn.Open();
-
-                var resultList = conn.Query<Meeting, Race, Meeting>(@"
-                    Select Meeting.Id as MeetingId, RaceCourse.Name as RaceCourseName, Weather.Name as WeatherName, 
-	                       Going.Id as DefaultGoingName, CourseVariant.Name as CourseVariantName, Country.Code as CountryCode,
-                           Race.Id as RaceId, RaceNumber, RaceType.Name as RaceTypeName, 
-                           Distance.Name as DistanceName, RaceJumpDateTimeUTC, 
-	                       HK_RaceIndex, Going.Name as RaceGoingName, isTurf, 
-                           isDone, isStarted, Country.Code as CountryCode
-                    from Race left join Meeting       on Meeting.Id=Race.MeetingId
-							  left join RaceCourse    on Meeting.RaceCourseId=RaceCourse.Id
-			                  left join Weather       on Meeting.WeatherId=Weather.Id
-			                  left join CourseVariant on Meeting.CourseVariantId=CourseVariant.Id
-							  left join RaceType	  on Race.RaceTypeId=RaceType.Id
-			                  left join Distance	  on Race.DistanceId=Distance.Id
-			                  left join Going		  on Race.RaceGoingId=Going.Id
-                              left join Country		  on Meeting.CountryId=Country.Id
-                    where Race.Id = @RaceId",
-                    (m, r) =>
-                    {
-                        m.Races = new List<RaceBase>();
-                        if (r != null)
-                            m.Races.Add(r);
-                        return m;
-                    },
-                    param: new { RaceId = raceId },
-                    splitOn: "RaceId"
-                    );
-
-                return resultList.FirstOrDefault();
-            }
-        }
     }
 
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RaceDayDisplayApp.DAL;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -52,16 +53,16 @@ namespace RaceDayDisplayApp.Models
         /// <summary>
         /// Creates a collection of grid column based on the properties of the class Runner and their attributes
         /// </summary>
-        public static IEnumerable<MvcJqGrid.Column> GetGridColumns(bool isHK)
+        public static IEnumerable<MvcJqGrid.Column> GetGridColumns(Race race)
         {
             Dictionary<string, DisplayAttribute> lookup = new Dictionary<string, DisplayAttribute>();
             Dictionary<string, CustomDisplayAttribute> lookup2 = new Dictionary<string, CustomDisplayAttribute>();
             CustomDisplayAttribute attr = null;
             //loops through all the properties of the class Runner
-            return typeof(Runner).GetProperties()
+            var columns = typeof(Runner).GetProperties()
                 .Where(p => (lookup2[p.Name] = attr = getCustomDisplayAttribute(p)).Display == DisplayOn.BOTH
-                            || (isHK && attr.Display == DisplayOn.HK)
-                            || (!isHK && attr.Display == DisplayOn.AUS))
+                            || (race.IsHK && attr.Display == DisplayOn.HK)
+                            || (!race.IsHK && attr.Display == DisplayOn.AUS))
                 .OrderBy(p => (lookup[p.Name] = getDisplayAttribute(p)).Order)
                 .Select(p => {
                     var col = new MvcJqGrid.Column(p.Name);
@@ -74,6 +75,9 @@ namespace RaceDayDisplayApp.Models
                         col.SetWidth(attr.FixedColumnSize).SetFixedWidth(true);
                     return col;
                 });
+
+            var statisticalColumns = new DBGateway().GetGridColumns(race);
+            return columns.Concat(statisticalColumns);
         }
 
         private static DisplayAttribute getDisplayAttribute(PropertyInfo info)
@@ -105,6 +109,7 @@ namespace RaceDayDisplayApp.Models
             }
             return new LinkedToAttribute { Attribute = info.Name };
         }
+
 
     }
 }

@@ -54,19 +54,19 @@ namespace RaceDayDisplayApp.Models
         public int Barrier { get; set; }
         
         [Display(Name = "Horse", Order = 0)]
-        [CustomDisplay(DisplayOn.BOTH, colSize:Config.NAME_COLUMN_WIDTH)]
+        [CustomDisplay(DisplayOn.BOTH, colSize: ConfigValues.NAME_COLUMN_WIDTH)]
         public string Name { get; set; }
 
         [Display(Name = "Chinese Name", Order = 0)]
-        [CustomDisplay(DisplayOn.HK, colSize:Config.NAME_COLUMN_WIDTH)]
+        [CustomDisplay(DisplayOn.HK, colSize: ConfigValues.NAME_COLUMN_WIDTH)]
         public string HK_ChineseName { get; set; }
 
         [Display(Name = "Jockey", Order = 0)]
-        [CustomDisplay(DisplayOn.BOTH, colSize: Config.NAME_COLUMN_WIDTH)]
+        [CustomDisplay(DisplayOn.BOTH, colSize: ConfigValues.NAME_COLUMN_WIDTH)]
         public string Jockey { get; set; }
         
         [Display(Name = "Trainer", Order = 0)]
-        [CustomDisplay(DisplayOn.BOTH, colSize: Config.NAME_COLUMN_WIDTH)]
+        [CustomDisplay(DisplayOn.BOTH, colSize: ConfigValues.NAME_COLUMN_WIDTH)]
         public string Trainer { get; set; }
 
         [Display(Name = "Gear", Order = 0)]

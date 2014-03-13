@@ -192,7 +192,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Config.cs" />
+    <Compile Include="ConfigValues.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\MeetingsController.cs" />
     <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
@@ -200,10 +200,10 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountModels.cs" />
-    <Compile Include="Models\Config.cs" />
+    <Compile Include="DAL\RacesCache.cs" />
     <Compile Include="Models\Country.cs" />
     <Compile Include="Models\CustomAttributes.cs" />
-    <Compile Include="Models\MeetingDB.cs" />
+    <Compile Include="DAL\DBGateway.cs" />
     <Compile Include="Models\Meeting.cs" />
     <Compile Include="Models\ModelHelper.cs" />
     <Compile Include="Models\Race.cs" />

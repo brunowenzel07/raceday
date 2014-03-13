@@ -19,7 +19,7 @@ namespace RaceDayDisplayApp.Models
     }
 
     /// <summary>
-    /// Clase used to display the Races list in the RacesIndex view
+    /// Class used to display the Races list in the RacesIndex view
     /// </summary>
     public class RaceDisplay : RaceBase
     {
@@ -98,6 +98,26 @@ namespace RaceDayDisplayApp.Models
                 return FizzWare.NBuilder.Builder<Race>.CreateNew().Build();
             }
         }
+
+        //[CustomDisplay(DisplayOn.NONE)]
+        //public int SecsToNextRefresh { get; set; }
+    }
+
+    /// <summary>
+    /// class used to keep the grid data in cache
+    /// </summary>
+    public class RaceCache : Race
+    {
+        public class RefreshInfo
+        {
+            public DateTime LastDBUpdate { get; set; }
+            public DateTime LastRefresh { get; set; }
+            public DateTime LastTotalRefresh { get; set; }
+            public DateTime NextRefresh { get; set; }
+        }
+
+        public List<Runner> Runners = new List<Runner>();
+        public RefreshInfo RefreshVaues = new RefreshInfo();
     }
 
 
