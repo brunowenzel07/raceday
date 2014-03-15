@@ -129,11 +129,13 @@ namespace RaceDayDisplayApp.DAL
 
                 var resultList = conn.Query<Meeting>(@"
                     Select Meeting.Id as MeetingId, RaceCourse.Name as RaceCourseName, Weather.Name as WeatherName, 
-	                       Going.Id as DefaultGoingName, CourseVariant.Name as CourseVariantName, Country.Code as CountryCode,
+	                       Going.Id as DefaultGoingName, CourseVariant.Name as CourseVariantName, Country.Code as CountryCode
                     from Race left join Meeting       on Meeting.Id=Race.MeetingId
 							  left join RaceCourse    on Meeting.RaceCourseId=RaceCourse.Id
 			                  left join Weather       on Meeting.WeatherId=Weather.Id
 			                  left join CourseVariant on Meeting.CourseVariantId=CourseVariant.Id
+  			                  left join Going		    on Race.RaceGoingId=Going.Id
+                              left join Country		on Meeting.CountryId=Country.Id
                     where Race.Id = @RaceId",
                     new { RaceId = raceId });
 
@@ -144,7 +146,7 @@ namespace RaceDayDisplayApp.DAL
         /// <summary>
         /// used in the cache layer
         /// </summary>
-        public RaceCache GetRaceWithRunners(int raceId)
+        public RaceCache GetRaceWithRunnersStat(int raceId)
         {
             //return Race.DummyRace;
 
@@ -153,7 +155,7 @@ namespace RaceDayDisplayApp.DAL
                 conn.Open();
 
                 var race = conn.Query<RaceCache>(@"
-                    Select Race.Id as RaceId, RaceNumber, RaceType.Name as RaceTypeName, 
+                    Select Race.Id as RaceId, MeetingId, RaceNumber, RaceType.Name as RaceTypeName, 
                            Distance.Name as DistanceName, RaceJumpDateTimeUTC, 
 	                       HK_RaceIndex, Going.Name as RaceGoingName, isTurf, 
                            isDone, isStarted, Country.Code as CountryCode
@@ -187,39 +189,55 @@ namespace RaceDayDisplayApp.DAL
         }
 
         /// <summary>
-        /// used in the cache layer
+        /// Used in the cache layer
         /// </summary>
-        public IEnumerable<RunnerBase> GetRunnersDyn(int raceId)
+        public RaceDyn GetRaceWithRunnersDyn(int raceId)
         {
-            //return RunnerBase.DummyRunnerList;
+            //TODO
             using (var conn = new SqlConnection(connectionString))
             {
                 conn.Open();
 
-                var resultList = conn.Query<RunnerBase>(@"
-                    select RunnerId, RaceId, isScratched, isDone, RaceId, ODDSLAST1, ODDSLAST2, ODDSLAST3
-                    from DataGrid_dyn2
-                    where RaceId=@RaceId",
-                   new { RaceId = raceId });
+                var race = conn.Query<RaceDyn>(@"
+                    SELECT RaceId, isDone, RaceWinPool, RacePPPool, EXPoolTotal, EXDivAmount,
+                    QNPoolTotal, QNDivAmount, F4PoolTotal, F4DivAmount, TFPoolTotal
+                    FROM RaceDivPoolData
+                    WHERE RaceId = @RaceId",
+                    new { RaceId = raceId }).FirstOrDefault();
 
-                return resultList;
+                if (race != null)
+                {
+                    var resultList = conn.Query<RunnerDyn>(@"
+                        select RunnerId, RaceId, isScratched, RaceId, 
+                        WinOdds, PlaceOdds, isWinFavorite, WinDropby20, WinDropby50,
+                        isPlaceFavorite, PlaceDropby20, PlaceDropby50, 
+                        ODDSLAST1, ODDSLAST2, ODDSLAST3
+                        from DataGrid_dyn2
+                        where RaceId=@RaceId",
+                        new { RaceId = raceId });
+
+                    race.Runners = resultList;
+                }
+
+                return race;
             }
         }
 
+            
         /// <summary>
         /// used in the cache layer
         /// </summary>
-        internal int GetSecondsSinceLastUpdate(int raceId)
+        internal int GetSecondsSinceLastUpdate(Race race)
         {
             using (var conn = new SqlConnection(connectionString))
             {
                 conn.Open();
 
                 var resultList = conn.Query<int>(@"
-                        Select DATEDIFF(second, [DateTime], getdate())
+                        Select DATEDIFF(second, UpdateDateTime, getdate())
                         from LastUpdates
-                        where RaceId = @raceId", 
-                    new { countryCode = raceId });
+                        where MeetingId = @meetingId and RaceNumber=@raceNumber",
+                    new { meetingId = race.MeetingId, raceNumber = race.RaceNumber });
                 
                 return resultList.FirstOrDefault();
             }

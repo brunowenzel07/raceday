@@ -114,8 +114,7 @@ namespace RaceDayDisplayApp.Models
         [LinkedTo("ODDSLAST3")]
         public bool OddsLast3 { get; set; }
 
-        //TODO this field doesn't have its equivalent in Runner class
-
+        //this field doesn't have its equivalent in Runner class
         //[Display(Name = "Current Odds", Order = 22)]
         //[CustomDisplay(DisplayOn.AUS)]
         //public bool Z_AUS_CurrentOdds { get; set; }
@@ -141,12 +140,17 @@ namespace RaceDayDisplayApp.Models
         [LinkedTo("Formatted_HK_FinishTime")]
         public bool HK_FinishTime { get; set; }
 
+        [Display(Name = "Win Odds", Order = 27)]
+        public bool WinOdds { get; set; }
+
+        [Display(Name = "Place Odds", Order = 27)]
+        public bool PlaceOdds { get; set; }
 
         [CustomDisplay(DisplayOn.NONE)]
         public static UserSettings DEFAULT { 
             get 
             {
-                return new UserSettings { HorseName = true, TrainerName = true, Aus_SPW = true }; 
+                return new UserSettings { HorseName = true, TrainerName = true, Aus_SPW = true, WinOdds = true, PlaceOdds = true }; 
             } 
         }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace RaceDayDisplayApp.Models
 {
@@ -33,11 +34,60 @@ namespace RaceDayDisplayApp.Models
     }
 
     /// <summary>
+    /// Class that is retrieved periodically while the race is active
+    /// </summary>
+    public class RaceDyn : RaceBase
+    {
+        [CustomDisplay(DisplayOn.NONE)]
+        public IEnumerable<RunnerDyn> Runners { get; set; }
+
+        [CustomDisplay(DisplayOn.NONE)]
+        public bool isDone { get; set; }
+
+        [Display(Name = "Win Pool", Order = 0)]
+        [CustomDisplay(DisplayOn.BOTH)]
+        public float RaceWinPool { get; set; }
+
+        [Display(Name = "PP Pool", Order = 0)]
+        [CustomDisplay(DisplayOn.BOTH)]
+        public float RacePPPool { get; set; }
+
+        [Display(Name = "EX Pool Total", Order = 0)]
+        [CustomDisplay(DisplayOn.BOTH)]
+        public float EXPoolTotal { get; set; }
+
+        [Display(Name = "Ex Div Amount", Order = 0)]
+        [CustomDisplay(DisplayOn.BOTH)]
+        public float EXDivAmount { get; set; }
+
+        [Display(Name = "QN Pool Total", Order = 0)]
+        [CustomDisplay(DisplayOn.BOTH)]
+        public float QNPoolTotal { get; set; }
+
+        [Display(Name = "QN Div Amount", Order = 0)]
+        [CustomDisplay(DisplayOn.BOTH)]
+        public float QNDivAmount { get; set; }
+
+        [Display(Name = "F4 Pool Total", Order = 0)]
+        [CustomDisplay(DisplayOn.BOTH)]
+        public float F4PoolTotal { get; set; }
+
+        [Display(Name = "F4 Div Amount", Order = 0)]
+        [CustomDisplay(DisplayOn.BOTH)]
+        public float F4DivAmount { get; set; }
+
+        [Display(Name = "TF Pool Total", Order = 0)]
+        [CustomDisplay(DisplayOn.BOTH)]
+        public float TFPoolTotal { get; set; }
+    }
+
+    /// <summary>
     /// Class used to show the Race details in the Race view
     /// </summary>
-    public class Race : RaceBase
+    public class Race : RaceDyn
     {
-        //public int MeetingId { get; set; }
+        [CustomDisplay(DisplayOn.NONE)]
+        public int MeetingId { get; set; }
 
         [Display(Name = "Race Type", Order = 0)]
         [CustomDisplay(DisplayOn.BOTH)]
@@ -76,10 +126,7 @@ namespace RaceDayDisplayApp.Models
         //CONTROL FIELDS
 
         [CustomDisplay(DisplayOn.NONE)]
-        public bool isDone { get; set; } 
-
-        [CustomDisplay(DisplayOn.NONE)]
-        public bool isStarted { get; set; }
+        public bool isStarted { get; set; } 
 
         [CustomDisplay(DisplayOn.NONE)]
         public string CountryCode { get; set; }
@@ -99,8 +146,21 @@ namespace RaceDayDisplayApp.Models
             }
         }
 
-        //[CustomDisplay(DisplayOn.NONE)]
-        //public int SecsToNextRefresh { get; set; }
+        internal void Update(RaceDyn race)
+        {
+            this.Runners.ToList().ForEach(r => 
+                ((Runner)r).Update(race.Runners.First(rd => rd.RunnerId == r.RunnerId)));
+            this.isDone = race.isDone;
+            this.RaceWinPool = race.RaceWinPool;
+            this.RacePPPool = race.RacePPPool;
+            this.EXPoolTotal = race.EXPoolTotal;
+            this.EXDivAmount = race.EXDivAmount;
+            this.QNPoolTotal = race.QNPoolTotal;
+            this.QNDivAmount = race.QNDivAmount;
+            this.F4PoolTotal = race.F4PoolTotal;
+            this.F4DivAmount = race.F4DivAmount;
+            this.TFPoolTotal = race.TFPoolTotal;
+        }
     }
 
     /// <summary>
@@ -111,12 +171,12 @@ namespace RaceDayDisplayApp.Models
         public class RefreshInfo
         {
             public DateTime LastDBUpdate { get; set; }
-            public DateTime LastRefresh { get; set; }
+            public DateTime LastServerRefresh { get; set; }
             public DateTime LastTotalRefresh { get; set; }
+            public DateTime LastUserRequest { get; set; }
             public DateTime NextRefresh { get; set; }
         }
 
-        public List<Runner> Runners = new List<Runner>();
         public RefreshInfo RefreshVaues = new RefreshInfo();
     }
 

@@ -10,8 +10,8 @@
 @*Control fields to let JavaScript know if it has to auto-reload the grid*@
 @Html.HiddenFor(r => r.RaceId)
 @Html.Hidden("SecsToNextRefresh", (string)ViewBag.SecsToNextRefresh)
-@Html.HiddenFor(r => r.isStarted)
-@Html.HiddenFor(r => r.isDone)
+@*@Html.HiddenFor(r => r.isStarted)*@
+@*@Html.HiddenFor(r => r.isDone)*@
 
 
 @(Html.Grid("race_grid")
@@ -21,9 +21,7 @@
 .SetAltRows(true)
 .SetAltClass("alt_rows")
 .AddColumns(ViewBag.GridColumns)
-.SetUrl(Url.Action("GridData", "Meetings", new { id = Model.RaceId, 
-                                                    isStarted = Model.isStarted, 
-                                                    isDone = Model.isDone }))
+.SetUrl(Url.Action("GridData", "Meetings", new { id = Model.RaceId }))
 //.SetUrl("Meetings/GridData/" + Model.RaceId + "?isStarted='+$('#isStarted').val()+'&isDone='+$('#isDone').val()+'")
 .SetAutoWidth(true)
 .SetLoadUi(MvcJqGrid.Enums.LoadUi.Block)

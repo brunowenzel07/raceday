@@ -13,6 +13,7 @@ namespace RaceDayDisplayApp.DAL
         public static RacesCache Instance = new RacesCache();
 
         Dictionary<int, RaceCache> races = new Dictionary<int, RaceCache>();
+        Dictionary<int, object> racesLocks = new Dictionary<int, object>();
 
         Timer timer;
 
@@ -28,22 +29,25 @@ namespace RaceDayDisplayApp.DAL
             get
             {
                 RaceCache race;
-                if (!races.TryGetValue(id, out race))
+                lock (races)
                 {
-                    lock (races)
+                    if (!races.TryGetValue(id, out race))
+                        racesLocks.Add(id, new object());
+                }
+
+                lock (racesLocks[id])
+                {
+                    //try again because it may have been updated while waiting on the lock
+                    if (race == null && !races.TryGetValue(id, out race))
                     {
-                        //try again because it may have been updated while waiting on the lock
-                        if (!races.TryGetValue(id, out race))
+                        race = getRace(id, null);
+                        lock (races)
                         {
-                            race = getRace(id, null);
                             races.Add(id, race);
                         }
                     }
                 }
-                lock (race)
-                {
-                    return race;
-                }
+                return race;
             }
         }
 
@@ -53,29 +57,41 @@ namespace RaceDayDisplayApp.DAL
             {
                 var now = DateTime.UtcNow;
                 List<int> racesToDelete = new List<int>();
-                List<RaceCache> racesToUpdate = new List<RaceCache>();
+                List<int> racesToUpdate = new List<int>();
 
-                foreach (var race in races.Values)
+                lock (races)
                 {
-                    if (race.RefreshVaues.NextRefresh < now)
+                    foreach (var race in races.Values)
                     {
-                        lock (race)
-                        {
-                            //if it is refresh time, retrieve from database
-                            racesToUpdate.Add(getRace(race.RaceId, race));
-                        }
+                        //if it is refresh time, retrieve from database
+                        if (race.RefreshVaues.NextRefresh < now)
+                            racesToUpdate.Add(race.RaceId);
+                        //if the race hasn't been requested for a while, it is removed from cache
+                        else if (race.RefreshVaues.LastUserRequest.AddSeconds(ConfigValues.CacheExpireTimeSec) < now)
+                            racesToDelete.Add(race.RaceId);
                     }
-                    //if the race is two days old, it is removed from cache
-                    else if (race.RaceJumpDateTimeUTC.Date.AddDays(1) < DateTime.UtcNow.Date)
-                        racesToDelete.Add(race.RaceId);
                 }
 
                 if (racesToDelete.Count > 0 || racesToUpdate.Count > 0)
                 {
+                    var updatedRaces = new List<RaceCache>(racesToUpdate.Count());
+                    racesToUpdate.ForEach(id =>
+                        {
+                            lock (racesLocks[id])
+                            {
+                                //retrieve from database and update
+                                updatedRaces.Add(getRace(id, races[id]));
+                            }
+                        });
+
                     lock (races)
                     {
-                        racesToDelete.ForEach(r => races.Remove(r)); //remove old
-                        racesToUpdate.ForEach(r => races[r.RaceId] = r); //update refreshed
+                        updatedRaces.ForEach(r => races[r.RaceId] = r); //update refreshed
+                        racesToDelete.ForEach(id => //remove old
+                            {
+                                races.Remove(id);
+                                racesLocks.Remove(id);
+                            }); 
                     }
                 }
             }
@@ -89,40 +105,41 @@ namespace RaceDayDisplayApp.DAL
 
 
             //retrieve grid dynamic fields
-            var runnersDyn = dbGateway.GetRunnersDyn(id);
-            bool isDone = false;
-            if (runnersDyn.Count() > 0)
-                isDone = runnersDyn.First().isDone;
-
+            var raceDyn = dbGateway.GetRaceWithRunnersDyn(id);
 
             //retrieve grid static fields
             RaceCache r;
             int refreshInterval;
-            if (oldRace != null && !isDone)
+            if (oldRace != null && !raceDyn.isDone)
             {
                 bool inactive;
                 refreshInterval = getCurrentRefreshInterval(oldRace, out inactive);
                 //if the race is inactive (once every hour) or finished, the cached race is overwritten with the one from DB 
-                r = inactive ? dbGateway.GetRaceWithRunners(id) : oldRace;
+                r = inactive ? dbGateway.GetRaceWithRunnersStat(id) : oldRace;
             }
             else //first time that this race is requested -> retrieve from DB
             {
-                r = dbGateway.GetRaceWithRunners(id);
-                refreshInterval = getCurrentRefreshInterval(oldRace);
+                r = dbGateway.GetRaceWithRunnersStat(id);
+                refreshInterval = getCurrentRefreshInterval(r);
             }
 
-
-            //update the runners info with the dynamic fields
-            r.Runners.ToList().ForEach(runn => runn.Update(runnersDyn.First(rd => rd.RunnerId == runn.RunnerId)));
-
+            //update the race and runners info with the dynamic fields
+            r.Update(raceDyn);
 
             //update refresh info
-            var secsSinceLastRefresh = dbGateway.GetSecondsSinceLastUpdate(r.RaceId);
+            var secsSinceLastRefresh = dbGateway.GetSecondsSinceLastUpdate(r);
             r.RefreshVaues.LastDBUpdate = now.AddSeconds(-secsSinceLastRefresh);
-            r.RefreshVaues.LastRefresh = now;
-            r.RefreshVaues.NextRefresh = r.isDone ? DateTime.MaxValue //if it is done, it is not refreshed anymore
-                                                 : now.AddSeconds(refreshInterval - secsSinceLastRefresh);
-            
+            r.RefreshVaues.LastServerRefresh = now;
+            if (r.isDone) //if it is done, it is not refreshed anymore
+                r.RefreshVaues.NextRefresh = DateTime.MaxValue;
+            else if (secsSinceLastRefresh < refreshInterval)
+                r.RefreshVaues.NextRefresh = now.AddSeconds(refreshInterval - secsSinceLastRefresh);
+            else
+                r.RefreshVaues.NextRefresh = now.AddSeconds(refreshInterval);
+
+            if (oldRace == null) //update this value if it was a user request
+                r.RefreshVaues.LastUserRequest = now;
+
             return r;
         }
 
@@ -148,7 +165,7 @@ namespace RaceDayDisplayApp.DAL
                 var active = activeTimeUTC <= now;
                 var finishing = finishingTimeUTC <= now;
 
-                if (active)
+                if (active) //TODO check if it's possible to use r.isStarted
                 {
                     if (finishing) //last 5 minutes, decrese delay
                     {

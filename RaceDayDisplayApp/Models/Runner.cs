@@ -12,7 +12,7 @@ namespace RaceDayDisplayApp.Models
     /// <summary>
     /// Base class with the dynamic fields, those which are going to be refreshed periodically
     /// </summary>
-    public class RunnerBase
+    public class RunnerDyn
     {
         [Key]
         [CustomDisplay(DisplayOn.NONE)]
@@ -24,8 +24,33 @@ namespace RaceDayDisplayApp.Models
         [CustomDisplay(DisplayOn.NONE)]
         public bool isScratched { get; set; } //when it is true, the font is set red and strikethrough 
 
+
+        [Display(Order = 0)]
+        [CustomDisplay(DisplayOn.BOTH)]
+        public decimal WinOdds { get; set; }
+
+        [Display(Order = 0)]
+        [CustomDisplay(DisplayOn.BOTH)]
+        public decimal PlaceOdds { get; set; }
+
         [CustomDisplay(DisplayOn.NONE)]
-        public bool isDone { get; set; }
+        public bool isWinFavorite { get; set; }
+
+        [CustomDisplay(DisplayOn.NONE)]
+        public bool WinDropby20 { get; set; }
+
+        [CustomDisplay(DisplayOn.NONE)]
+        public bool WinDropby50 { get; set; }
+
+        [CustomDisplay(DisplayOn.NONE)]
+        public bool isPlaceFavorite { get; set; }
+
+        [CustomDisplay(DisplayOn.NONE)]
+        public bool PlaceDropby20 { get; set; }
+
+        [CustomDisplay(DisplayOn.NONE)]
+        public bool PlaceDropby50 { get; set; }
+
 
         [Display(Order = 0)]
         [CustomDisplay(DisplayOn.BOTH)]
@@ -43,7 +68,7 @@ namespace RaceDayDisplayApp.Models
     /// <summary>
     /// Static fields
     /// </summary>
-    public class Runner: RunnerBase
+    public class Runner: RunnerDyn
     {
         [Display(Name = "Tab No.", Order = 0)]
         [CustomDisplay(DisplayOn.BOTH)]
@@ -172,10 +197,19 @@ namespace RaceDayDisplayApp.Models
             }
         }
 
-        internal void Update(RunnerBase runner)
+        internal void Update(RunnerDyn runner)
         {
             this.isScratched = runner.isScratched;
-            this.isDone = runner.isDone;
+
+            this.WinOdds = runner.WinOdds;
+            this.PlaceOdds = runner.PlaceOdds;
+            this.isWinFavorite = runner.isWinFavorite;
+            this.WinDropby20 = runner.WinDropby20;
+            this.WinDropby50 = runner.WinDropby50;
+            this.isPlaceFavorite = runner.isPlaceFavorite;
+            this.PlaceDropby20 = runner.PlaceDropby20;
+            this.PlaceDropby50 = runner.PlaceDropby50;
+            
             this.ODDSLAST1 = runner.ODDSLAST1;
             this.ODDSLAST2 = runner.ODDSLAST2;
             this.ODDSLAST3 = runner.ODDSLAST3;

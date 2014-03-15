@@ -124,7 +124,7 @@ namespace RaceDayDisplayApp.Controllers
                         runners = runners.OrderByDescending(o => typeof(Runner).GetProperty(gridSettings.SortColumn).GetValue(o)).ToList();
                 }
                 else
-                    runners = runners.OrderBy(o => o.AUS_SPW).ToList(); //default sorting criteria
+                    runners = runners.Cast<Runner>().OrderBy(o => o.AUS_SPW).ToList(); //default sorting criteria
             
                 //dynamic obj = runners.First();
                 //obj. //todo

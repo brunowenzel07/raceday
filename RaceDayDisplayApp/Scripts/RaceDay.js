@@ -10,6 +10,78 @@ $(document).ready(function() {
 
 });
 
+function startRefresh() {
+    var refreshIntervalStr = $("#RefreshIntervalSeconds").val(); //todo
+    if (typeof refreshIntervalStr != "undefined") {
+
+        //Every 30 seconds the grid is reloaded
+        var refreshInterval = parseInt(refreshIntervalStr, 10) * 1000;
+        setTimeout(startRefresh, refreshInterval);
+
+        //var isDoneStr = $('#isDone').val();
+        //if (typeof isDoneStr != "undefined") {
+
+            var mustRefresh = false;
+
+            //if (isDoneStr != "True") { //Race is Done -> no refresh
+                
+                //if ($('#isStarted').val() == "True") { //Race is started -> do refresh
+                    mustRefresh = true;
+                }
+                else { //otherwise -> check jumptime
+                    var jumpTimeStr = $('#RaceJumpTimeLocal').val();
+                    if (typeof jumpTimeStr != "undefined") {
+
+                        var jumpTime = convertDateTime(jumpTimeStr);
+                        var minutes = parseInt($("#MinutesBeforeJumpTimeToStartRefresh").val(), 10); //todo
+
+                        //substract 25 minutes from jumpTime
+                        var MS_PER_MINUTE = 60000;
+                        var startTime = new Date(jumpTime - (minutes * MS_PER_MINUTE));
+
+                        var currentDT = new Date($.now());
+
+                        //only refresh the grid between (jumptime-25min) to raceIsDone
+                        if (currentDT >= startTime) {
+                            //$('#isStarted').val("True"); //TODO convert to universal time
+                            mustRefresh = true;
+                        }
+
+                    }
+                }
+            }
+            if (mustRefresh) {
+                refreshGrid();
+            }
+        }
+    }
+};
+
+function refreshGrid() {
+    isFirstRow = true;
+    //var raceId = $('#RaceId').val();
+    //var isStarted = $('#isStarted').val() == "True";
+    //var isDone = $('#isDone').val() == "True";
+    //the url is updated with the last values of isStarted and isDone
+    //$("#race_grid").setGridParam({ url: '/Meetings/GridData/'+raceId+'?isStarted='+isStarted+'&isDone='+isDone, page:1 });
+    $("#race_grid").trigger("reloadGrid");
+}
+
+//this event handler updates the value of isDone when the grid is refreshed
+var isFirstRow = true; //just for performance
+function gridAfterInsertRow(rowid, rowdata, rowelem) {
+    if (isFirstRow) {
+        //var isDone = $('#isDone').val() == "True";
+        //if (!isDone && rowelem.isDone)
+            //$('#isDone').val("True"); //the race has just finished, so we save it in the hidden field
+    }
+
+    if (rowelem.isScratched)
+        $('#' + rowid).addClass("scratched");
+
+    isFirstRow = false;
+}
+
 
 function bindCheckboxes() {
     //when a checkbox is clicked, a column is shown/hidden
@@ -30,81 +102,6 @@ function currencyFormatter(cellvalue, options, rowObject) {
 function percentageFormatter(cellvalue, options, rowObject) {
     return cellvalue + "%";
 }
-
-
-function startRefresh() {
-    var refreshIntervalStr = $("#RefreshIntervalSeconds").val(); //todo
-    if (typeof refreshIntervalStr != "undefined") {
-
-        //Every 30 seconds the grid is reloaded
-        var refreshInterval = parseInt(refreshIntervalStr, 10) * 1000;
-        setTimeout(startRefresh, refreshInterval);
-
-        var isDoneStr = $('#isDone').val();
-        if (typeof isDoneStr != "undefined") {
-
-            var mustRefresh = false;
-
-            if (isDoneStr != "True") { //Race is Done -> no refresh
-                
-                if ($('#isStarted').val() == "True") { //Race is started -> do refresh
-                    mustRefresh = true;
-                }
-                else { //otherwise -> check jumptime
-                    var jumpTimeStr = $('#RaceJumpTimeLocal').val();
-                    if (typeof jumpTimeStr != "undefined") {
-
-                        var jumpTime = convertDateTime(jumpTimeStr);
-                        var minutes = parseInt($("#MinutesBeforeJumpTimeToStartRefresh").val(), 10); //todo
-
-                        //substract 25 minutes from jumpTime
-                        var MS_PER_MINUTE = 60000;
-                        var startTime = new Date(jumpTime - (minutes * MS_PER_MINUTE));
-
-                        var currentDT = new Date($.now());
-
-                        //only refresh the grid between (jumptime-25min) to raceIsDone
-                        if (currentDT >= startTime) {
-                            $('#isStarted').val("True"); //TODO convert to universal time
-                            mustRefresh = true;
-                        }
-
-                    }
-                }
-            }
-            if (mustRefresh) {
-                refreshGrid();
-            }
-        }
-    }
-};
-
-function refreshGrid() {
-    isFirstRow = true;
-    var raceId = $('#RaceId').val();
-    var isStarted = $('#isStarted').val() == "True";
-    var isDone = $('#isDone').val() == "True";
-    //the url is updated with the last values of isStarted and isDone
-    $("#race_grid").setGridParam({ url: '/Meetings/GridData/'+raceId+'?isStarted='+isStarted+'&isDone='+isDone, page:1 });
-    $("#race_grid").trigger("reloadGrid");
-}
-
-//this event handler updates the value of isDone when the grid is refreshed
-var isFirstRow = true; //just for performance
-function gridAfterInsertRow(rowid, rowdata, rowelem) {
-    if (isFirstRow) {
-        var isDone = $('#isDone').val() == "True";
-        if (!isDone && rowelem.isDone)
-            $('#isDone').val("True"); //the race has just finished, so we save it in the hidden field
-    }
-
-    if (rowelem.isScratched)
-        $('#' + rowid).addClass("scratched");
-
-    isFirstRow = false;
-}
-
-
 
 //when the Races select changes, new race details and grid are loaded and the checkboxes shown/hidden
 $(function () {
