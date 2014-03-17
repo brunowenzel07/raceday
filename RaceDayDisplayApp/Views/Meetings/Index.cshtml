@@ -28,18 +28,19 @@
     @foreach (var country in Model)
     {
         <div class="country">
-            <p>@Html.DisplayFor(modelItem => country.Name):</p>
+            <h3><p>@Html.DisplayFor(modelItem => country.Name):</p></h3>
 
             @if (country.Meetings != null && country.Meetings.Any())
             {
                 <table>
-                    @*<tr>
+                    <tr>
                         @if (!ViewBag.Today) {
                         <th>Date</th>
                         }
-                        <th>Jump time</th>
+                        <th>Local</th>
+                        <th>UTC</th>
                         <th>Racecourse</th>
-                    </tr>*@
+                    </tr>
                     @foreach (var meeting in country.Meetings)
                     {
                         @*var linkText = string.Format("{0}{1} - {2}", 
@@ -51,8 +52,9 @@
                             @if (!ViewBag.Today) {
                                 <td>@meeting.MeetingDate.ToShortDateString()</td>
                             }
-                            <td>@meeting.MinRaceJumpDateTimeUTC.ToString()+" UTC"</td>
-                            <td>@Html.ActionLink(meeting.RaceCourseName??"(no race course name provided)", "Details", new { id = meeting.MeetingId })</td>
+                            <td>@(meeting.MinJumpTimeLocal.ToString())</td>
+                            <td>@(meeting.MinRaceJumpDateTimeUTC.ToShortTimeString())</td>
+                            <td>@Html.ActionLink(meeting.RaceCourseName??"(no race course name)", "Details", new { id = meeting.MeetingId })</td>
                         </tr>
                     
                     }

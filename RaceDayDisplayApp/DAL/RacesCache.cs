@@ -64,10 +64,10 @@ namespace RaceDayDisplayApp.DAL
                     foreach (var race in races.Values)
                     {
                         //if it is refresh time, retrieve from database
-                        if (race.RefreshVaues.NextRefresh < now)
+                        if (race.RefreshValues.NextRefresh < now)
                             racesToUpdate.Add(race.RaceId);
                         //if the race hasn't been requested for a while, it is removed from cache
-                        else if (race.RefreshVaues.LastUserRequest.AddSeconds(ConfigValues.CacheExpireTimeSec) < now)
+                        else if (race.RefreshValues.LastUserRequest.AddSeconds(ConfigValues.CacheExpireTimeSec) < now)
                             racesToDelete.Add(race.RaceId);
                     }
                 }
@@ -128,17 +128,17 @@ namespace RaceDayDisplayApp.DAL
 
             //update refresh info
             var secsSinceLastRefresh = dbGateway.GetSecondsSinceLastUpdate(r);
-            r.RefreshVaues.LastDBUpdate = now.AddSeconds(-secsSinceLastRefresh);
-            r.RefreshVaues.LastServerRefresh = now;
+            r.RefreshValues.LastDBUpdate = now.AddSeconds(-secsSinceLastRefresh);
+            r.RefreshValues.LastServerRefresh = now;
             if (r.isDone) //if it is done, it is not refreshed anymore
-                r.RefreshVaues.NextRefresh = DateTime.MaxValue;
+                r.RefreshValues.NextRefresh = DateTime.MaxValue;
             else if (secsSinceLastRefresh < refreshInterval)
-                r.RefreshVaues.NextRefresh = now.AddSeconds(refreshInterval - secsSinceLastRefresh);
+                r.RefreshValues.NextRefresh = now.AddSeconds(refreshInterval - secsSinceLastRefresh + ConfigValues.ServerAddedDelay);
             else
-                r.RefreshVaues.NextRefresh = now.AddSeconds(refreshInterval);
+                r.RefreshValues.NextRefresh = now.AddSeconds(refreshInterval);
 
             if (oldRace == null) //update this value if it was a user request
-                r.RefreshVaues.LastUserRequest = now;
+                r.RefreshValues.LastUserRequest = now;
 
             return r;
         }
@@ -157,6 +157,8 @@ namespace RaceDayDisplayApp.DAL
 
             if (r.isDone)
                 secsToNextRefresh = -1;
+            else if (r.RaceJumpDateTimeUTC == default(DateTime)) //if jump time wasn't set
+                secsToNextRefresh = ConfigValues.InactiveRefreshInterval; 
             else
             {
                 //check if race is active

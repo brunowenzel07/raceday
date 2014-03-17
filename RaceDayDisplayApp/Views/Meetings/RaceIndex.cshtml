@@ -31,23 +31,38 @@
                 @if (!ViewBag.Today) {
             <th>Date</th>
             }
-                <th>Jump time</th>
+                <th>JT local</th>
+                <th>JT UTC</th>
                 <th>Racecourse</th>
                 <th>Race</th>
-                <th>No</th>
+                <th>Race No</th>
             </tr>
 
-            @foreach (var race in Model)
+            @{
+            var now = DateTime.UtcNow;
+            var foundNextRace = false;
+            foreach (var race in Model)
             {
-            <tr>
-                @if (!ViewBag.Today) {
-                    <td>@race.MeetingDate.ToShortDateString()</td>
+                var classTxt = "";
+                if (!foundNextRace && race.RaceJumpDateTimeUTC > now) 
+                {
+                    classTxt = "class='nextRace'";
+                    foundNextRace = true;
                 }
-                <td>@race.RaceJumpDateTimeUTC.ToString() + " UTC"</td>
-                <td>@race.RaceCourseName</td>
-                <td>@Html.ActionLink(race.RaceName ?? "(no name)", "RaceDetails", new { id = race.RaceId, today = ViewBag.Today })</td>
-                <td>@race.RaceNumber</td>
-            </tr>
+                
+                <tr @Html.Raw(classTxt)>
+ 
+                    @if (!ViewBag.Today) {
+                        <td>@race.MeetingDate.ToShortDateString()</td>
+                    }
+                
+                    <td>@race.LocalJumpTime.ToString()</td>
+                    <td>@race.RaceJumpDateTimeUTC.ToString("hh:mm")</td>
+                    <td>@race.RaceCourseName</td>
+                    <td>@race.RaceNumber</td>
+                    <td class='race_column'>@Html.ActionLink(race.RaceName ?? "(no name)", "RaceDetails", new { id = race.RaceId, today = ViewBag.Today })</td>
+                </tr>
+            }
             }
         </table>
 

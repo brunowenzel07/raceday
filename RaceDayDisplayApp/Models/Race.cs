@@ -26,11 +26,35 @@ namespace RaceDayDisplayApp.Models
     {
         public string RaceName { get; set; }
 
-        public DateTime RaceJumpDateTimeUTC { get; set; }
+        public string RaceCourseName { get; set; }
+
+        public string CountryCode { get; set; }
 
         public DateTime MeetingDate { get; set; }
 
-        public string RaceCourseName { get; set; }
+        public TimeSpan LocalJumpTime { get; set; }
+
+        public int StateId { get; set; }
+
+        DateTime _raceJumpDateTimeUTC;
+        
+        public DateTime RaceJumpDateTimeUTC { 
+            get {
+                if (_raceJumpDateTimeUTC == default(DateTime))
+                {
+                    var aux = new DateTime(
+                        MeetingDate.Year,
+                        MeetingDate.Month,
+                        MeetingDate.Day,
+                        LocalJumpTime.Hours,
+                        LocalJumpTime.Minutes,
+                        LocalJumpTime.Seconds);
+                    _raceJumpDateTimeUTC = TimeZoneHelper.ToUTC(aux, StateId);
+                }
+                return _raceJumpDateTimeUTC;
+            }
+            set { _raceJumpDateTimeUTC = value; }
+        }
     }
 
     /// <summary>
@@ -79,6 +103,24 @@ namespace RaceDayDisplayApp.Models
         [Display(Name = "TF Pool Total", Order = 0)]
         [CustomDisplay(DisplayOn.BOTH)]
         public float TFPoolTotal { get; set; }
+
+        public RaceDyn GetLightCopy()
+        {
+            var r = new RaceDyn();
+            r.EXDivAmount = EXDivAmount;
+            r.EXPoolTotal = EXPoolTotal;
+            r.F4DivAmount = F4DivAmount;
+            r.F4PoolTotal = F4PoolTotal;
+            r.isDone = isDone;
+            r.QNDivAmount = QNDivAmount;
+            r.QNPoolTotal = QNPoolTotal;
+            r.RaceId = RaceId;
+            r.RaceNumber = RaceNumber;
+            r.RacePPPool = RacePPPool;
+            r.RaceWinPool = RaceWinPool;
+            r.TFPoolTotal = TFPoolTotal;
+            return r;
+        }
     }
 
     /// <summary>
@@ -96,13 +138,6 @@ namespace RaceDayDisplayApp.Models
         [Display(Name = "Distance", Order = 0)]
         [CustomDisplay(DisplayOn.BOTH)]
         public string DistanceName { get; set; }
-
-        [CustomDisplay(DisplayOn.NONE)]
-        public DateTime RaceJumpDateTimeUTC { get; set; }
-
-        [Display(Name = "Jump Time", Order = 0)]
-        [CustomDisplay(DisplayOn.BOTH)]
-        public string Formatted_JumpDateTimeUTC { get { return RaceJumpDateTimeUTC.ToString() + " UTC"; } }
 
         [Display(Name = "Race Index", Order = 0)]
         [CustomDisplay(DisplayOn.HK)]
@@ -136,6 +171,45 @@ namespace RaceDayDisplayApp.Models
         {
             get { return CountryCode == "HKG"; }
         }
+
+        [Display(Name = "Jump Time", Order = 0)]
+        [CustomDisplay(DisplayOn.BOTH)]
+        public string Formatted_JumpDateTimeUTC { get { return RaceJumpDateTimeUTC.ToString() + " UTC"; } }
+
+
+        [CustomDisplay(DisplayOn.NONE)]
+        public TimeSpan LocalJumpTime { get; set; }
+
+        [CustomDisplay(DisplayOn.NONE)]
+        public DateTime MeetingDate { get; set; }
+
+        [CustomDisplay(DisplayOn.NONE)]
+        public int StateId { get; set; }
+
+
+        DateTime _raceJumpDateTimeUTC;
+
+        [CustomDisplay(DisplayOn.NONE)]
+        public DateTime RaceJumpDateTimeUTC
+        {
+            get
+            {
+                if (_raceJumpDateTimeUTC == default(DateTime))
+                {
+                    var aux = new DateTime(
+                        MeetingDate.Year,
+                        MeetingDate.Month,
+                        MeetingDate.Day,
+                        LocalJumpTime.Hours,
+                        LocalJumpTime.Minutes,
+                        LocalJumpTime.Seconds);
+                    _raceJumpDateTimeUTC = TimeZoneHelper.ToUTC(aux, StateId);
+                }
+                return _raceJumpDateTimeUTC;
+            }
+            set { _raceJumpDateTimeUTC = value; }
+        }
+
 
         [CustomDisplay(DisplayOn.NONE)]
         public static Race DummyRace
@@ -172,17 +246,18 @@ namespace RaceDayDisplayApp.Models
         {
             public DateTime LastDBUpdate { get; set; }
             public DateTime LastServerRefresh { get; set; }
-            public DateTime LastTotalRefresh { get; set; }
+            //public DateTime LastTotalRefresh { get; set; }
             public DateTime LastUserRequest { get; set; }
             public DateTime NextRefresh { get; set; }
         }
 
-        public RefreshInfo RefreshVaues = new RefreshInfo();
+        public RefreshInfo RefreshValues = new RefreshInfo();
     }
 
 
-    public class NameValuePair
+    public class DisplayProperty
     {
+        public string FieldName;
         public string DisplayName;
         public string Value;
     }

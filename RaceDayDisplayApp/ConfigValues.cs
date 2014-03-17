@@ -5,6 +5,8 @@ namespace RaceDayDisplayApp
 {
     public static class ConfigValues
     {
+        public const string DefaultAction = "RaceIndex";
+
         public const int NAME_COLUMN_WIDTH = 140;
         public const double CacheRefreshIntervalMs = 500; //half a second
         public const int CacheExpireTimeSec = 3600; //one hore
@@ -15,10 +17,7 @@ namespace RaceDayDisplayApp
         public static readonly int ActiveBeforeJumpTime = int.Parse(ConfigurationManager.AppSettings["Active_BeforeJumpTimeSec"]);
         public static readonly int FinishingBeforeJumpTime = int.Parse(ConfigurationManager.AppSettings["Finishing_BeforeJumpTimeSec"]);
 
-        public static readonly int MeetingsCacheSize = int.Parse(ConfigurationManager.AppSettings["MeetingsCacheSize"]);
-        public static readonly int RacesCacheSize = int.Parse(ConfigurationManager.AppSettings["RacesCacheSize"]);
-        public static readonly int RunnersCacheSize = int.Parse(ConfigurationManager.AppSettings["RunnersCacheSize"]);
-
-
+        public static double ClientAddedDelay = double.Parse(ConfigurationManager.AppSettings["ClientAddedDelaySecs"]);
+        public static double ServerAddedDelay = double.Parse(ConfigurationManager.AppSettings["ServerAddedDelaySecs"]);
     }
 }

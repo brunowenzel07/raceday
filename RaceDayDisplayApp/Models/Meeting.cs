@@ -16,6 +16,9 @@ namespace RaceDayDisplayApp.Models
         [CustomDisplay(DisplayOn.NONE)]
         public DateTime MinRaceJumpDateTimeUTC { get; set; }
 
+        [CustomDisplay(DisplayOn.NONE)]
+        public TimeSpan MinJumpTimeLocal { get; set; }
+
         [Display(Name = "Race Course", Order = 0)]
         [CustomDisplay(DisplayOn.BOTH)]
         public string RaceCourseName { get; set; }

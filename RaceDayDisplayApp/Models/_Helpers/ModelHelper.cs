@@ -32,7 +32,7 @@ namespace RaceDayDisplayApp.Models
         /// <summary>
         /// Converts an object to a collection of name-value pair that can be consumed by the view
         /// </summary>
-        public static IEnumerable<NameValuePair> ToNameValuePairs(object obj, bool isHK)
+        public static IEnumerable<DisplayProperty> ToNameValuePairs(object obj, bool isHK)
         {
             Type t = obj.GetType();
             Dictionary<string, DisplayAttribute> lookup = new Dictionary<string, DisplayAttribute>();
@@ -43,8 +43,9 @@ namespace RaceDayDisplayApp.Models
                             || (isHK && attr.Display == DisplayOn.HK)
                             || (!isHK && attr.Display == DisplayOn.AUS))
                 .OrderBy(p => (lookup[p.Name] = getDisplayAttribute(p)).Order)
-                .Select(p => new NameValuePair
+                .Select(p => new DisplayProperty
                 {
+                    FieldName = p.Name,
                     DisplayName = lookup[p.Name].Name ?? p.Name,
                     Value = (t.GetProperty(p.Name).GetValue(obj) ?? "").ToString()
                 });

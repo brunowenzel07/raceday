@@ -16,7 +16,7 @@ namespace RaceDayDisplayApp
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Meetings", action = "Index", id = UrlParameter.Optional }
+                defaults: new { controller = "Meetings", action = ConfigValues.DefaultAction, id = UrlParameter.Optional }
             );
         }
     }

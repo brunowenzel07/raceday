@@ -54,7 +54,7 @@ namespace RaceDayDisplayApp.Controllers
         {
             WebSecurity.Logout();
 
-            return RedirectToAction("Index", "Meetings");
+            return RedirectToAction(ConfigValues.DefaultAction, "Meetings");
         }
 
         //
@@ -82,7 +82,7 @@ namespace RaceDayDisplayApp.Controllers
                     //WebSecurity.CreateUserAndAccount(model.UserName, model.Password, new { Email = model.Email });
                     WebSecurity.CreateUserAndAccount(model.UserName, model.Password);
                     WebSecurity.Login(model.UserName, model.Password);
-                    return RedirectToAction("Index", "Meetings");
+                    return RedirectToAction(ConfigValues.DefaultAction, "Meetings");
                 }
                 catch (MembershipCreateUserException e)
                 {
@@ -338,7 +338,7 @@ namespace RaceDayDisplayApp.Controllers
             }
             else
             {
-                return RedirectToAction("Index", "Meetings");
+                return RedirectToAction(ConfigValues.DefaultAction, "Meetings");
             }
         }
 

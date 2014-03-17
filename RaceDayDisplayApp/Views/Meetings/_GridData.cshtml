@@ -7,15 +7,11 @@
 
 @model Race
 
-@*Control fields to let JavaScript know if it has to auto-reload the grid*@
-@Html.HiddenFor(r => r.RaceId)
-@Html.Hidden("SecsToNextRefresh", (string)ViewBag.SecsToNextRefresh)
-@*@Html.HiddenFor(r => r.isStarted)*@
-@*@Html.HiddenFor(r => r.isDone)*@
-
+<div id="raceStatus"></div>
 
 @(Html.Grid("race_grid")
 .SetDataType(MvcJqGrid.Enums.DataType.Json)
+.SetHeaderTitles(true)
 .OnAfterInsertRow("gridAfterInsertRow(rowid,rowdata,rowelem)")
 .OnGridComplete("hideColumnsFirstTime()")
 .SetAltRows(true)
@@ -30,4 +26,4 @@
 .SetShowAllSortIcons(true)
 .SetShrinkToFit(true))
 
-
+<div id="refreshInfo"></div>

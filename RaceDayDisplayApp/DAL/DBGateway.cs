@@ -26,13 +26,14 @@ namespace RaceDayDisplayApp.DAL
                 var resultList = conn.Query<Country, MeetingBase, Country>(@"
                     SELECT c.Id as CountryId, c.Name, 
                            m.Id AS MeetingId, m.MeetingDate, rc.Name AS RaceCourseName,
-						   MIN(r.RaceJumpDateTimeUTC) as MinRaceJumpDateTimeUTC
+						   MIN(r.RaceJumpDateTimeUTC) as MinRaceJumpDateTimeUTC,
+                           MIN(r.LocalJumpTime) as MinRaceJumpTimeLocal
                     FROM Country AS c INNER JOIN Meeting AS m ON c.Id = m.CountryId
 			                          LEFT JOIN RaceCourse AS rc ON m.RaceCourseId = rc.Id
 									  LEFT JOIN Race AS r on r.MeetingId = m.Id
                     WHERE c.inUse = 1" + (filterByToday ? " AND m.MeetingDate = CONVERT(date, getdate())" : "") + @"
 					GROUP BY c.Id, c.Name, m.Id, m.MeetingDate, rc.Name
-					ORDER BY m.MeetingDate, MinRaceJumpDateTimeUTC",
+					ORDER BY m.MeetingDate DESC, MinRaceJumpDateTimeUTC DESC",
                     (c, m) =>
                     {
                         Country country;
@@ -65,11 +66,13 @@ namespace RaceDayDisplayApp.DAL
                 conn.Open();
 
                 return conn.Query<RaceDisplay>(@"
-                    SELECT Race.Id AS RaceId, Race.RaceNumber, Race.RaceName, Race.RaceJumpDateTimeUTC, Meeting.MeetingDate, RaceCourse.Name AS RaceCourseName
+                    SELECT Race.Id AS RaceId, Race.RaceNumber, Race.RaceName, Race.RaceJumpDateTimeUTC, 
+                           Meeting.MeetingDate, RaceCourse.Name AS RaceCourseName, 
+                           LocalJumpTime, AUS_StateId as StateId
                     FROM Race INNER JOIN Meeting on Meeting.Id = Race.MeetingId
 		                      INNER JOIN RaceCourse on Meeting.RaceCourseId = RaceCourse.Id
-                    WHERE RaceJumpDateTimeUTC IS NOT NULL" + (today ? " AND Meeting.MeetingDate = CONVERT(date, getdate())" : "") + @"
-                    ORDER BY MeetingDate, RaceJumpDateTimeUTC");
+                    " + (today ? "WHERE Meeting.MeetingDate = CONVERT(date, getdate())" : "") + @"
+                    ORDER BY MeetingDate DESC, RaceJumpDateTimeUTC DESC");
                 //TODO review the WHERE condition            
             }
         }
@@ -158,12 +161,14 @@ namespace RaceDayDisplayApp.DAL
                     Select Race.Id as RaceId, MeetingId, RaceNumber, RaceType.Name as RaceTypeName, 
                            Distance.Name as DistanceName, RaceJumpDateTimeUTC, 
 	                       HK_RaceIndex, Going.Name as RaceGoingName, isTurf, 
-                           isDone, isStarted, Country.Code as CountryCode
+                           isDone, isStarted, Country.Code as CountryCode, 
+                           LocalJumpTime, MeetingDate, AUS_StateId as StateId
                     from Race left join RaceType on Race.RaceTypeId=RaceType.Id
 			                    left join Distance on Race.DistanceId=Distance.Id
 			                    left join Going    on Race.RaceGoingId=Going.Id
                                 left join Meeting on Race.MeetingId=Race.Id
                                 left join Country on Meeting.CountryId=Country.Id
+                                left join RaceCourse on Meeting.RaceCourseId=RaceCourse.Id
                     where Race.Id = @RaceId",
                     new { RaceId = raceId }).FirstOrDefault();
 
@@ -306,6 +311,21 @@ namespace RaceDayDisplayApp.DAL
             }
         }
 
+        public Dictionary<int, string> GetTimeZones()
+        {
+            using (var conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                var q = string.Format(@"select AUS_State.Id as AUSStateId, CountryState_Timezone.Timezone as Code
+                                        from CountryState_Timezone inner join AUS_State 
+                                             on AUS_State.Code = CountryState_Timezone.Code");
+
+                var timezones = new Dictionary<int, string>();
+                conn.Query(q).ToList().ForEach(x => timezones.Add(x.AUSStateId, x.Code));
+                return timezones;
+            }
+        }
 
         //        /// <summary>
         //        /// True if the race is held in Hong Kong

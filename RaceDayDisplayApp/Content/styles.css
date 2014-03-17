@@ -63,7 +63,7 @@
 .details_attrs_wrapper
 {
     float:left;
-    width:50%;
+    width:33%;
     /*padding:0.3em;*/
 }
 
@@ -270,10 +270,22 @@
     line-height:30px;
     background: #e4e4e4;
 }
+
+.race_column{
+    width: 40% !important;
+}
+
+.race_table td{
+    width: 12%;
+}
+
 .visible{
     display:block!important;
 }
 
+.nextRace{
+    background: #e4e4e4;
+}
 /************** ALL PAGES **************/
 
 h2, h3 {
@@ -285,3 +297,10 @@ ul
     list-style-type: none;
 }
 
+/*body {
+	font-size: 100%;
+	line-height:1;
+	-moz-text-size-adjust:100%;
+	-ms-text-size-adjust:100%;
+	-webkit-text-size-adjust:100%;
+}*/

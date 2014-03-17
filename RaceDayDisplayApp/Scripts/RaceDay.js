@@ -5,77 +5,39 @@ $(document).ready(function() {
 
     bindCheckboxes();
 
-    //auto refresh grid
-    startRefresh();
+    $("#race_grid").bind('jqGridLoadComplete', function (e, data) {
+        GridLoadComplete(e, data)
+    });
 
 });
 
-function startRefresh() {
-    var refreshIntervalStr = $("#RefreshIntervalSeconds").val(); //todo
-    if (typeof refreshIntervalStr != "undefined") {
+function GridLoadComplete(e, data)
+{
+    //update race info
+    $.each(data.race, function (k, v) {
+        $('#'+k).text(v);
+    });
 
-        //Every 30 seconds the grid is reloaded
-        var refreshInterval = parseInt(refreshIntervalStr, 10) * 1000;
-        setTimeout(startRefresh, refreshInterval);
-
-        //var isDoneStr = $('#isDone').val();
-        //if (typeof isDoneStr != "undefined") {
-
-            var mustRefresh = false;
-
-            //if (isDoneStr != "True") { //Race is Done -> no refresh
-                
-                //if ($('#isStarted').val() == "True") { //Race is started -> do refresh
-                    mustRefresh = true;
-                }
-                else { //otherwise -> check jumptime
-                    var jumpTimeStr = $('#RaceJumpTimeLocal').val();
-                    if (typeof jumpTimeStr != "undefined") {
-
-                        var jumpTime = convertDateTime(jumpTimeStr);
-                        var minutes = parseInt($("#MinutesBeforeJumpTimeToStartRefresh").val(), 10); //todo
-
-                        //substract 25 minutes from jumpTime
-                        var MS_PER_MINUTE = 60000;
-                        var startTime = new Date(jumpTime - (minutes * MS_PER_MINUTE));
-
-                        var currentDT = new Date($.now());
-
-                        //only refresh the grid between (jumptime-25min) to raceIsDone
-                        if (currentDT >= startTime) {
-                            //$('#isStarted').val("True"); //TODO convert to universal time
-                            mustRefresh = true;
-                        }
-
-                    }
-                }
-            }
-            if (mustRefresh) {
-                refreshGrid();
-            }
-        }
+    if (data.race.isDone) {
+        $('#refreshInfo').text = "<b>RACE IS DONE</b>";
     }
-};
+
+    $('#refreshInfo').html("DB was last updated " + data.dbUpdatedSecs + " secs before displaying<br/> \
+                            Server was last updated " + data.serverUpdatedSecs + " secs before displaying<br/> \
+                            Next client refresh in " + data.nextRefreshSecs + " secs");
+    
+    //set next refresh
+    setTimeout(refreshGrid, data.nextRefreshSecs * 1000);
+}
 
 function refreshGrid() {
     isFirstRow = true;
-    //var raceId = $('#RaceId').val();
-    //var isStarted = $('#isStarted').val() == "True";
-    //var isDone = $('#isDone').val() == "True";
-    //the url is updated with the last values of isStarted and isDone
-    //$("#race_grid").setGridParam({ url: '/Meetings/GridData/'+raceId+'?isStarted='+isStarted+'&isDone='+isDone, page:1 });
     $("#race_grid").trigger("reloadGrid");
 }
 
 //this event handler updates the value of isDone when the grid is refreshed
 var isFirstRow = true; //just for performance
 function gridAfterInsertRow(rowid, rowdata, rowelem) {
-    if (isFirstRow) {
-        //var isDone = $('#isDone').val() == "True";
-        //if (!isDone && rowelem.isDone)
-            //$('#isDone').val("True"); //the race has just finished, so we save it in the hidden field
-    }
-
     if (rowelem.isScratched)
         $('#' + rowid).addClass("scratched");
 
@@ -123,6 +85,11 @@ $(function () {
                     $('#race_details').append(details);
                     $("#form-box").append(grid);
                     showHideColumns();
+
+                    $("#race_grid").bind('jqGridLoadComplete', function (e, data) {
+                        GridLoadComplete(e, data)
+                    });
+
                     $(".chks_container").show();
                     $("#btns_div").show();
                     $("#panel_right").show();
@@ -171,26 +138,26 @@ function resizeGrid() {
     $("#race_grid").setGridWidth($('#form-box').width(), true);
 }
 
-function convertDateTime(dateTimeStr) {
-    //dateTime = dateTimeStr.split(" ");
+//function convertDateTime(dateTimeStr) {
+//    //dateTime = dateTimeStr.split(" ");
 
-    //var date = dateTime[0].split("-");
-    //var yyyy = date[0];
-    //var mm = date[1] - 1;
-    //var dd = date[2];
+//    //var date = dateTime[0].split("-");
+//    //var yyyy = date[0];
+//    //var mm = date[1] - 1;
+//    //var dd = date[2];
 
-    //var time = dateTime[1].split(":");
-    var time = dateTimeStr.split(":");
-    var h = time[0];
-    var m = time[1];
-    var s = time[2];
+//    //var time = dateTime[1].split(":");
+//    var time = dateTimeStr.split(":");
+//    var h = time[0];
+//    var m = time[1];
+//    var s = time[2];
 
-    var result = new Date();
-    result.setHours(h);
-    result.setMinutes(m);
-    result.setSeconds(s);
-    return result;
-}
+//    var result = new Date();
+//    result.setHours(h);
+//    result.setMinutes(m);
+//    result.setSeconds(s);
+//    return result;
+//}
 
 
 function defaultSettings() {

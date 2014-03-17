@@ -19,6 +19,7 @@ namespace RaceDayDisplayApp.Controllers
     {
         private DBGateway entities = new DBGateway();
 
+
         //
         // GET: /Meetings/
 
@@ -104,7 +105,6 @@ namespace RaceDayDisplayApp.Controllers
         {
             var race = RacesCache.Instance[id];
             var runners = race.Runners;
-            //int secsToNextRefresh; //TODO
 
             if (runners == null)
             {
@@ -125,12 +125,23 @@ namespace RaceDayDisplayApp.Controllers
                 }
                 else
                     runners = runners.Cast<Runner>().OrderBy(o => o.AUS_SPW).ToList(); //default sorting criteria
-            
-                //dynamic obj = runners.First();
-                //obj. //todo
             }
+            
+            var now = DateTime.UtcNow;
+            var jsonData = new
+            {
+                total = runners.Count(),
+                page = gridSettings.PageIndex,
+                records = runners.Count(),
+                rows = runners,
+                race = race.GetLightCopy(),
+                dbUpdatedSecs = (now - race.RefreshValues.LastDBUpdate).TotalSeconds,
+                serverUpdatedSecs = (now - race.RefreshValues.LastServerRefresh).TotalSeconds,
+                //add delay to avoid waiting in the lock
+                nextRefreshSecs = (race.RefreshValues.NextRefresh - now).TotalSeconds + ConfigValues.ClientAddedDelay 
+            };
 
-            return Json(runners, JsonRequestBehavior.AllowGet);
+            return Json(jsonData, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult GridSettings(int meetingId, bool isHK)
