@@ -34,8 +34,9 @@
                 <th>JT local</th>
                 <th>JT UTC</th>
                 <th>Racecourse</th>
-                <th>Race</th>
                 <th>Race No</th>
+                <th>Name</th>
+                <th>Done</th>
             </tr>
 
             @{
@@ -61,6 +62,7 @@
                     <td>@race.RaceCourseName</td>
                     <td>@race.RaceNumber</td>
                     <td class='race_column'>@Html.ActionLink(race.RaceName ?? "(no name)", "RaceDetails", new { id = race.RaceId, today = ViewBag.Today })</td>
+                    <td>@race.isDone</td>
                 </tr>
             }
             }

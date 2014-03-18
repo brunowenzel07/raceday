@@ -10,6 +10,7 @@ using MvcJqGrid;
 using System.Configuration;
 using RaceDayDisplayApp.Filters;
 using RaceDayDisplayApp.DAL;
+using System.Dynamic;
 
 namespace RaceDayDisplayApp.Controllers
 {
@@ -152,6 +153,14 @@ namespace RaceDayDisplayApp.Controllers
                 ModelHelper.ToViewUserSettings(UserSettings.DEFAULT, isHK);
 
             return View("_GridSettings", settings);
+        }
+
+        public ActionResult RunnerHistory(int id, int raceId)
+        {
+            dynamic model = new ExpandoObject();
+            model.HorseDetails = entities.GetHorseDetailsData(id);
+            model.RunnerHistory = entities.GetRunnerHistory(raceId, id);
+            return View(model);
         }
 
     }

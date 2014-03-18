@@ -68,7 +68,7 @@ namespace RaceDayDisplayApp.DAL
                 return conn.Query<RaceDisplay>(@"
                     SELECT Race.Id AS RaceId, Race.RaceNumber, Race.RaceName, Race.RaceJumpDateTimeUTC, 
                            Meeting.MeetingDate, RaceCourse.Name AS RaceCourseName, 
-                           LocalJumpTime, AUS_StateId as StateId
+                           LocalJumpTime, AUS_StateId as StateId, isDone
                     FROM Race INNER JOIN Meeting on Meeting.Id = Race.MeetingId
 		                      INNER JOIN RaceCourse on Meeting.RaceCourseId = RaceCourse.Id
                     " + (today ? "WHERE Meeting.MeetingDate = CONVERT(date, getdate())" : "") + @"
@@ -88,18 +88,22 @@ namespace RaceDayDisplayApp.DAL
             {
                 conn.Open();
 
+                    //Select Meeting.Id as MeetingId, RaceCourse.Name as RaceCourseName, Weather.Name as WeatherName, 
+                    //       Going.Id as DefaultGoingName, CourseVariant.Name as CourseVariantName, Country.Code as CountryCode,
+                    //       Race.Id as RaceId, Race.RaceNumber
+                    //from Meeting left join RaceCourse    on Meeting.RaceCourseId=RaceCourse.Id
+                    //               left join Weather       on Meeting.WeatherId=Weather.Id
+                    //               left join Going         on Meeting.DefaultGoingId=Going.Id
+                    //               left join CourseVariant on Meeting.CourseVariantId=CourseVariant.Id
+                    //               left join Race          on Meeting.Id=Race.MeetingId
+                    //               left join Country       on Meeting.CountryId=Country.Id
+                    //where Meeting.Id = @MeetingId
+
                 var lookup = new Dictionary<int, Meeting>();
                 var resultList = conn.Query<Meeting,RaceBase,Meeting>(@"
-                    Select Meeting.Id as MeetingId, RaceCourse.Name as RaceCourseName, Weather.Name as WeatherName, 
-	                       Going.Id as DefaultGoingName, CourseVariant.Name as CourseVariantName, Country.Code as CountryCode,
-                           Race.Id as RaceId, Race.RaceNumber
-                    from Meeting left join RaceCourse    on Meeting.RaceCourseId=RaceCourse.Id
-			                       left join Weather       on Meeting.WeatherId=Weather.Id
-			                       left join Going         on Meeting.DefaultGoingId=Going.Id
-			                       left join CourseVariant on Meeting.CourseVariantId=CourseVariant.Id
-                                   left join Race          on Meeting.Id=Race.MeetingId
-                                   left join Country       on Meeting.CountryId=Country.Id
-                    where Meeting.Id = @MeetingId",
+                    Select meeting.*, Race.Id as RaceId, Race.RaceNumber
+                    from getMeetingDetailsData(@MeetingId) meeting 
+                         left join Race on meeting.MeetingId=Race.MeetingId",
                     (m, r) =>
                     {
                         Meeting meeting;
@@ -130,16 +134,20 @@ namespace RaceDayDisplayApp.DAL
             {
                 conn.Open();
 
+                    //Select Meeting.Id as MeetingId, RaceCourse.Name as RaceCourseName, Weather.Name as WeatherName, 
+                    //       Going.Id as DefaultGoingName, CourseVariant.Name as CourseVariantName, Country.Code as CountryCode
+                    //from Race left join Meeting       on Meeting.Id=Race.MeetingId
+                    //          left join RaceCourse    on Meeting.RaceCourseId=RaceCourse.Id
+                    //          left join Weather       on Meeting.WeatherId=Weather.Id
+                    //          left join CourseVariant on Meeting.CourseVariantId=CourseVariant.Id
+                    //          left join Going		    on Race.RaceGoingId=Going.Id
+                    //          left join Country		on Meeting.CountryId=Country.Id
+                    //where Race.Id = @RaceId
+
                 var resultList = conn.Query<Meeting>(@"
-                    Select Meeting.Id as MeetingId, RaceCourse.Name as RaceCourseName, Weather.Name as WeatherName, 
-	                       Going.Id as DefaultGoingName, CourseVariant.Name as CourseVariantName, Country.Code as CountryCode
-                    from Race left join Meeting       on Meeting.Id=Race.MeetingId
-							  left join RaceCourse    on Meeting.RaceCourseId=RaceCourse.Id
-			                  left join Weather       on Meeting.WeatherId=Weather.Id
-			                  left join CourseVariant on Meeting.CourseVariantId=CourseVariant.Id
-  			                  left join Going		    on Race.RaceGoingId=Going.Id
-                              left join Country		on Meeting.CountryId=Country.Id
-                    where Race.Id = @RaceId",
+                    declare @m int
+                    Select @m = MeetingId from Race where Race.Id = @RaceId
+                    Select * from getMeetingDetailsData(@m)",
                     new { RaceId = raceId });
 
                 return resultList.FirstOrDefault();
@@ -166,7 +174,7 @@ namespace RaceDayDisplayApp.DAL
                     from Race left join RaceType on Race.RaceTypeId=RaceType.Id
 			                    left join Distance on Race.DistanceId=Distance.Id
 			                    left join Going    on Race.RaceGoingId=Going.Id
-                                left join Meeting on Race.MeetingId=Race.Id
+                                left join Meeting on Race.MeetingId=Meeting.Id
                                 left join Country on Meeting.CountryId=Country.Id
                                 left join RaceCourse on Meeting.RaceCourseId=RaceCourse.Id
                     where Race.Id = @RaceId",
@@ -317,13 +325,40 @@ namespace RaceDayDisplayApp.DAL
             {
                 conn.Open();
 
-                var q = string.Format(@"select AUS_State.Id as AUSStateId, CountryState_Timezone.Timezone as Code
-                                        from CountryState_Timezone inner join AUS_State 
-                                             on AUS_State.Code = CountryState_Timezone.Code");
+                var q = @"select AUS_State.Id as AUSStateId, CountryState_Timezone.Timezone as Code
+                            from CountryState_Timezone inner join AUS_State 
+                                    on AUS_State.Code = CountryState_Timezone.Code";
 
                 var timezones = new Dictionary<int, string>();
                 conn.Query(q).ToList().ForEach(x => timezones.Add(x.AUSStateId, x.Code));
                 return timezones;
+            }
+        }
+
+
+        public IEnumerable<dynamic> GetRunnerHistory(int raceId, int horseId)
+        {
+            using (var conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                return conn.Query("Select * from getRunnerHistory(@raceId, @horseId)",
+                                    new 
+                                    { 
+                                        raceId = raceId,
+                                        horseId = horseId,
+                                    });
+            }
+        }
+
+        public dynamic GetHorseDetailsData(int horseId)
+        {
+            using (var conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                return conn.Query("Select * from getHorseDetailsDataHKG(@horseId)",
+                                    new { horseId = horseId }).FirstOrDefault();
             }
         }
 

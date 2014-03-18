@@ -1,0 +1,63 @@
+﻿@using RaceDayDisplayApp.Models
+
+@model dynamic
+
+@{
+    
+    ViewBag.Title = "Horse Details/History";
+    ViewBag.NoHeader = true;
+}
+
+<div>
+    <h3>Horse Details</h3>
+    <div class="details_attrs">
+        @if (Model.HorseDetails == null)
+        {
+            <h4>Horse Details not found in Database</h4>
+        }
+        else
+        { 
+            foreach (KeyValuePair<string, object> kvp in Model.HorseDetails)
+            {
+                if (kvp.Value != null)
+                {
+                    <div class="details_attrs_wrapper">
+                        @kvp.Key:
+                        @kvp.Value
+                    </div>
+                }
+            }
+        }
+    </div>
+</div>
+<div>
+    <h3>Runner History</h3>
+        @if (Model.RunnerHistory == null && Model.RunnerHistory.Count() == 0)
+        {
+            <h4>Runner history not found in Database</h4>
+        }
+        else
+        {
+            <table id="runnerHistory">
+                <tr>
+                    @foreach (dynamic item in Model.RunnerHistory)
+                    {
+                        foreach (KeyValuePair<string, object> kvp in item)
+                        {
+                            <th>@kvp.Key</th>
+                        }
+                        break;
+                    }
+                </tr>
+            @foreach (dynamic item in Model.RunnerHistory)
+            {
+                <tr>
+                    @foreach (KeyValuePair<string, object> kvp in item)
+                    {
+                        <td>@kvp.Value</td>
+                    }
+                </tr>
+            }
+            </table>
+        }
+</div>

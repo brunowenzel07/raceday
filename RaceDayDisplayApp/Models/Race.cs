@@ -30,6 +30,8 @@ namespace RaceDayDisplayApp.Models
 
         public string CountryCode { get; set; }
 
+        public bool isDone { get; set; }
+
         public DateTime MeetingDate { get; set; }
 
         public TimeSpan LocalJumpTime { get; set; }

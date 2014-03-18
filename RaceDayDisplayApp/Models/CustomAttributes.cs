@@ -41,7 +41,8 @@ namespace RaceDayDisplayApp.Models
     {
         none,
         currencyFormatter,
-        percentageFormatter
+        percentageFormatter,
+        linkFormatter
     }
 
 

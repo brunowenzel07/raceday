@@ -29,16 +29,28 @@ namespace RaceDayDisplayApp.Models
         [CustomDisplay(DisplayOn.NONE)]
         public string CountryCode { get; set; }
 
-        [Display(Name = "Weather", Order = 0)]
-        [CustomDisplay(DisplayOn.BOTH)]
-        public string WeatherName { get; set; }
+        //[Display(Name = "Weather", Order = 0)]
+        //[CustomDisplay(DisplayOn.BOTH)]
+        //public string WeatherName { get; set; }
 
-        [Display(Name = "Going", Order = 0)]
-        [CustomDisplay(DisplayOn.BOTH)]
-        public string DefaultGoingName { get; set; }
+        //[Display(Name = "Going", Order = 0)]
+        //[CustomDisplay(DisplayOn.BOTH)]
+        //public string DefaultGoingName { get; set; }
 
-        //public int NumberOfRaces { get; set; }
-        //public bool HK_isNightMeet { get; set; }
+        [Display(Name = "Number of Races", Order = 0)]
+        [CustomDisplay(DisplayOn.BOTH)]
+        public int NumberOfRaces { get; set; }
+
+        [Display(Name = "Code", Order = 0)]
+        [CustomDisplay(DisplayOn.BOTH)]
+        public string MeetingCode { get; set; }
+
+        [CustomDisplay(DisplayOn.NONE)]
+        public bool HK_isNightMeet { get; set; }
+
+        [Display(Name = "Time of Day", Order = 0)]
+        [CustomDisplay(DisplayOn.BOTH)]
+        public string TimeOfDay { get; set; }
 
         [Display(Name = "Course Variant", Order = 0)]
         [CustomDisplay(DisplayOn.BOTH)]

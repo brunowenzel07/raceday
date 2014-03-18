@@ -15,7 +15,7 @@ namespace RaceDayDisplayApp.Models
     public class RunnerDyn
     {
         [Key]
-        [CustomDisplay(DisplayOn.NONE)]
+        [CustomDisplay(DisplayOn.BOTH)]
         public int RunnerId { get; set; }
 
         [CustomDisplay(DisplayOn.NONE)]
@@ -79,7 +79,7 @@ namespace RaceDayDisplayApp.Models
         public int Barrier { get; set; }
         
         [Display(Name = "Horse", Order = 0)]
-        [CustomDisplay(DisplayOn.BOTH, colSize: ConfigValues.NAME_COLUMN_WIDTH)]
+        [CustomDisplay(DisplayOn.BOTH, CustomFormatters.linkFormatter, colSize: ConfigValues.NAME_COLUMN_WIDTH)]
         public string Name { get; set; }
 
         [Display(Name = "Chinese Name", Order = 0)]

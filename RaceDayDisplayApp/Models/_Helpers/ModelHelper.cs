@@ -68,10 +68,22 @@ namespace RaceDayDisplayApp.Models
                 .Select(p => {
                     var col = new MvcJqGrid.Column(p.Name);
                     col.SetLabel(lookup[p.Name].Name ?? p.Name);
-
+                    
+                    //check if it's key
+                    object[] attributes = p.GetCustomAttributes(typeof(KeyAttribute), false);
+                    if (attributes != null && attributes.Length > 0)
+                    {
+                        col.SetKey(true).SetHidden(true);
+                    } 
+                    
+                    //assign cell formatter
                     attr = lookup2[p.Name];
                     if (attr.CustomFormatter != CustomFormatters.none)
+                    {
                         col.SetCustomFormatter(attr.CustomFormatter.ToString());
+                    }
+                    
+                    //assign col width
                     if (attr.FixedColumnSize != -1)
                         col.SetWidth(attr.FixedColumnSize).SetFixedWidth(true);
                     return col;
