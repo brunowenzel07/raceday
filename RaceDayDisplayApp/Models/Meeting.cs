@@ -13,13 +13,17 @@ namespace RaceDayDisplayApp.Models
         [CustomDisplay(DisplayOn.NONE)]
         public DateTime MeetingDate { get; set; }
 
+        [Display(Name = "Date", Order = 1)]
+        [CustomDisplay(DisplayOn.BOTH)]
+        public string _MeetingDate { get { return MeetingDate.ToString(@"ddd MMM d\t\h yyyy"); } }
+        
         [CustomDisplay(DisplayOn.NONE)]
         public DateTime MinRaceJumpDateTimeUTC { get; set; }
 
         [CustomDisplay(DisplayOn.NONE)]
         public TimeSpan MinJumpTimeLocal { get; set; }
 
-        [Display(Name = "Race Course", Order = 0)]
+        [Display(Name = "Venue", Order = 2)]
         [CustomDisplay(DisplayOn.BOTH)]
         public string RaceCourseName { get; set; }
     }
@@ -37,22 +41,22 @@ namespace RaceDayDisplayApp.Models
         //[CustomDisplay(DisplayOn.BOTH)]
         //public string DefaultGoingName { get; set; }
 
-        [Display(Name = "Number of Races", Order = 0)]
+        [Display(Name = "No./Races", Order = 3)]
         [CustomDisplay(DisplayOn.BOTH)]
         public int NumberOfRaces { get; set; }
 
-        [Display(Name = "Code", Order = 0)]
-        [CustomDisplay(DisplayOn.BOTH)]
-        public string MeetingCode { get; set; }
+        //[CustomDisplay(DisplayOn.NONE)]
+        //public string MeetingCode { get; set; }
 
-        [CustomDisplay(DisplayOn.NONE)]
+        [Display(Name = "Time of Day", Order = 4)]
+        [CustomDisplay(DisplayOn.HK)]
         public bool HK_isNightMeet { get; set; }
 
-        [Display(Name = "Time of Day", Order = 0)]
-        [CustomDisplay(DisplayOn.BOTH)]
-        public string TimeOfDay { get; set; }
+        //[Display(Name = "Time of Day", Order = 0)]
+        //[CustomDisplay(DisplayOn.BOTH)]
+        //public string TimeOfDay { get; set; }
 
-        [Display(Name = "Course Variant", Order = 0)]
+        [Display(Name = "Track Variant", Order = 5)]
         [CustomDisplay(DisplayOn.BOTH)]
         public string CourseVariantName { get; set; }
         
@@ -71,18 +75,18 @@ namespace RaceDayDisplayApp.Models
             get { return CountryCode == "HKG"; }
         }
 
-        [CustomDisplay(DisplayOn.NONE)]
-        public static Meeting DummyMeeting
-        {
-            get
-            {
-                Random rdm = new Random();
-                Meeting m = FizzWare.NBuilder.Builder<Meeting>.CreateNew().Build();
-                m.Races = FizzWare.NBuilder.Builder<RaceBase>.CreateListOfSize(rdm.Next(10) + 1).Build();
+        //[CustomDisplay(DisplayOn.NONE)]
+        //public static Meeting DummyMeeting
+        //{
+        //    get
+        //    {
+        //        Random rdm = new Random();
+        //        Meeting m = FizzWare.NBuilder.Builder<Meeting>.CreateNew().Build();
+        //        m.Races = FizzWare.NBuilder.Builder<RaceBase>.CreateListOfSize(rdm.Next(10) + 1).Build();
 
-                return m;
-            }
-        }
+        //        return m;
+        //    }
+        //}
     }
 
 }

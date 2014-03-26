@@ -14,7 +14,7 @@ namespace RaceDayDisplayApp.Models
         [CustomDisplay(DisplayOn.NONE)]
         public int RaceId { get; set; }
 
-        [Display(Name = "Race Number", Order = 0)]
+        [Display(Name = "Race No.", Order = 2)]
         [CustomDisplay(DisplayOn.BOTH)]
         public int RaceNumber { get; set; }
     }
@@ -30,13 +30,13 @@ namespace RaceDayDisplayApp.Models
 
         public string CountryCode { get; set; }
 
-        public bool isDone { get; set; }
-
         public DateTime MeetingDate { get; set; }
 
         public TimeSpan LocalJumpTime { get; set; }
 
         public int StateId { get; set; }
+
+        public string RaceStatus { get; set; }
 
         DateTime _raceJumpDateTimeUTC;
         
@@ -68,7 +68,7 @@ namespace RaceDayDisplayApp.Models
         public IEnumerable<RunnerDyn> Runners { get; set; }
 
         [CustomDisplay(DisplayOn.NONE)]
-        public bool isDone { get; set; }
+        public virtual bool isDone { get; set; }
 
         [Display(Name = "Win Pool", Order = 0)]
         [CustomDisplay(DisplayOn.BOTH)]
@@ -79,31 +79,31 @@ namespace RaceDayDisplayApp.Models
         public float RacePPPool { get; set; }
 
         [Display(Name = "EX Pool Total", Order = 0)]
-        [CustomDisplay(DisplayOn.BOTH)]
+        [CustomDisplay(DisplayOn.AUS)]
         public float EXPoolTotal { get; set; }
 
         [Display(Name = "Ex Div Amount", Order = 0)]
-        [CustomDisplay(DisplayOn.BOTH)]
+        [CustomDisplay(DisplayOn.AUS)]
         public float EXDivAmount { get; set; }
 
         [Display(Name = "QN Pool Total", Order = 0)]
-        [CustomDisplay(DisplayOn.BOTH)]
+        [CustomDisplay(DisplayOn.AUS)]
         public float QNPoolTotal { get; set; }
 
         [Display(Name = "QN Div Amount", Order = 0)]
-        [CustomDisplay(DisplayOn.BOTH)]
+        [CustomDisplay(DisplayOn.AUS)]
         public float QNDivAmount { get; set; }
 
         [Display(Name = "F4 Pool Total", Order = 0)]
-        [CustomDisplay(DisplayOn.BOTH)]
+        [CustomDisplay(DisplayOn.AUS)]
         public float F4PoolTotal { get; set; }
 
         [Display(Name = "F4 Div Amount", Order = 0)]
-        [CustomDisplay(DisplayOn.BOTH)]
+        [CustomDisplay(DisplayOn.AUS)]
         public float F4DivAmount { get; set; }
 
         [Display(Name = "TF Pool Total", Order = 0)]
-        [CustomDisplay(DisplayOn.BOTH)]
+        [CustomDisplay(DisplayOn.AUS)]
         public float TFPoolTotal { get; set; }
 
         public RaceDyn GetLightCopy()
@@ -133,37 +133,85 @@ namespace RaceDayDisplayApp.Models
         [CustomDisplay(DisplayOn.NONE)]
         public int MeetingId { get; set; }
 
-        [Display(Name = "Race Type", Order = 0)]
+        [Display(Name = "Name", Order = 4)]
+        [CustomDisplay(DisplayOn.BOTH)]
+        public string RaceName { get; set; }
+
+        [Display(Name = "Type", Order = 5)]
         [CustomDisplay(DisplayOn.BOTH)]
         public string RaceTypeName { get; set; }
 
-        [Display(Name = "Distance", Order = 0)]
-        [CustomDisplay(DisplayOn.BOTH)]
+        [CustomDisplay(DisplayOn.NONE)]
         public string DistanceName { get; set; }
 
-        [Display(Name = "Race Index", Order = 0)]
+        [Display(Name = "Distance", Order = 6)]
+        [CustomDisplay(DisplayOn.BOTH)]
+        public string _DistanceName { get { return DistanceName + "m"; } }
+
+        [Display(Name = "Race Index", Order = 1)]
         [CustomDisplay(DisplayOn.HK)]
         public int HK_RaceIndex { get; set; }
 
         //public System.TimeSpan RaceWinningTime { get; set; }
 
-        [Display(Name = "Race Going", Order = 0)]
+        [Display(Name = "Race Going", Order = 7)]
         [CustomDisplay(DisplayOn.BOTH)]
         public string RaceGoingName { get; set; }
 
-        [CustomDisplay(DisplayOn.NONE)]
-        public bool isTurf { get; set; }
+        //[CustomDisplay(DisplayOn.NONE)]
+        //public bool isTurf { get; set; }
 
-        [Display(Name = "Is turf", Order = 0)]
+        //[Display(Name = "Is turf", Order = 0)]
+        //[CustomDisplay(DisplayOn.BOTH)]
+        //public string IsTurf { get { return isTurf ? null : "No"; } }//only displays "No" if not isTurf
+
+        [Display(Name = "Surface", Order = 8)]
         [CustomDisplay(DisplayOn.BOTH)]
-        public string IsTurf { get { return isTurf ? null : "No"; } }//only displays "No" if not isTurf
+        public string RaceTrackType { get; set; }
 
-        //public short NumberOfRunners { get; set; }
-        
-        //CONTROL FIELDS
+        [Display(Name = "No./Runners", Order = 9)]
+        [CustomDisplay(DisplayOn.BOTH)]
+        public short NumberOfRunners { get; set; }
+
+        //[CustomDisplay(DisplayOn.NONE)]
+        //public bool isStarted { get; set; } 
+
+        //[Display(Name = "Jump Time", Order = 0)]
+        //[CustomDisplay(DisplayOn.BOTH)]
+        //public string Formatted_JumpDateTimeUTC { get { return RaceJumpDateTimeUTC.ToString() + " UTC"; } }
+
+        [Display(Name = "Status", Order = 10)]
+        [CustomDisplay(DisplayOn.BOTH)]
+        public string RaceStatus { get; set; }
+
+        bool _isDone;
 
         [CustomDisplay(DisplayOn.NONE)]
-        public bool isStarted { get; set; } 
+        public override bool isDone
+        {
+            get
+            {
+                if (!_isDone)
+                {
+                    _isDone = RaceStatus != null ? RaceStatus == ConfigValues.RaceStatusDone : false;
+                }
+                return _isDone;
+            }
+            set { _isDone = value; }
+        }
+
+        [CustomDisplay(DisplayOn.NONE)]
+        public DateTime MeetingDate { get; set; }
+
+        [CustomDisplay(DisplayOn.NONE)]
+        public TimeSpan LocalJumpTime { get; set; }
+
+        [Display(Name = "Jump Time", Order = 3)]
+        [CustomDisplay(DisplayOn.BOTH)]
+        public string _LocalJumpTime { get { return string.Format("{0}:{1}", LocalJumpTime.Hours, LocalJumpTime.Minutes); } }
+
+        [CustomDisplay(DisplayOn.NONE)]
+        public int StateId { get; set; }
 
         [CustomDisplay(DisplayOn.NONE)]
         public string CountryCode { get; set; }
@@ -173,20 +221,6 @@ namespace RaceDayDisplayApp.Models
         {
             get { return CountryCode == "HKG"; }
         }
-
-        [Display(Name = "Jump Time", Order = 0)]
-        [CustomDisplay(DisplayOn.BOTH)]
-        public string Formatted_JumpDateTimeUTC { get { return RaceJumpDateTimeUTC.ToString() + " UTC"; } }
-
-
-        [CustomDisplay(DisplayOn.NONE)]
-        public TimeSpan LocalJumpTime { get; set; }
-
-        [CustomDisplay(DisplayOn.NONE)]
-        public DateTime MeetingDate { get; set; }
-
-        [CustomDisplay(DisplayOn.NONE)]
-        public int StateId { get; set; }
 
 
         DateTime _raceJumpDateTimeUTC;
@@ -198,6 +232,9 @@ namespace RaceDayDisplayApp.Models
             {
                 if (_raceJumpDateTimeUTC == default(DateTime))
                 {
+                    if (StateId == default(int))
+                        return DateTime.MaxValue;
+
                     var aux = new DateTime(
                         MeetingDate.Year,
                         MeetingDate.Month,
@@ -213,20 +250,20 @@ namespace RaceDayDisplayApp.Models
         }
 
 
-        [CustomDisplay(DisplayOn.NONE)]
-        public static Race DummyRace
-        {
-            get
-            {
-                return FizzWare.NBuilder.Builder<Race>.CreateNew().Build();
-            }
-        }
+        //[CustomDisplay(DisplayOn.NONE)]
+        //public static Race DummyRace
+        //{
+        //    get
+        //    {
+        //        return FizzWare.NBuilder.Builder<Race>.CreateNew().Build();
+        //    }
+        //}
 
         internal void Update(RaceDyn race)
         {
             this.Runners.ToList().ForEach(r => 
                 ((Runner)r).Update(race.Runners.First(rd => rd.RunnerId == r.RunnerId)));
-            this.isDone = race.isDone;
+            this.isDone = this.isDone || race.isDone;
             this.RaceWinPool = race.RaceWinPool;
             this.RacePPPool = race.RacePPPool;
             this.EXPoolTotal = race.EXPoolTotal;

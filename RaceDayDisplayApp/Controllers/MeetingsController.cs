@@ -50,8 +50,7 @@ namespace RaceDayDisplayApp.Controllers
 
             //get the user settings
             var userId = WebMatrix.WebData.WebSecurity.GetUserId(User.Identity.Name);
-            ViewBag.UserSettings = entities.GetUserSettings(userId, meeting.MeetingId, meeting.IsHK) ??
-                ModelHelper.ToViewUserSettings(UserSettings.DEFAULT, meeting.IsHK);
+            ViewBag.UserSettings = entities.GetUserSettings(userId, meeting.MeetingId, meeting.IsHK);
 
             return View(meeting);
         }
@@ -77,8 +76,7 @@ namespace RaceDayDisplayApp.Controllers
 
             //get the user settings
             var userId = WebMatrix.WebData.WebSecurity.GetUserId(User.Identity.Name);
-            ViewBag.UserSettings = entities.GetUserSettings(userId, meeting.MeetingId, meeting.IsHK) ??
-                ModelHelper.ToViewUserSettings(UserSettings.DEFAULT, meeting.IsHK);
+            ViewBag.UserSettings = entities.GetUserSettings(userId, meeting.MeetingId, meeting.IsHK);
 
             //columns to display for this race
             ViewBag.GridColumns = ModelHelper.GetGridColumns(meeting.Races[0] as Race);
@@ -125,7 +123,7 @@ namespace RaceDayDisplayApp.Controllers
                         runners = runners.OrderByDescending(o => typeof(Runner).GetProperty(gridSettings.SortColumn).GetValue(o)).ToList();
                 }
                 else
-                    runners = runners.Cast<Runner>().OrderBy(o => o.AUS_SPW).ToList(); //default sorting criteria
+                    runners = runners.Cast<Runner>().OrderBy(o => o.HorseNumber).ToList(); //default sorting criteria
             }
             
             var now = DateTime.UtcNow;
@@ -136,10 +134,12 @@ namespace RaceDayDisplayApp.Controllers
                 records = runners.Count(),
                 rows = runners,
                 race = race.GetLightCopy(),
-                dbUpdatedSecs = (now - race.RefreshValues.LastDBUpdate).TotalSeconds,
+                dbUpdatedSecs = race.RefreshValues.LastDBUpdate == default (DateTime) ? -1 :
+                                (now - race.RefreshValues.LastDBUpdate).TotalSeconds,
                 serverUpdatedSecs = (now - race.RefreshValues.LastServerRefresh).TotalSeconds,
                 //add delay to avoid waiting in the lock
-                nextRefreshSecs = (race.RefreshValues.NextRefresh - now).TotalSeconds + ConfigValues.ClientAddedDelay 
+                nextRefreshSecs = race.isDone ? -1 : 
+                        (race.RefreshValues.NextRefresh - now).TotalSeconds + ConfigValues.ClientAddedDelay 
             };
 
             return Json(jsonData, JsonRequestBehavior.AllowGet);
@@ -149,8 +149,7 @@ namespace RaceDayDisplayApp.Controllers
         {
             //get the user settings
             var userId = WebMatrix.WebData.WebSecurity.GetUserId(User.Identity.Name);
-            var settings = entities.GetUserSettings(userId, meetingId, isHK) ??
-                ModelHelper.ToViewUserSettings(UserSettings.DEFAULT, isHK);
+            var settings = entities.GetUserSettings(userId, meetingId, isHK);
 
             return View("_GridSettings", settings);
         }

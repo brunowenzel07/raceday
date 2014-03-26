@@ -18,16 +18,27 @@ function GridLoadComplete(e, data)
         $('#'+k).text(v);
     });
 
+    var txtRefresh;
     if (data.race.isDone) {
-        $('#refreshInfo').text = "<b>RACE IS DONE</b>";
+        txtRefresh = "<b>RACE IS DONE</b>";
+    }
+    else {
+        txtRefresh = "Next client refresh in " + data.nextRefreshSecs + " secs";
+        //set next refresh
+        setTimeout(refreshGrid, data.nextRefreshSecs * 1000);
+    }
+    
+    var txtDbUpdated;
+    if (data.dbUpdatedSecs < 0) {
+        txtDbUpdated = "DB has never been updated<br/>";
+    }
+    else{
+        txtDbUpdated = "DB was last updated " + data.dbUpdatedSecs + " secs before displaying<br/>";
     }
 
-    $('#refreshInfo').html("DB was last updated " + data.dbUpdatedSecs + " secs before displaying<br/> \
-                            Server was last updated " + data.serverUpdatedSecs + " secs before displaying<br/> \
-                            Next client refresh in " + data.nextRefreshSecs + " secs");
-    
-    //set next refresh
-    setTimeout(refreshGrid, data.nextRefreshSecs * 1000);
+    $('#refreshInfo').html( txtDbUpdated +
+                            "Server was last updated " + data.serverUpdatedSecs + " secs before displaying<br/>"
+                            + txtRefresh);
 }
 
 function refreshGrid() {
@@ -68,6 +79,38 @@ function percentageFormatter(cellvalue, options, rowObject) {
 function linkFormatter(cellvalue, options, rowObject) {
     return "<a href=\"../RunnerHistory/" + options.rowId + "?RaceId=" + $("#RaceId").val() + "\" onclick=\"window.open(this.href, 'mywin','left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;\" >" + cellvalue + "</a>";
 }
+
+function winOddsFormatter(cellvalue, options, rowObject) {
+    var classTxt = "";
+    if (rowObject.isWinFavorite) {
+        classTxt = "class=\"cell_favorite\"";
+    }
+    else if (rowObject.WinDropby20) {
+        classTxt = "class=\"cell_dropBy20\"";
+    }
+    else if (rowObject.WinDropby50) {
+        classTxt = "class=\"cell_dropBy50\"";
+    }
+
+    return "<span " + classTxt + ">$" + cellvalue + "</span>";
+}
+
+function placeOddsFormatter(cellvalue, options, rowObject) {
+    var classTxt = "";
+    //if (rowObject.isPlaceFavorite) {
+    //    classTxt = "class=\"cell_favorite\"";
+    //}
+    //else
+    if (rowObject.PlaceDropby20) {
+        classTxt = "class=\"cell_dropBy20\"";
+    }
+    else if (rowObject.PlaceDropby50) {
+        classTxt = "class=\"cell_dropBy50\"";
+    }
+
+    return "<span " + classTxt + ">$" + cellvalue + "</span>";
+}
+
 
 //when the Races select changes, new race details and grid are loaded and the checkboxes shown/hidden
 $(function () {
@@ -111,80 +154,80 @@ $(function () {
 });
 
 
-    var firstTime = true;
-    function hideColumnsFirstTime(){
-        if (firstTime){
-            showHideColumns();
-            firstTime = false;
-        }
+var firstTime = true;
+function hideColumnsFirstTime(){
+    if (firstTime){
+        showHideColumns();
+        firstTime = false;
     }
+}
 
-    //every time a new grid or settings are loaded, this function hides the unchecked columns
-    function showHideColumns() {
+//every time a new grid or settings are loaded, this function hides the unchecked columns
+function showHideColumns() {
 
-        var columnsShow = [];
-        var columnsHide = [];
-        $(".chk_settings").each(function (index, li) {
-            if ($(this).is(":checked")) {
-                columnsShow.push(this.id.substring(4));
-            } else if ($(this).not(":checked")) {
-                columnsHide.push(this.id.substring(4));
+    var columnsShow = [];
+    var columnsHide = [];
+    $(".chk_settings").each(function (index, li) {
+        if ($(this).is(":checked")) {
+            columnsShow.push(this.id.substring(4));
+        } else if ($(this).not(":checked")) {
+            columnsHide.push(this.id.substring(4));
+        }
+        jQuery("#race_grid").jqGrid('showCol', columnsShow);
+        jQuery("#race_grid").jqGrid('hideCol', columnsHide);
+    });
+
+    resizeGrid();
+}
+
+
+function resizeGrid() {
+    $("#race_grid").setGridWidth($('#form-box').width(), true);
+}
+
+//function convertDateTime(dateTimeStr) {
+//    //dateTime = dateTimeStr.split(" ");
+
+//    //var date = dateTime[0].split("-");
+//    //var yyyy = date[0];
+//    //var mm = date[1] - 1;
+//    //var dd = date[2];
+
+//    //var time = dateTime[1].split(":");
+//    var time = dateTimeStr.split(":");
+//    var h = time[0];
+//    var m = time[1];
+//    var s = time[2];
+
+//    var result = new Date();
+//    result.setHours(h);
+//    result.setMinutes(m);
+//    result.setSeconds(s);
+//    return result;
+//}
+
+
+function defaultSettings() {
+
+    var MeetingId = $("#MeetingId").val();
+    var IsHK = $("#IsHK").val();
+
+    if (MeetingId != "") {
+        $.ajax({
+            type: 'POST',
+            url: '/Meetings/GridSettings',
+            data: {
+                meetingId: MeetingId,
+                isHK: IsHK
+            },
+            success: function (data) {
+                $("#chks_container").empty();
+                $('#chks_container').append(data);
+                bindCheckboxes();
+                showHideColumns();
             }
-            jQuery("#race_grid").jqGrid('showCol', columnsShow);
-            jQuery("#race_grid").jqGrid('hideCol', columnsHide);
         });
-
-        resizeGrid();
     }
-
-
-    function resizeGrid() {
-        $("#race_grid").setGridWidth($('#form-box').width(), true);
-    }
-
-    //function convertDateTime(dateTimeStr) {
-    //    //dateTime = dateTimeStr.split(" ");
-
-    //    //var date = dateTime[0].split("-");
-    //    //var yyyy = date[0];
-    //    //var mm = date[1] - 1;
-    //    //var dd = date[2];
-
-    //    //var time = dateTime[1].split(":");
-    //    var time = dateTimeStr.split(":");
-    //    var h = time[0];
-    //    var m = time[1];
-    //    var s = time[2];
-
-    //    var result = new Date();
-    //    result.setHours(h);
-    //    result.setMinutes(m);
-    //    result.setSeconds(s);
-    //    return result;
-    //}
-
-
-    function defaultSettings() {
-
-        var MeetingId = $("#MeetingId").val();
-        var IsHK = $("#IsHK").val();
-
-        if (MeetingId != "") {
-            $.ajax({
-                type: 'POST',
-                url: '/Meetings/GridSettings',
-                data: {
-                    meetingId: MeetingId,
-                    isHK: IsHK
-                },
-                success: function (data) {
-                    $("#chks_container").empty();
-                    $('#chks_container').append(data);
-                    bindCheckboxes();
-                    showHideColumns();
-                }
-            });
-        }
-    }
+}
 
 

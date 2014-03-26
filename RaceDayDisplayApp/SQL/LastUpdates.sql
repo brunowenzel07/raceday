@@ -4,6 +4,7 @@ create TABLE [dbo].[LastUpdates] (
     [MeetingId]			INT            NOT NULL,
     [RaceNumber]		SMALLINT       NOT NULL,
     [UpdateDateTime]    DATETIME       NOT NULL,
+    [Refreshinterval] INT      NOT NULL,
 	PRIMARY KEY CLUSTERED ([MeetingId] ASC, [RaceNumber] ASC)
 );
 
@@ -11,8 +12,11 @@ create TABLE [dbo].[LastUpdates] (
 drop PROCEDURE SetUpdateTime
 drop type RaceUpdateType
 
-CREATE TYPE RaceUpdateType AS TABLE 
-( MeetingId INT, RaceNumber SMALLINT);
+create TYPE [dbo].[RaceUpdateType] AS TABLE (
+    [MeetingId]  INT      NULL,
+    [RaceNumber] SMALLINT NULL,
+	[Refreshinterval] INT NULL);
+
 
 create PROCEDURE SetUpdateTime
 (
@@ -20,26 +24,28 @@ create PROCEDURE SetUpdateTime
 )
 AS
 declare cur cursor for 
-select MeetingId,RaceNumber from @races
+select MeetingId,RaceNumber,Refreshinterval from @races
 open cur
 declare @meetingId int
 declare @raceNumber smallint
-fetch next from cur into @meetingId,@racenumber
+declare @refreshinterval int
+fetch next from cur into @meetingId,@racenumber,@refreshinterval
 while (@@FETCH_STATUS = 0)
 begin
 
 	merge LastUpdates as target
-	using (values (getdate()))
-		as source (UpdateDateTime)
+	using (values (getdate(), @refreshinterval))
+		as source (UpdateDateTime, Refreshinterval)
 		on target.MeetingId = @meetingId and target.RaceNumber = @raceNumber
 	when matched then
 		update
-		set UpdateDateTime = source.UpdateDateTime
+		set UpdateDateTime = source.UpdateDateTime,
+		    Refreshinterval = source.Refreshinterval
 	when not matched then
-		insert ( MeetingId, RaceNumber, UpdateDateTime)
-		values ( @meetingId, @raceNumber, source.UpdateDateTime);
+		insert ( MeetingId, RaceNumber, UpdateDateTime, Refreshinterval)
+		values ( @meetingId, @raceNumber, source.UpdateDateTime, source.Refreshinterval);
 
-    fetch next from cur into @meetingId,@racenumber
+    fetch next from cur into @meetingId,@racenumber,@refreshinterval
 end
 close cur
 deallocate cur
@@ -48,7 +54,7 @@ deallocate cur
 DECLARE @TVP RaceUpdateType
 INSERT INTO @TVP
 VALUES
-    (0412589,1),(0412589,2),(0425896,2),(04789652,1)
+    (699824,1, -1)
 exec SetUpdateTime @TVP
 
 delete from LastUpdates

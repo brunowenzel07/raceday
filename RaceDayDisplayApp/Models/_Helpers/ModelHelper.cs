@@ -11,21 +11,62 @@ namespace RaceDayDisplayApp.Models
 {
     public static class ModelHelper
     {
+        //public static IEnumerable<ViewUserSetting> ToViewUserSettings(UserSettings userSettings, bool isHK)
+        //{
+        //    Dictionary<string, DisplayAttribute> lookup = new Dictionary<string, DisplayAttribute>();
+        //    CustomDisplayAttribute attr = null;
+        //    //loops through all the properties of the class UserSettings
+        //    return typeof(UserSettings).GetProperties()
+        //        .Where(p => (attr = getCustomDisplayAttribute(p)).Display == DisplayOn.BOTH
+        //                    || (isHK && attr.Display == DisplayOn.HK)
+        //                    || (!isHK && attr.Display == DisplayOn.AUS))
+        //        .OrderBy(p => (lookup[p.Name] = getDisplayAttribute(p)).Order)
+        //        .Select(p => new ViewUserSetting
+        //        {
+        //            PropertyName = getLinkedToAttribute(p).Attribute,
+        //            DisplayName = lookup[p.Name].Name ?? p.Name,
+        //            Checked = (bool)typeof(UserSettings).GetProperty(p.Name).GetValue(userSettings)
+        //        });
+        //}
+
         public static IEnumerable<ViewUserSetting> ToViewUserSettings(UserSettings userSettings, bool isHK)
         {
+            Dictionary<string, bool> userConfig = new Dictionary<string, bool>();
+            //loops through all the properties of the class UserSettings
+            typeof(UserSettings).GetProperties().ToList().ForEach(p => 
+                {
+                    var prop = typeof(UserSettings).GetProperty(p.Name);
+                    if (prop.PropertyType == typeof(bool))
+                    {
+                        var name = getLinkedToAttribute(p).Attribute;
+                        var chkd = (bool)prop.GetValue(userSettings);
+                        userConfig.Add(name, chkd);
+                    }
+                });
+
+
             Dictionary<string, DisplayAttribute> lookup = new Dictionary<string, DisplayAttribute>();
             CustomDisplayAttribute attr = null;
+
             //loops through all the properties of the class UserSettings
-            return typeof(UserSettings).GetProperties()
-                .Where(p => (attr = getCustomDisplayAttribute(p)).Display == DisplayOn.BOTH
-                            || (isHK && attr.Display == DisplayOn.HK)
-                            || (!isHK && attr.Display == DisplayOn.AUS))
+            return typeof(Runner).GetProperties()
+                .Where(p => (attr = getCustomDisplayAttribute(p)).RenderCheckbox &&
+                                        (attr.Display == DisplayOn.BOTH
+                            || (isHK  && attr.Display == DisplayOn.HK)
+                            || (!isHK && attr.Display == DisplayOn.AUS)))
                 .OrderBy(p => (lookup[p.Name] = getDisplayAttribute(p)).Order)
-                .Select(p => new ViewUserSetting
+                .Select(p =>
                 {
-                    PropertyName = getLinkedToAttribute(p).Attribute,
-                    DisplayName = lookup[p.Name].Name ?? p.Name,
-                    Checked = (bool)typeof(UserSettings).GetProperty(p.Name).GetValue(userSettings)
+                    bool val;
+                    if (!userConfig.TryGetValue(p.Name, out val))
+                        val = false;
+                    
+                    return new ViewUserSetting 
+                    {
+                        PropertyName = p.Name,
+                        DisplayName = lookup[p.Name].Name ?? p.Name,
+                        Checked = val 
+                    };
                 });
         }
 
@@ -37,18 +78,30 @@ namespace RaceDayDisplayApp.Models
             Type t = obj.GetType();
             Dictionary<string, DisplayAttribute> lookup = new Dictionary<string, DisplayAttribute>();
             CustomDisplayAttribute attr = null;
+            List<DisplayProperty> result = new List<DisplayProperty>();
+            
             //loops through all the properties of the class UserSettings
-            return t.GetProperties()
+            t.GetProperties()
                 .Where(p => (attr = getCustomDisplayAttribute(p)).Display == DisplayOn.BOTH
                             || (isHK && attr.Display == DisplayOn.HK)
                             || (!isHK && attr.Display == DisplayOn.AUS))
                 .OrderBy(p => (lookup[p.Name] = getDisplayAttribute(p)).Order)
-                .Select(p => new DisplayProperty
+                .ToList().ForEach(p =>
                 {
-                    FieldName = p.Name,
-                    DisplayName = lookup[p.Name].Name ?? p.Name,
-                    Value = (t.GetProperty(p.Name).GetValue(obj) ?? "").ToString()
+                    PropertyInfo prop = t.GetProperty(p.Name);
+                    var val = prop.GetValue(obj);
+                    Type type = prop.PropertyType;
+                    object defaultValue = type.IsValueType ? Activator.CreateInstance(type) : null;
+                    if (val != null && !val.Equals(defaultValue))
+                    {
+                        var fp = new DisplayProperty();
+                        fp.FieldName = p.Name;
+                        fp.DisplayName = lookup[p.Name].Name ?? p.Name;
+                        fp.Value = val.ToString();
+                        result.Add(fp);
+                    }
                 });
+            return result;
         }
 
         /// <summary>

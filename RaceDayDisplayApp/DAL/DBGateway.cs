@@ -68,7 +68,7 @@ namespace RaceDayDisplayApp.DAL
                 return conn.Query<RaceDisplay>(@"
                     SELECT Race.Id AS RaceId, Race.RaceNumber, Race.RaceName, Race.RaceJumpDateTimeUTC, 
                            Meeting.MeetingDate, RaceCourse.Name AS RaceCourseName, 
-                           LocalJumpTime, AUS_StateId as StateId, isDone
+                           LocalJumpTime, AUS_StateId as StateId, RaceStatus
                     FROM Race INNER JOIN Meeting on Meeting.Id = Race.MeetingId
 		                      INNER JOIN RaceCourse on Meeting.RaceCourseId = RaceCourse.Id
                     " + (today ? "WHERE Meeting.MeetingDate = CONVERT(date, getdate())" : "") + @"
@@ -165,33 +165,35 @@ namespace RaceDayDisplayApp.DAL
             {
                 conn.Open();
 
-                var race = conn.Query<RaceCache>(@"
-                    Select Race.Id as RaceId, MeetingId, RaceNumber, RaceType.Name as RaceTypeName, 
-                           Distance.Name as DistanceName, RaceJumpDateTimeUTC, 
-	                       HK_RaceIndex, Going.Name as RaceGoingName, isTurf, 
-                           isDone, isStarted, Country.Code as CountryCode, 
-                           LocalJumpTime, MeetingDate, AUS_StateId as StateId
-                    from Race left join RaceType on Race.RaceTypeId=RaceType.Id
-			                    left join Distance on Race.DistanceId=Distance.Id
-			                    left join Going    on Race.RaceGoingId=Going.Id
-                                left join Meeting on Race.MeetingId=Meeting.Id
-                                left join Country on Meeting.CountryId=Country.Id
-                                left join RaceCourse on Meeting.RaceCourseId=RaceCourse.Id
-                    where Race.Id = @RaceId",
+                    //Select Race.Id as RaceId, MeetingId, RaceNumber, RaceType.Name as RaceTypeName, 
+                    //       Distance.Name as DistanceName, RaceJumpDateTimeUTC, 
+                    //       HK_RaceIndex, Going.Name as RaceGoingName, isTurf, 
+                    //       isDone, isStarted, Country.Code as CountryCode, 
+                    //       LocalJumpTime, MeetingDate, AUS_StateId as StateId
+                    //from Race left join RaceType on Race.RaceTypeId=RaceType.Id
+                    //            left join Distance on Race.DistanceId=Distance.Id
+                    //            left join Going    on Race.RaceGoingId=Going.Id
+                    //            left join Meeting on Race.MeetingId=Meeting.Id
+                    //            left join Country on Meeting.CountryId=Country.Id
+                    //            left join RaceCourse on Meeting.RaceCourseId=RaceCourse.Id
+                    //where Race.Id = @RaceId
+
+                var race = conn.Query<RaceCache>("Select * from getRaceDetailsData(@RaceId)",
                     new { RaceId = raceId }).FirstOrDefault();
 
                 if (race != null)
                 {
                     var runners = conn.Query<Runner>(@"
-                        SELECT	RunnerId, RaceId, HorseNumber, Barrier, RunnerId, Name, HK_ChineseName,
-		                        Jockey, Trainer, Gear, Z_newTrainerSinceLastStart,
-		                        Z_BPAdvFactor, Age, Sex, Color,
-		                        AUS_HcpWt, CarriedWt, HK_DeclaredHorseWtLbs, AUS_HcpRatingAtJump, HK_ActualWtLbs,
-		                        HK_Rating, isScratched, Place, AUS_SPW, AUS_SPP,
-		                        HK_WinOdds, Z_AUS_FinishTime, HK_FinishTime, JockeyPoints,
-		                        STATISTICS1, STATISTICS2, STATISTICS3, STATISTICS4
-                        from DataGrid_sta
-                        where RaceId = @RaceId",
+                        SELECT	RaceId, HorseNumber, Barrier, RunnerId, 
+                                Name, Horse, isScratched, 
+                                HorseId, Jockey, Trainer, Z_newTrainerSinceLastStart, Gear, Age, Sex, Color,
+                                AUS_HcpWt, AUS_HcpRatingAtJump, HK_ActualWtLbs, HK_Rating, Place, 
+                                Z_WinOddsRank, AVG3WinOddsRank, nUp, [Class+/-] as Class, 
+                                Rtg, [Gld?] as Gld, CWt, [%BW] as BW, [Wt+/-] as Wt, [NewTr?] as NewTr, 
+                                [LSW?] as LSW, [FirstStart?] as FirstStart, 
+                                [KAD?] as KAD, [ROLast?] as ROLast, [SwampedLast?] as SwampedLast, 
+                                [FUP?] as FUP, [LUP?] as LUP
+                        from DataGrid_staFN(@RaceId)",
                         new { RaceId = raceId });
 
                     race.Runners = runners.ToList();
@@ -221,12 +223,11 @@ namespace RaceDayDisplayApp.DAL
                 if (race != null)
                 {
                     var resultList = conn.Query<RunnerDyn>(@"
-                        select RunnerId, RaceId, isScratched, RaceId, 
+                        select isScratched, RunnerId, CurrentTime, RaceId, HorseNumber, HorseId, 
                         WinOdds, PlaceOdds, isWinFavorite, WinDropby20, WinDropby50,
                         isPlaceFavorite, PlaceDropby20, PlaceDropby50, 
                         ODDSLAST1, ODDSLAST2, ODDSLAST3
-                        from DataGrid_dyn2
-                        where RaceId=@RaceId",
+                        from DataGrid_dynFN(@RaceId)",
                         new { RaceId = raceId });
 
                     race.Runners = resultList;
@@ -240,19 +241,30 @@ namespace RaceDayDisplayApp.DAL
         /// <summary>
         /// used in the cache layer
         /// </summary>
-        internal int GetSecondsSinceLastUpdate(Race race)
+        internal int GetSecondsSinceLastUpdate(Race race, out int refreshInterval)
         {
             using (var conn = new SqlConnection(connectionString))
             {
                 conn.Open();
 
-                var resultList = conn.Query<int>(@"
-                        Select DATEDIFF(second, UpdateDateTime, getdate())
+                var resultList = conn.Query(@"
+                        Select DATEDIFF(second, UpdateDateTime, getdate()) as SecsSinceLastUpdate, Refreshinterval
                         from LastUpdates
                         where MeetingId = @meetingId and RaceNumber=@raceNumber",
                     new { meetingId = race.MeetingId, raceNumber = race.RaceNumber });
                 
-                return resultList.FirstOrDefault();
+                var result = resultList.FirstOrDefault();
+
+                if (result != null)
+                {
+                    refreshInterval = result.Refreshinterval;
+                    return result.SecsSinceLastUpdate;
+                }
+                else
+                {
+                    refreshInterval = -1;
+                    return -1;
+                }
             }
         }
 
@@ -276,24 +288,25 @@ namespace RaceDayDisplayApp.DAL
                     settings = UserSettings.DEFAULT;
 
                 var viewSettings = ModelHelper.ToViewUserSettings(settings, isHK);
+                return viewSettings;
 
-                //retrieve the statistical columns
-                var resultList2 = conn.Query(@"
-                    SELECT rs.LongName, rs.Ordering
-                    FROM RaceStatistics rs
-                    WHERE rs.MeetingId = @MeetingId",
-                    new { MeetingId = meetingId });
+//                //retrieve the statistical columns
+//                var resultList2 = conn.Query(@"
+//                    SELECT rs.LongName, rs.Ordering
+//                    FROM RaceStatistics rs
+//                    WHERE rs.MeetingId = @MeetingId",
+//                    new { MeetingId = meetingId });
 
-                string aux;
-                var statSettings = resultList2.Select(rs => new ViewUserSetting
-                {
-                    PropertyName = aux = "STATISTICS" + rs.Ordering,
-                    DisplayName = rs.LongName,
-                    Checked = (bool)typeof(UserSettings).GetProperty(aux).GetValue(settings)
-                });
+//                string aux;
+//                var statSettings = resultList2.Select(rs => new ViewUserSetting
+//                {
+//                    PropertyName = aux = "STATISTICS" + rs.Ordering,
+//                    DisplayName = rs.LongName,
+//                    Checked = (bool)typeof(UserSettings).GetProperty(aux).GetValue(settings)
+//                });
 
-                //concat user settings and statistical columns
-                return viewSettings.Concat(statSettings);
+                ////concat user settings and statistical columns
+                //return viewSettings.Concat(statSettings);
             }
         }
 

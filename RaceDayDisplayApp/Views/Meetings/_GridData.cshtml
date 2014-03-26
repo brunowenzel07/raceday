@@ -9,7 +9,15 @@
 
 @Html.HiddenFor(m => m.RaceId)
 
-<div id="raceStatus"></div>
+<tr>
+    <td width="10"><span class="cell_favorite">00</span></td>
+    <td width="70" align="left">Favourite</td>
+    <td width="10"><span class="cell_dropBy20">00</span></td>
+    <td width="100">Odds Drop by 20%</td>
+    <td width="10"><span class="cell_dropBy50">00</span></td>
+    <td width="100">Odds Drop by 50%</td>
+</tr>
+
 
 @(Html.Grid("race_grid")
 .SetDataType(MvcJqGrid.Enums.DataType.Json)
