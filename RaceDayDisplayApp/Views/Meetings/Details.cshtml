@@ -4,6 +4,7 @@
 
 @{
     ViewBag.Title = "Meeting Details";
+    ViewBag.IsGridPage = true;
 }
 
 @Html.HiddenFor(m => m.MeetingId)
@@ -29,16 +30,7 @@
                 </div>
             </div>
             <div id="meeting_details">
-                <h3>Meeting Details</h3>
-                <div class="details_attrs">
-                    @foreach (var field in ModelHelper.ToNameValuePairs(Model, Model.IsHK))
-                    {
-                        <div class="details_attrs_wrapper">
-                            @field.DisplayName:
-                            @field.Value
-                        </div>
-                    }
-                </div>
+                @{Html.RenderPartial("_MeetingData", Model);}
             </div>
             <div id="race_details">
             </div>

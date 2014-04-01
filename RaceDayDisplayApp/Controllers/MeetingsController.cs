@@ -154,11 +154,15 @@ namespace RaceDayDisplayApp.Controllers
             return View("_GridSettings", settings);
         }
 
-        public ActionResult RunnerHistory(int id, int raceId)
+        public ActionResult RunnerHistory(int id)
         {
             dynamic model = new ExpandoObject();
             model.HorseDetails = entities.GetHorseDetailsData(id);
-            model.RunnerHistory = entities.GetRunnerHistory(raceId, id);
+
+            var runnerHistory = entities.GetRunnerHistory(id);
+            model.RunnerHistory = runnerHistory;
+            model.Fields = RunnerHistoryHelper.GetFieldsIndexes(runnerHistory.First());
+
             return View(model);
         }
 

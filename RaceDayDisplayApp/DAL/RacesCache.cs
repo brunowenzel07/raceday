@@ -141,7 +141,11 @@ namespace RaceDayDisplayApp.DAL
                 r.RefreshValues.LastDBUpdate = now.AddSeconds(-secsSinceLastRefresh);
 
                 if (refreshInterval <= 0) //race is done but its status hasn't been updated
+                {
                     secsToAdd = 3;
+                    if (secsSinceLastRefresh > 300) //after 5 minutes, is considered done (it was a parsing error)
+                        r.isDone = true;
+                }
                 else if (secsSinceLastRefresh < refreshInterval) //normal case
                     secsToAdd = refreshInterval - secsSinceLastRefresh + ConfigValues.ServerAddedDelay;
                 else //db update is taking more than usual

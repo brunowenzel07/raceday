@@ -21,12 +21,12 @@ namespace RaceDayDisplayApp.Models
         [CustomDisplay(DisplayOn.NONE)]
         public int RunnerId { get; set; }
 
-        [CustomDisplay(DisplayOn.NONE)]
-        public DateTime CurrentTime { get; set; }
+        //[CustomDisplay(DisplayOn.NONE)]
+        //public DateTime CurrentTime { get; set; }
 
-        [Display(Name = "Time", Order = 12)]
-        [CustomDisplay(DisplayOn.BOTH, checkbox: false)]
-        public string _CurrentTime { get { return CurrentTime.ToString("mm:ss.fff"); } }
+        //[Display(Name = "Time", Order = 12)]
+        //[CustomDisplay(DisplayOn.BOTH, checkbox: false)]
+        //public string _CurrentTime { get { return CurrentTime.ToString("mm:ss.fff"); } }
 
         [CustomDisplay(DisplayOn.NONE)]
         public int RaceId { get; set; }
@@ -34,9 +34,6 @@ namespace RaceDayDisplayApp.Models
         [Display(Name = "Tab No.", Order = 1)]
         [CustomDisplay(DisplayOn.BOTH, checkbox: false)]
         public int HorseNumber { get; set; }
-
-        [CustomDisplay(DisplayOn.NONE)]
-        public int HorseId { get; set; }
 
         [Display(Order = 7)]
         [CustomDisplay(DisplayOn.BOTH, CustomFormatters.winOddsFormatter, checkbox:false)]
@@ -74,7 +71,15 @@ namespace RaceDayDisplayApp.Models
 
         [Display(Order = 6)]
         [CustomDisplay(DisplayOn.BOTH, CustomFormatters.currencyFormatter, checkbox: false)]
-        public int ODDSLAST3 { get; set; }  
+        public int ODDSLAST3 { get; set; }
+
+        [Display(Order = 9)]
+        [CustomDisplay(DisplayOn.BOTH, checkbox: false)]
+        public int Z_WinOddsRank { get; set; }
+
+        [Display(Order = 10)]
+        [CustomDisplay(DisplayOn.BOTH, checkbox: false)]
+        public int AVG3WinOddsRank { get; set; } 
     }
 
     /// <summary>
@@ -82,6 +87,9 @@ namespace RaceDayDisplayApp.Models
     /// </summary>
     public class Runner: RunnerDyn
     {
+        [CustomDisplay(DisplayOn.NONE)]
+        public int HorseId { get; set; }
+
         [Display(Name = "BP", Order = 3)]
         [CustomDisplay(DisplayOn.BOTH, checkbox: false)]
         public int Barrier { get; set; }
@@ -106,9 +114,9 @@ namespace RaceDayDisplayApp.Models
         [CustomDisplay(DisplayOn.BOTH)]
         public string Gear { get; set; }
 
-        [Display(Name = "NewTr?", Order = 99)]
-        [CustomDisplay(DisplayOn.BOTH)]
-        public string Z_newTrainerSinceLastStart { get; set; }
+        //[Display(Name = "NewTr?", Order = 99)]
+        //[CustomDisplay(DisplayOn.BOTH)]
+        //public string Z_newTrainerSinceLastStart { get; set; }
 
         //[CustomDisplay(DisplayOn.BOTH, CustomFormatters.percentageFormatter)]
         //[Display(Name = "Barrier Advantage", Order = 0)]
@@ -162,14 +170,6 @@ namespace RaceDayDisplayApp.Models
         //[CustomDisplay(DisplayOn.HK, CustomFormatters.currencyFormatter)]
         //public int HK_WinOdds { get; set; }
 
-        [Display(Order = 9)]
-        [CustomDisplay(DisplayOn.BOTH, checkbox: false)]
-        public int Z_WinOddsRank { get; set; }
-
-        [Display(Order = 10)]
-        [CustomDisplay(DisplayOn.BOTH, checkbox:false)]
-        public int AVG3WinOddsRank { get; set; } 
-        
         [Display(Order = 99)]
         [CustomDisplay(DisplayOn.BOTH)]
         public int nUp { get; set; } 
@@ -274,10 +274,10 @@ namespace RaceDayDisplayApp.Models
         {
             this.isScratched = runner.isScratched;
             this.RunnerId = runner.RunnerId;
-            this.CurrentTime = runner.CurrentTime;
+            //this.CurrentTime = runner.CurrentTime;
             this.RaceId = runner.RaceId;
             this.HorseNumber = runner.HorseNumber;
-            this.HorseId = runner.HorseId;
+            //this.HorseId = runner.HorseId;
 
             this.WinOdds = runner.WinOdds;
             this.PlaceOdds = runner.PlaceOdds;
@@ -291,6 +291,9 @@ namespace RaceDayDisplayApp.Models
             this.ODDSLAST1 = runner.ODDSLAST1;
             this.ODDSLAST2 = runner.ODDSLAST2;
             this.ODDSLAST3 = runner.ODDSLAST3;
+
+            this.Z_WinOddsRank = runner.Z_WinOddsRank;
+            this.AVG3WinOddsRank = runner.AVG3WinOddsRank;
         }
     }
 

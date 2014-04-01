@@ -21,7 +21,7 @@ namespace RaceDayDisplayApp
             bundles.Add(new ScriptBundle("~/bundles/jqGrid").Include(
                         "~/Scripts/i18n/grid.locale-en.js",
                         "~/Scripts/jquery.jqGrid.js",
-                        "~/Scripts/RaceDay.js"
+                        "~/Scripts/GridPage.js"
                         ));
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.unobtrusive*",
@@ -35,7 +35,10 @@ namespace RaceDayDisplayApp
             bundles.Add(new StyleBundle("~/Content/css").Include(
                         "~/Content/site.css",
                         "~/Content/styles.css",
-                        "~/Content/themes/base/jquery.ui.all.css",
+                        "~/Content/themes/base/jquery.ui.all.css"
+                        ));
+
+            bundles.Add(new StyleBundle("~/Content/jqGrid").Include(
                         "~/Content/jquery.jqGrid/ui.jqgrid.css"
                         ));
 

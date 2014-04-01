@@ -9,6 +9,14 @@ $(document).ready(function() {
         GridLoadComplete(e, data)
     });
 
+    $("#race-flip").click(function () {
+        $("#race-history").slideToggle("slow");
+    });
+
+    $("#meeting-flip").click(function () {
+        $("#meeting-history").slideToggle("slow");
+    });
+
 });
 
 function GridLoadComplete(e, data)
@@ -77,7 +85,8 @@ function percentageFormatter(cellvalue, options, rowObject) {
 }
 
 function linkFormatter(cellvalue, options, rowObject) {
-    return "<a href=\"../RunnerHistory/" + options.rowId + "?RaceId=" + $("#RaceId").val() + "\" onclick=\"window.open(this.href, 'mywin','left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;\" >" + cellvalue + "</a>";
+    return "<a href=\"../RunnerHistory/" + rowObject.HorseId + "\" onclick=\"window.open(this.href, 'mywin','left=20,top=20,width=1120,height=500,toolbar=1,resizable=0'); return false;\" >" + cellvalue + "</a>";
+    //+ "?RaceId=" + $("#RaceId").val() 
 }
 
 function winOddsFormatter(cellvalue, options, rowObject) {
@@ -229,5 +238,4 @@ function defaultSettings() {
         });
     }
 }
-
 

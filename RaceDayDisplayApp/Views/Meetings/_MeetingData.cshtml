@@ -4,22 +4,22 @@
     Layout = null;
 }
 
-@model Race
+@model Meeting
 
 
-<h3>Race Details</h3>
+<h3>Meeting Details</h3>
 <div class="details_attrs">
     @foreach (var field in ModelHelper.ToNameValuePairs(Model, Model.IsHK))
     {
         <div class="details_attrs_wrapper">
             @field.DisplayName:
-            <span id="@(field.FieldName)">@(field.Value)</span>
+            @field.Value
         </div>
     }
 </div>
 <div class="history-container">
-    <div class="panel-flip" id="race-flip">Show more (FAV/LSW/TF/QN/F4 statistics)</div>
-    <div class="panel-history" id="race-history">
+    <div class="panel-flip" id="meeting-flip">Show more (FAV/LSW/TF/QN/F4 statistics)</div>
+    <div class="panel-history" id="meeting-history">
         <table>
             <tr><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td></tr>
             <tr><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td></tr>

@@ -8,16 +8,20 @@
 
         @Scripts.Render("~/bundles/jquery")
         @Scripts.Render("~/bundles/jqueryui")
-        @Scripts.Render("~/bundles/jqGrid")
+
+        @if (ViewBag.IsGridPage != null && ViewBag.IsGridPage)
+        {
+            @Scripts.Render("~/bundles/jqGrid")
+            @Styles.Render("~/Content/jqGrid")
+        }
+
         @RenderSection("scripts", required: false)
 
-
         @Styles.Render("~/Content/css")
+        
         @Scripts.Render("~/bundles/modernizr")
     </head>
     <body>
-        @if (ViewBag.NoHeader == null || !ViewBag.NoHeader)
-        {
         <header>
             <div class="content-wrapper">
                 <div class="float-left">
@@ -37,8 +41,7 @@
                 </div>
             </div>
         </header>
-        }
-        <div id="body">
+        <div id="history-body">
             @RenderSection("featured", required: false)
             <section class="content-wrapper main-content clear-fix">
                 @RenderBody()

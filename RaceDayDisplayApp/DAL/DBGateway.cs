@@ -183,12 +183,13 @@ namespace RaceDayDisplayApp.DAL
 
                 if (race != null)
                 {
+                    //Z_WinOddsRank, AVG3WinOddsRank, 
                     var runners = conn.Query<Runner>(@"
                         SELECT	RaceId, HorseNumber, Barrier, RunnerId, 
                                 Name, Horse, isScratched, 
-                                HorseId, Jockey, Trainer, Z_newTrainerSinceLastStart, Gear, Age, Sex, Color,
+                                HorseId, Jockey, Trainer, Gear, Age, Sex, Color,
                                 AUS_HcpWt, AUS_HcpRatingAtJump, HK_ActualWtLbs, HK_Rating, Place, 
-                                Z_WinOddsRank, AVG3WinOddsRank, nUp, [Class+/-] as Class, 
+                                nUp, [Class+/-] as Class, 
                                 Rtg, [Gld?] as Gld, CWt, [%BW] as BW, [Wt+/-] as Wt, [NewTr?] as NewTr, 
                                 [LSW?] as LSW, [FirstStart?] as FirstStart, 
                                 [KAD?] as KAD, [ROLast?] as ROLast, [SwampedLast?] as SwampedLast, 
@@ -208,7 +209,6 @@ namespace RaceDayDisplayApp.DAL
         /// </summary>
         public RaceDyn GetRaceWithRunnersDyn(int raceId)
         {
-            //TODO
             using (var conn = new SqlConnection(connectionString))
             {
                 conn.Open();
@@ -223,10 +223,10 @@ namespace RaceDayDisplayApp.DAL
                 if (race != null)
                 {
                     var resultList = conn.Query<RunnerDyn>(@"
-                        select isScratched, RunnerId, CurrentTime, RaceId, HorseNumber, HorseId, 
+                        select isScratched, RunnerId, RaceId, HorseNumber, 
                         WinOdds, PlaceOdds, isWinFavorite, WinDropby20, WinDropby50,
                         isPlaceFavorite, PlaceDropby20, PlaceDropby50, 
-                        ODDSLAST1, ODDSLAST2, ODDSLAST3
+                        ODDSLAST1, ODDSLAST2, ODDSLAST3, Z_WinOddsRank, AVG3WinOddsRank
                         from DataGrid_dynFN(@RaceId)",
                         new { RaceId = raceId });
 
@@ -349,17 +349,17 @@ namespace RaceDayDisplayApp.DAL
         }
 
 
-        public IEnumerable<dynamic> GetRunnerHistory(int raceId, int horseId)
+        public IEnumerable<dynamic> GetRunnerHistory(int horseId)
         {
             using (var conn = new SqlConnection(connectionString))
             {
                 conn.Open();
 
-                return conn.Query("Select * from getRunnerHistory(@raceId, @horseId)",
+                return conn.Query("Select * from getRunnerHistory(@horseid, @date)",
                                     new 
                                     { 
-                                        raceId = raceId,
-                                        horseId = horseId,
+                                        horseid = horseId,
+                                        date = DateTime.UtcNow.Date,
                                     });
             }
         }
