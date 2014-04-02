@@ -356,14 +356,6 @@ ul
     list-style-type: none;
 }
 
-/*body {
-	font-size: 100%;
-	line-height:1;
-	-moz-text-size-adjust:100%;
-	-ms-text-size-adjust:100%;
-	-webkit-text-size-adjust:100%;
-}*/
-
 
 /************* RUNNER HISTORY ****************/
 
@@ -379,8 +371,8 @@ ul
     float:left;
 }
 
-history-body {
-    font: 12px/15px "Helvetica Neue",Arial, Helvetica, sans-serif;
+.history-body {
+    /*font: 12px/15px "Helvetica Neue",Arial, Helvetica, sans-serif;*/
     color: #555;
 }
 
@@ -392,9 +384,13 @@ history-body {
     width:100%;
 }
 
-.season-row{
+.season-row,
+.FU-row,
+.LU-row{
     text-align:center!important;
     font-weight:bold;
+    /*background:#dedede !important;*/
+    background: -webkit-gradient(linear, 0% 0%, 0% 25%, from(#f2f2f2), to(#ededed)) !important;
 }
 
 /*

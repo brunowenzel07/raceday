@@ -21,7 +21,10 @@
         $("#btn_0").click();
     });
 
-    function showFields(fields) {
+    function showFields(index, fields) {
+        $(".btn_hist").css('background-color', '#e1e0e1');
+        $("#btn_" + index).css('background-color', '#cccccc');
+
         $("table td, table th").hide(); //css('display', 'table-cell');
 
         $.each(fields, function (index, value) {
@@ -55,7 +58,7 @@
             }
         </div>
     </div>
-    <tr class="runner-history">
+    <div class="runner-history">
         <h2>Runner History</h2>
         @if (Model.RunnerHistory == null && Model.RunnerHistory.Count() == 0)
         {
@@ -68,7 +71,7 @@
                 @foreach (var item in Model.Fields)
                 {
                     <div class="hist_table_controls">
-                        <input id="btn_@(i++)" type="button" value="@(item.Key)" onclick="showFields(@(item.Value))" />
+                        <input id="btn_@(i)" class="btn_hist" type="button" value="@(item.Key)" onclick="showFields(@(i++), @(item.Value))" />
                     </div>
                 }
             </div>
@@ -97,17 +100,16 @@
                     }
                     if (item.LU != null)
                     {
-                        <tr><td class="FU-row" colspan="@RunnerHistoryHelper.GetNumAttrs(item)">FRESHEN UP</td></tr>
+                        <tr><td class="LU-row" colspan="@RunnerHistoryHelper.GetNumAttrs(item)">FRESHEN UP</td></tr>
                     }
                     <tr>
                         @foreach (KeyValuePair<string, object> kvp in item)
                         {
-                            <td>
-                                @if (!RunnerHistoryHelper.ControlFields.Contains(kvp.Key) && kvp.Value != null)
-                                {
-                                    @RunnerHistoryHelper.FormatField(kvp.Key, kvp.Value);
-                                }
-                            </td>
+                            if (!RunnerHistoryHelper.ControlFields.Contains(kvp.Key))
+                            {
+                                <td>@RunnerHistoryHelper.FormatField(kvp.Key, kvp.Value)</td>
+                            }
+
                         }
                     </tr>
                 }

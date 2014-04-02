@@ -10,7 +10,7 @@ namespace RaceDayDisplayApp.Models
 {
     public static class RunnerHistoryHelper
     {
-        public static string[] ControlFields = new[] { "Season" };//, "ROLast?", "SwampedLast?", "FU", "LU" };
+        public static string[] ControlFields = new[] { "Season" };//,  "SwampedLast?", "FU", "LU" };
 
         static string fixedGroupName;
         static Dictionary<string, List<string>> fields;
@@ -48,6 +48,9 @@ namespace RaceDayDisplayApp.Models
 
         public static string FormatField(string name, object value)
         {
+            if (value == null)
+                return null;
+
             string formatter;
             if (formatters.TryGetValue(name, out formatter))
             {

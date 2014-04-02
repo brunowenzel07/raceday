@@ -289,9 +289,9 @@
     <Content Include="Images\arrow.png" />
     <Content Include="Images\arrow_next.jpg" />
     <Content Include="Images\arrow_prev.jpg" />
-    <None Include="RunnerHistoryFields.config">
+    <Content Include="RunnerHistoryFields.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    </Content>
     <Content Include="Scripts\i18n\grid.locale-ar.js" />
     <Content Include="Scripts\i18n\grid.locale-bg.js" />
     <Content Include="Scripts\i18n\grid.locale-bg1251.js" />
