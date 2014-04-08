@@ -1,0 +1,58 @@
+﻿@model RaceDayDisplayApp.Models.HistoryFilters
+
+@{
+    ViewBag.Title = "Race Research";
+}
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/RaceResearch")
+}
+
+@Html.HiddenFor(m => m.AllRaceCourseItems)
+
+<h2>Race Research</h2>  
+<div class="filters-container">
+    <div class="filters-container-half">
+        <div class="filter">
+            @Html.LabelFor(m => m.SelectedCountryId)
+            @Html.DropDownListFor(m => m.SelectedCountryId, Model.CountryItems)
+            @Html.ValidationMessageFor(m => m.SelectedCountryId)
+        </div>
+        <div class="filter">
+            @Html.LabelFor(m => m.SelectedRaceCourseId)
+            @Html.DropDownListFor(m => m.SelectedRaceCourseId, Model.RaceCourseItems)
+            @Html.ValidationMessageFor(m => m.SelectedRaceCourseId)
+        </div>
+        <div class="filter">
+            @Html.LabelFor(m => m.SelectedSeasonId)
+            @Html.DropDownListFor(m => m.SelectedSeasonId, Model.SeasonItems)
+            @Html.ValidationMessageFor(m => m.SelectedSeasonId)
+        </div>
+    </div>
+    <div class="filters-container-half">
+        <div>
+            <div class="filter">
+                @Html.LabelFor(m => m.SelectedSuperMeetTypeId)
+                @Html.DropDownListFor(m => m.SelectedSuperMeetTypeId, Model.SuperMeetTypeItems)
+                @Html.ValidationMessageFor(m => m.SelectedSuperMeetTypeId)
+            </div>
+            <div class="filter">
+                @Html.LabelFor(m => m.SelectedSuperRaceTypeId)
+                @Html.DropDownListFor(m => m.SelectedSuperRaceTypeId, Model.SuperRaceTypeItems)
+                @Html.ValidationMessageFor(m => m.SelectedSuperRaceTypeId)
+            </div>
+            <div class="filter">
+                @Html.LabelFor(m => m.SelectedNumRunnersId)
+                @Html.DropDownListFor(m => m.SelectedNumRunnersId, Model.NumRunnersItems)
+                @Html.ValidationMessageFor(m => m.SelectedNumRunnersId)
+            </div>
+        </div>
+        <div class="filters-button-container">
+            <input id="go-button" type="button" value="GO" />
+        </div>
+    </div>
+</div>
+<div class="tables-container">
+
+</div>

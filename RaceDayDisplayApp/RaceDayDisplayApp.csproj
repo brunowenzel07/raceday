@@ -195,6 +195,7 @@
     <Compile Include="ConfigValues.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\MeetingsController.cs" />
+    <Compile Include="Controllers\RaceResearchController.cs" />
     <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -205,6 +206,7 @@
     <Compile Include="Models\CustomAttributes.cs" />
     <Compile Include="DAL\DBGateway.cs" />
     <Compile Include="Models\Meeting.cs" />
+    <Compile Include="Models\HistoryFilters.cs" />
     <Compile Include="Models\_Helpers\ModelHelper.cs" />
     <Compile Include="Models\Race.cs" />
     <Compile Include="Models\Runner.cs" />
@@ -221,6 +223,7 @@
   <ItemGroup>
     <Content Include="Content\jquery.jqGrid\ellipsis-xbl.xml" />
     <Content Include="Content\jquery.jqGrid\ui.jqgrid.css" />
+    <Content Include="Content\jquery.ui.combobox.css" />
     <Content Include="Content\styles.css" />
     <Content Include="Content\themes\base\images\animated-overlay.gif" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
@@ -346,6 +349,7 @@
     <Content Include="Scripts\jquery-ui-1.10.3.min.js" />
     <Content Include="Scripts\jquery.jqGrid.min.js" />
     <Content Include="Scripts\jquery.jqGrid.js" />
+    <Content Include="Scripts\jquery.ui.combobox.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
@@ -355,6 +359,8 @@
     <Content Include="Scripts\knockout-2.2.0.debug.js" />
     <Content Include="Scripts\knockout-2.2.0.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\RaceResearch.js" />
+    <Content Include="Scripts\RunnerHistory.js" />
     <Content Include="SQL\LastUpdates.sql" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -408,6 +414,8 @@
     <Content Include="Views\Meetings\RunnerHistory.cshtml" />
     <Content Include="Views\Meetings\_MeetingData.cshtml" />
     <Content Include="Views\Shared\_EmptyLayout.cshtml" />
+    <Content Include="Views\RaceResearch\Index.cshtml" />
+    <Content Include="Views\RaceResearch\_Tables.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

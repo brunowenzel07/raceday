@@ -1,23 +1,22 @@
 ﻿@model IEnumerable<RaceDayDisplayApp.Models.Country>
 
 @{
-    ViewBag.Title = ViewBag.Today? "Today's Meetings" : "All meetings";
-    ViewBag.IsGridPage = false;
+    ViewBag.Title = ViewBag.Today? "Upcoming Meetings" : "All meetings";
 }
 
 <div class="index_head">
     @if (ViewBag.Today)
     {
-        <h2>@String.Format("Meetings on {0}, {1}", DateTime.Today.DayOfWeek.ToString(), DateTime.Today.ToShortDateString())</h2>
+        <h2>@String.Format("Upcoming Meetings starting {0}, {1}", DateTime.Today.DayOfWeek.ToString(), DateTime.Today.ToShortDateString())</h2>
         <div class="index_link1">
-            @Html.ActionLink("View All Meetings", "Index", new { today = false })
+            @Html.ActionLink("View Upcoming Meetings", "Index", new { today = false })
         </div>
     }
     else
     {
         <h2>All Meetings</h2>
         <div class="index_link1">
-            @Html.ActionLink("View only Today's Meetings", "Index", new { today = true })
+            @Html.ActionLink("View only upcoming Meetings", "Index", new { today = true })
         </div>
     }
     <div class="index_link2">
@@ -35,9 +34,7 @@
             {
                 <table>
                     <tr>
-                        @if (!ViewBag.Today) {
                         <th>Date</th>
-                        }
                         <th>Local</th>
                         <th>UTC</th>
                         <th>Racecourse</th>
@@ -50,9 +47,7 @@
                         <li>@Html.ActionLink(linkText, "Details", new { id = meeting.MeetingId })</li>*@
 
                         <tr>
-                            @if (!ViewBag.Today) {
-                                <td>@meeting.MeetingDate.ToShortDateString()</td>
-                            }
+                            <td>@meeting.MeetingDate.ToShortDateString()</td>
                             <td>@(meeting.MinJumpTimeLocal.ToString())</td>
                             <td>@(meeting.MinRaceJumpDateTimeUTC.ToShortTimeString())</td>
                             <td>@Html.ActionLink(meeting.RaceCourseName??"(no race course name)", "Details", new { id = meeting.MeetingId })</td>

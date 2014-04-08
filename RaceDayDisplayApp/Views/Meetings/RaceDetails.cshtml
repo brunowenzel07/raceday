@@ -4,7 +4,11 @@
 
 @{
     ViewBag.Title = "Meeting Details";
-    ViewBag.IsGridPage = true;
+}
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqGrid")
 }
 
 @Html.HiddenFor(m => m.MeetingId)

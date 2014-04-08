@@ -142,8 +142,9 @@ namespace RaceDayDisplayApp.Models
                     return col;
                 });
 
-            var statisticalColumns = new DBGateway().GetGridColumns(race);
-            return columns.Concat(statisticalColumns);
+            return columns;
+            //var statisticalColumns = new DBGateway().GetGridColumns(race);
+            //return columns.Concat(statisticalColumns);
         }
 
         private static DisplayAttribute getDisplayAttribute(PropertyInfo info)

@@ -1,13 +1,12 @@
 ﻿@model IEnumerable<RaceDayDisplayApp.Models.RaceDisplay>
 
 @{
-    ViewBag.Title = ViewBag.Today? "Today's Races" : "All races";
-    ViewBag.IsGridPage = false;
+    ViewBag.Title = ViewBag.Today? "Upcoming Races" : "All races";
 }
 
 <div class="index_head">
     @if (ViewBag.Today) {
-        <h2>@String.Format("Races on {0}, {1}", DateTime.Today.DayOfWeek.ToString(), DateTime.Today.ToShortDateString())</h2>
+        <h2>@String.Format("Upcoming Races starting {0}, {1}", DateTime.Today.DayOfWeek.ToString(), DateTime.Today.ToShortDateString())</h2>
         <div class="index_link1">
             @Html.ActionLink("View All Races", "RaceIndex", new { today = false })
         </div>
@@ -16,7 +15,7 @@
     {
         <h2>All Races</h2>
         <div class="index_link1">
-            @Html.ActionLink("View only Today's Races", "RaceIndex", new { today = true })
+            @Html.ActionLink("View only upcoming Races", "RaceIndex", new { today = true })
         </div>
     }
     <div class="index_link2">
@@ -29,9 +28,7 @@
     <div class="race_table">
         <table>
             <tr>
-                @if (!ViewBag.Today) {
-            <th>Date</th>
-            }
+                <th>Date</th>
                 <th>JT local</th>
                 <th>JT UTC</th>
                 <th>Racecourse</th>
@@ -54,10 +51,7 @@
                 
                 <tr @Html.Raw(classTxt)>
  
-                    @if (!ViewBag.Today) {
-                        <td>@race.MeetingDate.ToShortDateString()</td>
-                    }
-                
+                    <td>@race.MeetingDate.ToShortDateString()</td>
                     <td>@race.LocalJumpTime.ToString()</td>
                     <td>@race.RaceJumpDateTimeUTC.ToString("hh:mm")</td>
                     <td>@race.RaceCourseName</td>

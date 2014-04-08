@@ -487,3 +487,39 @@ And, since we've applied the background colors to td/th element because of IE, G
     -moz-border-radius-bottomright: 5px;
     -webkit-border-bottom-right-radius: 5px; /* Saf3-4 */
 }
+
+/************************************RACE RESEARCH***************************************/
+
+
+.filters-container-half
+{
+    float: left;
+    width: 50%;
+}
+
+@media (max-width: 750px) {
+
+    .filters-container-half
+    {
+        width: 100%;
+    }
+}
+
+.filters-container{
+    float:left;
+    width:100%;
+}
+
+.filter{
+    float:left;
+    width:33%;
+}
+.ui-widget-content {
+    width: 88%;
+}
+
+.filters-button-container{
+    float: right;
+    margin-right: 8px;
+    margin-top: 10px;
+}

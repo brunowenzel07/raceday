@@ -261,8 +261,12 @@ namespace RaceDayDisplayApp.Models
 
         internal void Update(RaceDyn race)
         {
-            this.Runners.ToList().ForEach(r => 
-                ((Runner)r).Update(race.Runners.First(rd => rd.RunnerId == r.RunnerId)));
+            this.Runners.ToList().ForEach(r =>
+                {
+                    var runDyn = race.Runners.FirstOrDefault(rd => rd.RunnerId == r.RunnerId);
+                    if (runDyn != null)
+                        ((Runner)r).Update(runDyn);
+                });
             this.isDone = this.isDone || race.isDone;
             this.RaceWinPool = race.RaceWinPool;
             this.RacePPPool = race.RacePPPool;

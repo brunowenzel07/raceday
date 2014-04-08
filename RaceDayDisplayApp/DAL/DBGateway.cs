@@ -5,6 +5,8 @@ using System.Configuration;
 using System.Linq;
 using System.Data.SqlClient;
 using Dapper;
+using System.Web.Mvc;
+using System.Web.Script.Serialization;
 
 namespace RaceDayDisplayApp.DAL
 {
@@ -31,9 +33,9 @@ namespace RaceDayDisplayApp.DAL
                     FROM Country AS c INNER JOIN Meeting AS m ON c.Id = m.CountryId
 			                          LEFT JOIN RaceCourse AS rc ON m.RaceCourseId = rc.Id
 									  LEFT JOIN Race AS r on r.MeetingId = m.Id
-                    WHERE c.inUse = 1" + (filterByToday ? " AND m.MeetingDate = CONVERT(date, getdate())" : "") + @"
+                    WHERE c.inUse = 1" + (filterByToday ? " AND m.MeetingDate >= CONVERT(date, getdate())" : "") + @"
 					GROUP BY c.Id, c.Name, m.Id, m.MeetingDate, rc.Name
-					ORDER BY m.MeetingDate DESC, MinRaceJumpDateTimeUTC DESC",
+					ORDER BY m.MeetingDate ASC, MinRaceJumpDateTimeUTC ASC",
                     (c, m) =>
                     {
                         Country country;
@@ -71,8 +73,8 @@ namespace RaceDayDisplayApp.DAL
                            LocalJumpTime, AUS_StateId as StateId, RaceStatus
                     FROM Race INNER JOIN Meeting on Meeting.Id = Race.MeetingId
 		                      INNER JOIN RaceCourse on Meeting.RaceCourseId = RaceCourse.Id
-                    " + (today ? "WHERE Meeting.MeetingDate = CONVERT(date, getdate())" : "") + @"
-                    ORDER BY MeetingDate DESC, RaceJumpDateTimeUTC DESC");
+                    " + (today ? "WHERE Meeting.MeetingDate >= CONVERT(date, getdate())" : "") + @"
+                    ORDER BY MeetingDate ASC, RaceJumpDateTimeUTC ASC");
                 //TODO review the WHERE condition            
             }
         }
@@ -395,6 +397,98 @@ namespace RaceDayDisplayApp.DAL
         //            }
         //        }
 
+
+        static HistoryFilters historyFiltersInstance = null;
+
+        public HistoryFilters GetHistoryFilters()
+        {
+            //no need to retrieve from database every time
+            if (historyFiltersInstance != null)
+                return historyFiltersInstance;
+
+            HistoryFilters result = new HistoryFilters();
+            historyFiltersInstance = result;
+
+            using (var conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                result.CountryItems = conn.Query("Select Id, Name from Country").Select(c =>
+                    new SelectListItem
+                    {
+                        Value = c.Id.ToString(),
+                        Text = c.Name
+                    });
+
+
+                var allRaceCourses = conn.Query("Select Id, Name, CountryId from RaceCourse");
+                result.AllRaceCourseItems = new JavaScriptSerializer().Serialize(allRaceCourses);
+
+                var firstCountryId = int.Parse(result.CountryItems.First().Value);
+                result.RaceCourseItems = allRaceCourses
+                    .Where(rc => rc.CountryId == firstCountryId)
+                    .Select(rc =>
+                    new SelectListItem
+                    {
+                        Value = rc.Id.ToString(),
+                        Text = rc.Name
+                    });
+
+
+                result.SeasonItems = conn.Query("Select Id, Name from Season").Select(c =>
+                    new SelectListItem
+                    {
+                        Value = c.Id.ToString(),
+                        Text = c.Name
+                    });
+
+                result.SuperMeetTypeItems = conn.Query("Select Id, Name from SuperMeetingType").Select(c =>
+                    new SelectListItem
+                    {
+                        Value = c.Id.ToString(),
+                        Text = c.Name
+                    });
+
+
+                //TODO
+                result.SuperRaceTypeItems = new List<SelectListItem>( new [] { 
+                    new SelectListItem
+                    {
+                        Value = "1",
+                        Text = "superracetype1"
+                    },
+                    new SelectListItem
+                        {
+                            Value = "1",
+                            Text = "superracetype1"
+                        }
+                });
+                //result.SuperRaceTypeItems = conn.Query("Select Id, Name from SuperRaceType").Select(c =>
+                //    new SelectListItem
+                //    {
+                //        Value = c.Id.ToString(),
+                //        Text = c.Name
+                //    });
+
+                var numRun = new List<SelectListItem>(39);
+                numRun.Add(new SelectListItem
+                {
+                    Value = "0",
+                    Text = "ALL"
+                });
+                for (int i = 2; i <= 40; i++)
+			    {
+                    numRun.Add(new SelectListItem
+                        {
+                            Value = i.ToString(),
+                            Text = i.ToString()
+                        });
+			    }
+                result.NumRunnersItems = numRun;
+            }
+
+            return result;
+        }
 
     }
 

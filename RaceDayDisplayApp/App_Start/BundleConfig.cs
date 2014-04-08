@@ -16,7 +16,8 @@ namespace RaceDayDisplayApp
                         ));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryui").Include(
-                        "~/Scripts/jquery-ui-{version}.js"));
+                        "~/Scripts/jquery-ui-{version}.js",
+                        "~/Scripts/jquery.ui.combobox.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqGrid").Include(
                         "~/Scripts/i18n/grid.locale-en.js",
@@ -32,15 +33,20 @@ namespace RaceDayDisplayApp
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
                         "~/Scripts/modernizr-*"));
 
+            bundles.Add(new ScriptBundle("~/bundles/RunnerHistory").Include(
+                        "~/Scripts/RunnerHistory.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/RaceResearch").Include(
+                        "~/Scripts/RaceResearch.js"));
+
             bundles.Add(new StyleBundle("~/Content/css").Include(
                         "~/Content/site.css",
                         "~/Content/styles.css",
-                        "~/Content/themes/base/jquery.ui.all.css"
+                        "~/Content/themes/base/jquery.ui.all.css",
+                        "~/Content/jquery.jqGrid/ui.jqgrid.css",
+                        "~/Content/jquery.ui.combobox.css"
                         ));
 
-            bundles.Add(new StyleBundle("~/Content/jqGrid").Include(
-                        "~/Content/jquery.jqGrid/ui.jqgrid.css"
-                        ));
 
             //bundles.Add(new StyleBundle("~/Content/themes/base/css").Include(
             //            "~/Content/themes/base/jquery.ui.core.css",
