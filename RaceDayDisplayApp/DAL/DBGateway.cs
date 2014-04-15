@@ -419,14 +419,14 @@ namespace RaceDayDisplayApp.DAL
                         Value = c.Id.ToString(),
                         Text = c.Name
                     });
+                result.SelectedCountryId = int.Parse(result.CountryItems.FirstOrDefault(c => c.Text == "Australia").Value);
 
 
                 var allRaceCourses = conn.Query("Select Id, Name, CountryId from RaceCourse");
                 result.AllRaceCourseItems = new JavaScriptSerializer().Serialize(allRaceCourses);
 
-                var firstCountryId = int.Parse(result.CountryItems.First().Value);
                 result.RaceCourseItems = allRaceCourses
-                    .Where(rc => rc.CountryId == firstCountryId)
+                    .Where(rc => rc.CountryId == result.SelectedCountryId)
                     .Select(rc =>
                     new SelectListItem
                     {
@@ -441,6 +441,7 @@ namespace RaceDayDisplayApp.DAL
                         Value = c.Id.ToString(),
                         Text = c.Name
                     });
+                result.SelectedSeasonId = int.Parse(result.SeasonItems.FirstOrDefault(s => s.Text == "ALL SEASONS").Value);
 
                 result.SuperMeetTypeItems = conn.Query("Select Id, Name from SuperMeetingType").Select(c =>
                     new SelectListItem
@@ -450,25 +451,12 @@ namespace RaceDayDisplayApp.DAL
                     });
 
 
-                //TODO
-                result.SuperRaceTypeItems = new List<SelectListItem>( new [] { 
+                result.SuperRaceTypeItems = conn.Query("Select Id, Name from SuperRaceType").Select(c =>
                     new SelectListItem
                     {
-                        Value = "1",
-                        Text = "superracetype1"
-                    },
-                    new SelectListItem
-                        {
-                            Value = "1",
-                            Text = "superracetype1"
-                        }
-                });
-                //result.SuperRaceTypeItems = conn.Query("Select Id, Name from SuperRaceType").Select(c =>
-                //    new SelectListItem
-                //    {
-                //        Value = c.Id.ToString(),
-                //        Text = c.Name
-                //    });
+                        Value = c.Id.ToString(),
+                        Text = c.Name
+                    });
 
                 var numRun = new List<SelectListItem>(39);
                 numRun.Add(new SelectListItem
@@ -485,11 +473,34 @@ namespace RaceDayDisplayApp.DAL
                         });
 			    }
                 result.NumRunnersItems = numRun;
+                result.SelectedNumRunnersId = 0;
+
             }
 
             return result;
         }
 
+
+        public IEnumerable<dynamic> GetMarketData(HistoryFilters filters)
+        {
+            using (var conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                return conn.Query("Select * from RaceStatistics");
+            }
+        }
+
+
+        internal IEnumerable<dynamic> GetFormFactors(HistoryFilters filters)
+        {
+            using (var conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                return conn.Query("Select * from Formfactors");
+            }
+        }
     }
 
 }

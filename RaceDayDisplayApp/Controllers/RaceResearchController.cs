@@ -3,6 +3,7 @@ using RaceDayDisplayApp.Filters;
 using RaceDayDisplayApp.Models;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -21,14 +22,21 @@ namespace RaceDayDisplayApp.Controllers
         public ActionResult Index()
         {
             var filters = entities.GetHistoryFilters();
-
             return View(filters);
         }
 
-        public ActionResult Tables(int country, int racecourse, int season,
-                                   int meetType, int raceType, int noRunners)
+        //public ActionResult Tables(int country, int racecourse, int season,
+        //                           int meetType, int raceType, int noRunners)
+        public ActionResult Tables(HistoryFilters filters)
         {
-            return View("_Tables");
+            if (ModelState.IsValid)
+            {
+                ViewBag.MarketData =
+                    entities.GetMarketData(filters);
+                ViewBag.FormFactors = entities.GetFormFactors(filters);
+                return View("_Tables");
+            }
+            return null;
         }
     }
 }

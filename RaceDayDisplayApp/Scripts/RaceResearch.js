@@ -1,18 +1,15 @@
 ﻿$(function () {
-
     $('select').combobox();
 
-    $('#SelectedSeasonId').combobox('value', $('#SelectedSeasonId option:last-child').val());
-
-    $('#go-button').button()
-       .click(function () {
-           go($('#SelectedCountryId').combobox('value'),
-              $('#SelectedRaceCourseId').combobox('value'),
-              $('#SelectedSeasonId').combobox('value'),
-              $('#SelectedSuperMeetTypeId').combobox('value'),
-              $('#SelectedSuperRaceTypeId').combobox('value'),
-              $('#SelectedNumRunnersId').combobox('value'))
-       });
+    //$('#go-button').button()
+    //   .click(function () {
+    //       go($('#SelectedCountryId').combobox('value'),
+    //          $('#SelectedRaceCourseId').combobox('value'),
+    //          $('#SelectedSeasonId').combobox('value'),
+    //          $('#SelectedSuperMeetTypeId').combobox('value'),
+    //          $('#SelectedSuperRaceTypeId').combobox('value'),
+    //          $('#SelectedNumRunnersId').combobox('value'))
+    //   });
 
 
     $("#SelectedCountryId").combobox({
@@ -40,72 +37,39 @@
             });
 
             $('#SelectedRaceCourseId').combobox('value', $('#SelectedRaceCourseId option:first-child').val());
-            //$('#SelectedSeasonId').combobox('value', $('#SelectedSeasonId option:last-child').val());
-            //$('#SelectedSuperMeetTypeId').combobox('value', $('#SelectedSuperMeetTypeId option:first-child').val());
-
-            //$('#SelectedRaceCourseId').val($('#SelectedRaceCourseId option:first-child').val());
-            //$('#SelectedRaceCourseId option:first-child').attr("selected", "selected");
-            //$("#SelectedRaceCourseId").val($("#SelectedRaceCourseId option:first").val());
         }
     });
 
-    //$("#SelectedRaceCourseId").combobox({
-    //    select: function (event, ui) {
-    //        $('#SelectedSeasonId').combobox('value', $('#SelectedSeasonId option:last-child').val());
-    //        $('#SelectedSuperMeetTypeId').combobox('value', $('#SelectedSuperMeetTypeId option:first-child').val());
-    //    }
-    //});
+    // this is the id of the form
+    $("#filters-form").submit(function () {
 
-    //$("#SelectedSeasonId").combobox({
-    //    select: function (event, ui) {
-    //        $('#SelectedSuperMeetTypeId').combobox('value', $('#SelectedSuperMeetTypeId option:first-child').val());
-    //    }
-    //});
+        var error = false;
+        $.each($('select'), function (index, value) {
+            var txt = '';
+            if (value.value == "") {
+                txt = 'Please select a valid value';
+                error = true;
+            }
+            $('#error_' + value.id).text(txt);
+        });
 
-    //$("#SelectedSuperMeetTypeId").combobox({
-    //    select: function (event, ui) {
-    //    }
-    //});
+        if (!error) {
+            $.ajax({
+                type: "POST",
+                url: '/RaceResearch/Tables',
+                data: $("#filters-form").serialize(), // serializes the form's elements.
+                success: function (data) {
+                    var tabCont = $("#tables-container");
+                    tabCont.empty();
+                    tabCont.append(data);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert(xhr.responseText);
+                }
+            });
+        }
 
-    //$("#SelectedSuperRaceTypeId").combobox({
-    //    select: function (event, ui) {
-    //    }
-    //});
+        return false; // avoid to execute the actual submit of the form.
+    });
 
 });
-
-function go(country, racecourse, season, meetType, raceType, noRunners) {
-    $.ajax({
-        type: 'POST',
-        url: '/RaceResearch/Tables',
-        data: {
-            country: country,
-            racecourse: racecourse, 
-            season: season, 
-            meetType: meetType, 
-            raceType: raceType, 
-            noRunners: noRunners
-        },
-        success: function (data) {
-            var index = data.search('<!--GRID STARTS HERE-->');
-            var details = data.substring(0, index);
-            var grid = data.substring(index);
-            $("#race_details").empty();
-            $("#form-box").empty();
-            $('#race_details').append(details);
-            $("#form-box").append(grid);
-            showHideColumns();
-
-            $("#race_grid").bind('jqGridLoadComplete', function (e, data) {
-                GridLoadComplete(e, data)
-            });
-
-            $(".chks_container").show();
-            $("#btns_div").show();
-            $("#panel_right").show();
-        },
-        error: function (xhr, ajaxOptions, thrownError) {
-            alert(xhr.responseText);
-        }
-    });
-}

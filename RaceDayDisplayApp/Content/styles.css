@@ -397,7 +397,7 @@ ul
 Pretty Table Styling
 CSS Tricks also has a nice writeup: http://css-tricks.com/feature-table-design/
 */
-.table-runner-history {
+.stats-table {
     overflow: hidden;
     border: 1px solid #d3d3d3;
     background: #fefefe;
@@ -410,8 +410,8 @@ CSS Tricks also has a nice writeup: http://css-tricks.com/feature-table-design/
     -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
 }
 
-.table-runner-history th,
-.table-runner-history td {
+.stats-table th,
+.stats-table td {
     padding: 5px 10px 5px;
     text-align: center;
     white-space: nowrap; 
@@ -419,26 +419,26 @@ CSS Tricks also has a nice writeup: http://css-tricks.com/feature-table-design/
     text-overflow:ellipsis;
 }
 
-.table-runner-history th {
+.stats-table th {
     padding-top: 10px;
     text-shadow: 1px 1px 1px #fff;
     background: #e8eaeb;
 }
 
-.table-runner-history td {
+.stats-table td {
     border-top: 1px solid #e0e0e0;
     border-right: 1px solid #e0e0e0;
 }
 
-.table-runner-history tr.odd-row td {
+.stats-table tr.odd-row td {
     background: #f6f6f6;
 }
 
-.table-runner-history td.first, th.first {
+.stats-table td.first, th.first {
     text-align: left;
 }
 
-.table-runner-history td.last {
+.stats-table td.last {
     border-right: none;
 }
 
@@ -446,17 +446,17 @@ CSS Tricks also has a nice writeup: http://css-tricks.com/feature-table-design/
 Background gradients are completely unnecessary but a neat effect.
 */
 
-.table-runner-history td {
+.stats-table td {
     background: -moz-linear-gradient(100% 25% 90deg, #fefefe, #f9f9f9);
     background: -webkit-gradient(linear, 0% 0%, 0% 25%, from(#f9f9f9), to(#fefefe));
 }
 
-.table-runner-history tr.odd-row td {
+.stats-table tr.odd-row td {
     background: -moz-linear-gradient(100% 25% 90deg, #f6f6f6, #f1f1f1);
     background: -webkit-gradient(linear, 0% 0%, 0% 25%, from(#f1f1f1), to(#f6f6f6));
 }
 
-.table-runner-history th {
+.stats-table th {
     background: -moz-linear-gradient(100% 20% 90deg, #e8eaeb, #ededed);
     background: -webkit-gradient(linear, 0% 0%, 0% 20%, from(#ededed), to(#e8eaeb));
 }
@@ -468,22 +468,22 @@ Nice write up of this issue: http://www.onenaught.com/posts/266/css-inner-elemen
 And, since we've applied the background colors to td/th element because of IE, Gecko browsers also need it.
 */
 
-.table-runner-history tr:first-child th.first {
+.stats-table tr:first-child th.first {
     -moz-border-radius-topleft: 5px;
     -webkit-border-top-left-radius: 5px; /* Saf3-4 */
 }
 
-.table-runner-history tr:first-child th.last {
+.stats-table tr:first-child th.last {
     -moz-border-radius-topright: 5px;
     -webkit-border-top-right-radius: 5px; /* Saf3-4 */
 }
 
-.table-runner-history tr:last-child td.first {
+.stats-table tr:last-child td.first {
     -moz-border-radius-bottomleft: 5px;
     -webkit-border-bottom-left-radius: 5px; /* Saf3-4 */
 }
 
-.table-runner-history tr:last-child td.last {
+.stats-table tr:last-child td.last {
     -moz-border-radius-bottomright: 5px;
     -webkit-border-bottom-right-radius: 5px; /* Saf3-4 */
 }
@@ -497,7 +497,7 @@ And, since we've applied the background colors to td/th element because of IE, G
     width: 50%;
 }
 
-@media (max-width: 750px) {
+@media (max-width: 800px) {
 
     .filters-container-half
     {
@@ -510,16 +510,33 @@ And, since we've applied the background colors to td/th element because of IE, G
     width:100%;
 }
 
-.filter{
+.filter, .short-filter, .long-filter{
     float:left;
+}
+.filter{
     width:33%;
 }
+.long-filter{
+    width:47%;
+}
+.short-filter{
+    width:20%;
+    min-width:98px;
+    margin-left:8px;
+}
+
 .ui-widget-content {
     width: 88%;
 }
 
+.long-filter .ui-combobox{
+    /*min-width: 300px;*/
+    width: 100%;
+}
+
 .filters-button-container{
     float: right;
-    margin-right: 8px;
+    margin-right: 8%;
     margin-top: 10px;
 }
+

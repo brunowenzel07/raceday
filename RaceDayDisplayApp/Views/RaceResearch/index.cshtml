@@ -7,52 +7,65 @@
 @section scripts
 {
     @Scripts.Render("~/bundles/RaceResearch")
+    @Scripts.Render("~/bundles/jqueryval")
 }
+
 
 @Html.HiddenFor(m => m.AllRaceCourseItems)
 
 <h2>Race Research</h2>  
-<div class="filters-container">
-    <div class="filters-container-half">
-        <div class="filter">
-            @Html.LabelFor(m => m.SelectedCountryId)
-            @Html.DropDownListFor(m => m.SelectedCountryId, Model.CountryItems)
-            @Html.ValidationMessageFor(m => m.SelectedCountryId)
-        </div>
-        <div class="filter">
-            @Html.LabelFor(m => m.SelectedRaceCourseId)
-            @Html.DropDownListFor(m => m.SelectedRaceCourseId, Model.RaceCourseItems)
-            @Html.ValidationMessageFor(m => m.SelectedRaceCourseId)
-        </div>
-        <div class="filter">
-            @Html.LabelFor(m => m.SelectedSeasonId)
-            @Html.DropDownListFor(m => m.SelectedSeasonId, Model.SeasonItems)
-            @Html.ValidationMessageFor(m => m.SelectedSeasonId)
-        </div>
-    </div>
-    <div class="filters-container-half">
-        <div>
-            <div class="filter">
-                @Html.LabelFor(m => m.SelectedSuperMeetTypeId)
-                @Html.DropDownListFor(m => m.SelectedSuperMeetTypeId, Model.SuperMeetTypeItems)
-                @Html.ValidationMessageFor(m => m.SelectedSuperMeetTypeId)
-            </div>
-            <div class="filter">
-                @Html.LabelFor(m => m.SelectedSuperRaceTypeId)
-                @Html.DropDownListFor(m => m.SelectedSuperRaceTypeId, Model.SuperRaceTypeItems)
-                @Html.ValidationMessageFor(m => m.SelectedSuperRaceTypeId)
-            </div>
-            <div class="filter">
-                @Html.LabelFor(m => m.SelectedNumRunnersId)
-                @Html.DropDownListFor(m => m.SelectedNumRunnersId, Model.NumRunnersItems)
-                @Html.ValidationMessageFor(m => m.SelectedNumRunnersId)
-            </div>
-        </div>
-        <div class="filters-button-container">
-            <input id="go-button" type="button" value="GO" />
-        </div>
-    </div>
-</div>
-<div class="tables-container">
+@using (Html.BeginForm("Tables", "RaceResearch", FormMethod.Post, new { id = "filters-form" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary()
 
-</div>
+    <div class="filters-container">
+        <div class="filters-container-half">
+            <div class="filter">
+                @Html.LabelFor(m => m.SelectedCountryId)
+                @Html.DropDownListFor(m => m.SelectedCountryId, Model.CountryItems)
+                @Html.ValidationMessageFor(m => m.SelectedCountryId)
+                <span id="error_SelectedCountryId" class="field-validation-error"></span>
+            </div>
+            <div class="filter">
+                @Html.LabelFor(m => m.SelectedRaceCourseId)
+                @Html.DropDownListFor(m => m.SelectedRaceCourseId, Model.RaceCourseItems, new { @class = "selectComboboxCheck" })
+                @Html.ValidationMessageFor(m => m.SelectedRaceCourseId)
+                <span id="error_SelectedRaceCourseId" class="field-validation-error"></span>
+            </div>
+            <div class="filter">
+                @Html.LabelFor(m => m.SelectedSeasonId)
+                @Html.DropDownListFor(m => m.SelectedSeasonId, Model.SeasonItems)
+                @Html.ValidationMessageFor(m => m.SelectedSeasonId)
+                <span id="error_SelectedSeasonId" class="field-validation-error"></span>
+            </div>
+        </div>
+        <div class="filters-container-half">
+            <div>
+                <div class="long-filter">
+                    @Html.LabelFor(m => m.SelectedSuperMeetTypeId)
+                    @Html.DropDownListFor(m => m.SelectedSuperMeetTypeId, Model.SuperMeetTypeItems)
+                    @Html.ValidationMessageFor(m => m.SelectedSuperMeetTypeId)
+                    <span id="error_SelectedSuperMeetTypeId" class="field-validation-error"></span>
+                </div>
+                <div class="short-filter">
+                    @Html.LabelFor(m => m.SelectedSuperRaceTypeId)
+                    @Html.DropDownListFor(m => m.SelectedSuperRaceTypeId, Model.SuperRaceTypeItems)
+                    @Html.ValidationMessageFor(m => m.SelectedSuperRaceTypeId)
+                    <span id="error_SelectedSuperRaceTypeId" class="field-validation-error"></span>
+                </div>
+                <div class="short-filter">
+                    @Html.LabelFor(m => m.SelectedNumRunnersId)
+                    @Html.DropDownListFor(m => m.SelectedNumRunnersId, Model.NumRunnersItems)
+                    @Html.ValidationMessageFor(m => m.SelectedNumRunnersId)
+                    <span id="error_SelectedNumRunnersId" class="field-validation-error"></span>
+                </div>
+            </div>
+            <div class="filters-button-container">
+                <input id="go-button" type="submit" value="GO" />
+            </div>
+        </div>
+    </div>
+}
+<div id="tables-container"/>
+

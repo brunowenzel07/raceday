@@ -2,3 +2,67 @@
     Layout = null;
 }
 
+<h2>Market Data</h2>
+
+@{var marketData = (IEnumerable<dynamic>)ViewBag.MarketData;}
+@if (marketData.Count() == 0)
+{
+    <h3>No Market Data available for this combination of filters</h3>
+}
+else
+{
+    <table class="stats-table">
+        <thead>
+            <tr>
+                @foreach (KeyValuePair<string, object> kvp in marketData.First())
+                {
+                    <th>@kvp.Key</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (dynamic item in marketData)
+            {
+                <tr>
+                    @foreach (KeyValuePair<string, object> kvp in item)
+                    {
+                        <td>@kvp.Value</td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+<h2>Form Factors</h2>
+
+@{var formFactors = (IEnumerable<dynamic>)ViewBag.FormFactors;}
+@if (formFactors.Count() == 0)
+{
+    <h3>No Form Factors available for this combination of filters</h3>
+}
+else
+{
+    <table class="stats-table">
+        <thead>
+            <tr>
+                @foreach (KeyValuePair<string, object> kvp in formFactors.First())
+                {
+                    <th>@kvp.Key</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (dynamic item in formFactors)
+            {
+                <tr>
+                    @foreach (KeyValuePair<string, object> kvp in item)
+                    {
+                        <td>@kvp.Value</td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+}
