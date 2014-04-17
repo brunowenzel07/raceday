@@ -25,23 +25,28 @@ namespace RaceDayDisplayApp.Models
         [Display(Name = "Racecourse")]
         public int SelectedRaceCourseId { get; set; }
         public IEnumerable<SelectListItem> RaceCourseItems { get; set; }
-        
         public string AllRaceCourseItems { get; set; }
+
 
         [Range(1, int.MaxValue)]
         [Display(Name = "Season")]
         public int SelectedSeasonId { get; set; }
         public IEnumerable<SelectListItem> SeasonItems { get; set; }
 
+
         [Range(1, int.MaxValue)]
         [Display(Name = "Meeting Type")]
         public int SelectedSuperMeetTypeId { get; set; }
         public IEnumerable<SelectListItem> SuperMeetTypeItems { get; set; }
+        public string AllSuperMeetTypeItems { get; set; }
+
 
         [Range(1, int.MaxValue)]
         [Display(Name = "Race Type")]
         public int SelectedSuperRaceTypeId { get; set; }
         public IEnumerable<SelectListItem> SuperRaceTypeItems { get; set; }
+        public string AllSuperRaceTypeItems { get; set; }
+
 
         [Range(0, 40)]
         [Display(Name = "No Runners")]

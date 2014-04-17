@@ -207,6 +207,7 @@
     <Compile Include="DAL\DBGateway.cs" />
     <Compile Include="Models\Meeting.cs" />
     <Compile Include="Models\HistoryFilters.cs" />
+    <Compile Include="Models\RaceStatistics.cs" />
     <Compile Include="Models\_Helpers\ModelHelper.cs" />
     <Compile Include="Models\Race.cs" />
     <Compile Include="Models\Runner.cs" />
@@ -416,6 +417,8 @@
     <Content Include="Views\Shared\_EmptyLayout.cshtml" />
     <Content Include="Views\RaceResearch\Index.cshtml" />
     <Content Include="Views\RaceResearch\_Tables.cshtml" />
+    <Content Include="Views\RaceResearch\DisplayTemplates\RaceStatisticsHeader.cshtml" />
+    <Content Include="Views\RaceResearch\DisplayTemplates\RaceStatistics.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

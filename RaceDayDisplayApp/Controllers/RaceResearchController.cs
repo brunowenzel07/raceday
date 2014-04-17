@@ -31,10 +31,10 @@ namespace RaceDayDisplayApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                ViewBag.MarketData =
-                    entities.GetMarketData(filters);
-                ViewBag.FormFactors = entities.GetFormFactors(filters);
-                return View("_Tables");
+                var result = new RaceResearchViewModel();
+                result.MarketData = entities.GetMarketData(filters);
+                result.FormFactors = entities.GetFormFactors(filters);
+                return View("_Tables", result);
             }
             return null;
         }

@@ -1,0 +1,10 @@
+﻿@model RaceDayDisplayApp.Models.RaceStatistics
+
+<tr>
+    @foreach (System.Reflection.PropertyInfo prop in typeof(RaceDayDisplayApp.Models.RaceStatistics).GetProperties())
+    {
+        <td>
+            @Html.Display(prop.Name)
+        </td>
+    }
+</tr>

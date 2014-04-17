@@ -1,11 +1,12 @@
-﻿@{
+﻿@model RaceDayDisplayApp.Models.RaceResearchViewModel
+
+@{
     Layout = null;
 }
 
 <h2>Market Data</h2>
 
-@{var marketData = (IEnumerable<dynamic>)ViewBag.MarketData;}
-@if (marketData.Count() == 0)
+@if (Model.MarketData.Count() == 0)
 {
     <h3>No Market Data available for this combination of filters</h3>
 }
@@ -13,56 +14,31 @@ else
 {
     <table class="stats-table">
         <thead>
-            <tr>
-                @foreach (KeyValuePair<string, object> kvp in marketData.First())
-                {
-                    <th>@kvp.Key</th>
-                }
-            </tr>
+                @Html.DisplayFor(m => m.MarketData[0], "RaceStatisticsHeader")
         </thead>
         <tbody>
-            @foreach (dynamic item in marketData)
-            {
-                <tr>
-                    @foreach (KeyValuePair<string, object> kvp in item)
-                    {
-                        <td>@kvp.Value</td>
-                    }
-                </tr>
-            }
+                @Html.DisplayFor(m => m.MarketData)
         </tbody>
     </table>
-}
-
-
+}    
 <h2>Form Factors</h2>
 
-@{var formFactors = (IEnumerable<dynamic>)ViewBag.FormFactors;}
-@if (formFactors.Count() == 0)
+@if (Model.FormFactors.Count() == 0)
 {
-    <h3>No Form Factors available for this combination of filters</h3>
+            <h3>No Form Factors available for this combination of filters</h3>
 }
 else
 {
     <table class="stats-table">
         <thead>
             <tr>
-                @foreach (KeyValuePair<string, object> kvp in formFactors.First())
-                {
-                    <th>@kvp.Key</th>
-                }
+                @Html.DisplayFor(m => m.FormFactors[0], "RaceStatisticsHeader")
             </tr>
         </thead>
         <tbody>
-            @foreach (dynamic item in formFactors)
-            {
-                <tr>
-                    @foreach (KeyValuePair<string, object> kvp in item)
-                    {
-                        <td>@kvp.Value</td>
-                    }
-                </tr>
-            }
+            <tr>
+                @Html.DisplayFor(m => m.FormFactors)
+            </tr>
         </tbody>
     </table>
 }

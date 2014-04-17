@@ -12,6 +12,8 @@
 
 
 @Html.HiddenFor(m => m.AllRaceCourseItems)
+@Html.HiddenFor(m => m.AllSuperMeetTypeItems)
+@Html.HiddenFor(m => m.AllSuperRaceTypeItems)
 
 <h2>Race Research</h2>  
 @using (Html.BeginForm("Tables", "RaceResearch", FormMethod.Post, new { id = "filters-form" }))
