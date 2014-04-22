@@ -8,18 +8,18 @@
     @if (ViewBag.Today) {
         <h2>@String.Format("Upcoming Races starting {0}, {1}", DateTime.Today.DayOfWeek.ToString(), DateTime.Today.ToShortDateString())</h2>
         <div class="index_link1">
-            @Html.ActionLink("View All Races", "RaceIndex", new { today = false })
+            @Html.ActionLink("View All Races", "RaceList", new { today = false })
         </div>
     }
     else
     {
         <h2>All Races</h2>
         <div class="index_link1">
-            @Html.ActionLink("View only upcoming Races", "RaceIndex", new { today = true })
+            @Html.ActionLink("View only upcoming Races", "RaceList", new { today = true })
         </div>
     }
     <div class="index_link2">
-        @Html.ActionLink("Change to Meetings view", "Index")
+        @Html.ActionLink("Change to Meetings view", "MeetingList")
     </div>
 </div>
 
@@ -40,6 +40,7 @@
             @{
             var now = DateTime.UtcNow;
             var foundNextRace = false;
+            int i = 0;
             foreach (var race in Model)
             {
                 var classTxt = "";
@@ -59,6 +60,8 @@
                     <td class='race_column'>@Html.ActionLink(race.RaceName ?? "(no name)", "RaceDetails", new { id = race.RaceId, today = ViewBag.Today })</td>
                     <td>@race.RaceStatus</td>
                 </tr>
+                
+                if (i++ > 300) { break; }
             }
             }
         </table>

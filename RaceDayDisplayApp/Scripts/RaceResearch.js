@@ -78,15 +78,9 @@ function loadCombo(fieldId, comboId, selectedCountryId) {
     var $el = $("#" + comboId);
     $el.empty();
     $.each(newOptions, function (i, v) {
-        var CountryId, Id, Name;
-        $.each(v, function (id, value) {
-            if (value.Key == 'CountryId') { CountryId = value.Value; }
-            else if (value.Key == 'Id') { Id = value.Value; }
-            else if (value.Key == 'Name') { Name = value.Value; }
-        });
-        if (CountryId == selectedCountryId) {
+        if (v.CountryId == selectedCountryId) {
             $el.append($("<option></option>")
-               .attr("value", Id).text(Name));
+               .attr("value", v.Id).text(v.Name));
         }
     });
 

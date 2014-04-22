@@ -14,6 +14,12 @@ namespace RaceDayDisplayApp
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
+                name: "Default_Meetings",
+                url: "Meetings/{action}/{id}",
+                defaults: new { controller = "Meetings", action = "RaceList", id = UrlParameter.Optional }
+            );
+
+            routes.MapRoute(
                 name: "Default_RaceResearch",
                 url: "RaceResearch/{action}/{id}",
                 defaults: new { controller = "RaceResearch", action = "Index", id = UrlParameter.Optional }

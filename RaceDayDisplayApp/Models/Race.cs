@@ -51,7 +51,8 @@ namespace RaceDayDisplayApp.Models
                         LocalJumpTime.Hours,
                         LocalJumpTime.Minutes,
                         LocalJumpTime.Seconds);
-                    _raceJumpDateTimeUTC = TimeZoneHelper.ToUTC(aux, StateId);
+
+                    _raceJumpDateTimeUTC = StateId > 0 ? TimeZoneHelper.ToUTC(aux, StateId) : aux;
                 }
                 return _raceJumpDateTimeUTC;
             }

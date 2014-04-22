@@ -497,7 +497,7 @@ And, since we've applied the background colors to td/th element because of IE, G
     width: 50%;
 }
 
-@media (max-width: 800px) {
+@media (max-width: 820px) {
 
     .filters-container-half
     {
@@ -540,3 +540,14 @@ And, since we've applied the background colors to td/th element because of IE, G
     margin-top: 10px;
 }
 
+/************************INDEX PAGE *******************************/
+
+.index_buttons{
+    text-align:center;
+    padding-top:50px;
+    padding-bottom:50px;
+}
+
+.index_buttons input{
+    width:300px;
+}

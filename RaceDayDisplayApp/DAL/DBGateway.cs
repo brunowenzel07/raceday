@@ -16,7 +16,7 @@ namespace RaceDayDisplayApp.DAL
             ConfigurationManager.ConnectionStrings["RaceDayDB"].ConnectionString;
 
         /// <summary>
-        /// Used in the Index page
+        /// Used in the MeetingList page
         /// </summary>
         public IEnumerable<Country> GetCountries(bool filterByToday)
         {
@@ -59,7 +59,7 @@ namespace RaceDayDisplayApp.DAL
         }
 
         /// <summary>
-        /// RaceIndex and RaceDetails page
+        /// RaceList and RaceDetails page
         /// </summary>
         public IEnumerable<RaceDisplay> GetRacesList(bool today)
         {
@@ -414,7 +414,8 @@ namespace RaceDayDisplayApp.DAL
                 conn.Open();
 
                 //COUNTRY
-                result.CountryItems = conn.Query("Select Id, Name from Country").Select(c =>
+                var countries = conn.Query("Select Id, Name from Country").ToList();
+                result.CountryItems = countries.Select(c =>
                     new SelectListItem
                     {
                         Value = c.Id.ToString(),
@@ -422,8 +423,9 @@ namespace RaceDayDisplayApp.DAL
                     });
                 result.SelectedCountryId = int.Parse(result.CountryItems.FirstOrDefault(c => c.Text == "Hong Kong SAR").Value);
 
+
                 //RACECOURSES (COUNTRY-DEPENDENT)
-                var allRaceCourses = conn.Query("Select Id, Name, CountryId from RaceCourse");
+                var allRaceCourses = conn.Query<ComboItem>("Select Id, Name, CountryId from RaceCourse");
                 result.AllRaceCourseItems = new JavaScriptSerializer().Serialize(allRaceCourses);
 
                 result.RaceCourseItems = allRaceCourses
@@ -435,8 +437,17 @@ namespace RaceDayDisplayApp.DAL
                         Text = rc.Name
                     });
 
+
                 //SUPERMEETINGTYPE (COUNTRY-DEPENDENT)
-                var allMeetingTypes = conn.Query("Select Id, Name, CountryId from SuperMeetingType");
+                var allMeetingTypes = conn.Query<ComboItem>("Select Id, Name, CountryId from SuperMeetingType");
+                //add "ALL" values (one per country)
+                allMeetingTypes = countries.Select(c => new ComboItem
+                    { 
+                        Id = 0,
+                        Name = "ALL MEETING TYPES",
+                        CountryId = c.Id
+                    }).Concat(allMeetingTypes);
+
                 result.AllSuperMeetTypeItems = new JavaScriptSerializer().Serialize(allMeetingTypes);
 
                 result.SuperMeetTypeItems = allMeetingTypes
@@ -447,10 +458,19 @@ namespace RaceDayDisplayApp.DAL
                         Value = c.Id.ToString(),
                         Text = c.Name
                     });
-                result.SelectedSuperMeetTypeId = int.Parse(result.SuperMeetTypeItems.FirstOrDefault().Value);
+                result.SelectedSuperMeetTypeId = 0;
+
 
                 //SUPERRACETYPE (COUNTRY-DEPENDENT)
-                var allRaceTypes = conn.Query("Select Id, Name, CountryId from SuperRaceType");
+                var allRaceTypes = conn.Query<ComboItem>("Select Id, Name, CountryId from SuperRaceType");
+                //add "ALL" values (one per country)
+                allRaceTypes = countries.Select(c => new ComboItem
+                    {
+                        Id = 0,
+                        Name = "ALL",
+                        CountryId = c.Id
+                    }).Concat(allRaceTypes);
+                
                 result.AllSuperRaceTypeItems = new JavaScriptSerializer().Serialize(allRaceTypes);
 
                 result.SuperRaceTypeItems = allRaceTypes
@@ -461,16 +481,23 @@ namespace RaceDayDisplayApp.DAL
                         Value = c.Id.ToString(),
                         Text = c.Name
                     });
-                result.SelectedSuperRaceTypeId = int.Parse(result.SuperRaceTypeItems.FirstOrDefault().Value);
+                result.SelectedSuperRaceTypeId = 0;
+
 
                 //SEASON
-                result.SeasonItems = conn.Query("Select Id, Name from Season").Select(c =>
+                result.SeasonItems = (new[] {new SelectListItem
+                    {
+                        Value = "0",
+                        Text = "ALL SEASONS"
+                    }})
+                    .Concat(conn.Query("Select Id, Name from Season").Select(c =>
                     new SelectListItem
                     {
                         Value = c.Id.ToString(),
                         Text = c.Name
-                    });
-                result.SelectedSeasonId = int.Parse(result.SeasonItems.FirstOrDefault(s => s.Text == "ALL SEASONS").Value);
+                    }));
+                result.SelectedSeasonId = 0;
+
 
                 //NUMBEROFRUNNERS (HARDCODED)
                 var numRun = new List<SelectListItem>(39);
@@ -504,7 +531,7 @@ namespace RaceDayDisplayApp.DAL
 
                 return conn.Query<RaceStatistics>(@"Select
                     totalruns,
-                    oddsrank,
+                    'F'+CONVERT(varchar(5), oddsrank) as MarketPos,
                     pc_firsts,
                     pc_seconds,
                     pc_thirds,
@@ -518,11 +545,11 @@ namespace RaceDayDisplayApp.DAL
                     roiplace
                     from RaceStatistics
                     where countryid=@countryid
-                    and racecourseId=@racecourseId
-                    and supermeetingtypeId=@supermeetingtypeId
-                    and superracetypeid=@superracetypeid
-                    order by roiwin DESC",
-                    //and numberofrunners=@numberofrunners //TODO
+                    and racecourseId=@racecourseId" +
+                    (filters.SelectedSuperMeetTypeId > 0 ? " and supermeetingtypeId=@supermeetingtypeId" : "") +
+                    (filters.SelectedSuperRaceTypeId > 0 ? " and superracetypeid=@superracetypeid" : "") +
+                    (filters.SelectedNumRunnersId > 0 ? " and NumberOfRunners=@numberofrunners" : "") +
+                    " order by roiwin DESC",
                     new 
                     { 
                         countryid = filters.SelectedCountryId,
@@ -540,8 +567,37 @@ namespace RaceDayDisplayApp.DAL
             using (var conn = new SqlConnection(connectionString))
             {
                 conn.Open();
-                //TODO
-                return conn.Query<RaceStatistics>("Select * from Formfactors").ToList();
+
+                return conn.Query<RaceStatistics>(@"Select
+                    totalruns,
+                    Formfactors.Name as MarketPos,
+                    pc_firsts,
+                    pc_seconds,
+                    pc_thirds,
+                    pc_fourths,
+                    pc_unplaceds,
+                    avgwindiv,
+                    avgplacediv,
+                    maxlosingstreak,
+                    avglosingstreak,
+                    roiwin,
+                    roiplace
+                    from FormFactorsTable inner join Formfactors
+                    on FormFactorsTable.formfactorsId=Formfactors.Id
+                    where countryid=@countryid
+                    and racecourseId=@racecourseId" +
+                    (filters.SelectedSuperMeetTypeId > 0 ? " and supermeetingtypeId=@supermeetingtypeId" : "") +
+                    (filters.SelectedSuperRaceTypeId > 0 ? " and superracetypeid=@superracetypeid" : "") +
+                    (filters.SelectedNumRunnersId > 0 ? " and NumberOfRunners=@numberofrunners" : "") +
+                    " order by roiwin DESC",
+                    new
+                    {
+                        countryid = filters.SelectedCountryId,
+                        racecourseId = filters.SelectedRaceCourseId,
+                        supermeetingtypeId = filters.SelectedSuperMeetTypeId,
+                        superracetypeid = filters.SelectedSuperRaceTypeId,
+                        numberofrunners = filters.SelectedNumRunnersId
+                    }).ToList();
             }
         }
     }

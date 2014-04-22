@@ -9,7 +9,7 @@ namespace RaceDayDisplayApp.Models
     public class RaceStatistics
     {
         [Display(Name = "MarketPos", Order = 0)]
-        public int oddsrank { get; set; }
+        public string MarketPos { get; set; }
 
         [Display(Name = "TotalRuns", Order = 1)]
         public int totalruns { get; set; }

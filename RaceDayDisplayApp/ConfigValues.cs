@@ -6,7 +6,7 @@ namespace RaceDayDisplayApp
     public static class ConfigValues
     {
         public const string RaceStatusDone = "PAYING";
-        public const string DefaultAction = "RaceIndex";
+        public const string DefaultAction = "Index";
 
         public const int NameColumnWidth = 140;
         public const double CacheRefreshIntervalMs = 500; //half a second

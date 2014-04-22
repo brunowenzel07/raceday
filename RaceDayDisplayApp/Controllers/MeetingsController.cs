@@ -21,16 +21,21 @@ namespace RaceDayDisplayApp.Controllers
         private DBGateway entities = new DBGateway();
 
 
+        public ActionResult Index()
+        {
+            return View();
+        }
+
         //
         // GET: /Meetings/
 
-        public ActionResult Index(bool today = true)
+        public ActionResult MeetingList(bool today = true)
         {
             ViewBag.Today = today;
             return View(entities.GetCountries(today));
         }
 
-        public ActionResult RaceIndex(bool today = true)
+        public ActionResult RaceList(bool today = true)
         {
             ViewBag.Today = today;
             return View(entities.GetRacesList(today));

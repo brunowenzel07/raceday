@@ -33,7 +33,11 @@ namespace RaceDayDisplayApp.Models
 
         public static DateTime ToUTC(DateTime dt, int AUS_StateId)
         {
-            TimeZoneInfo tz = TimeZoneInfo.FindSystemTimeZoneById(winRegEntries[AUS_StateId]);
+            string winEntry;
+            if (!winRegEntries.TryGetValue(AUS_StateId, out winEntry))
+                return dt; //TODO log warning
+            
+            TimeZoneInfo tz = TimeZoneInfo.FindSystemTimeZoneById(winEntry);
             return TimeZoneInfo.ConvertTimeToUtc(dt, tz);
         }
     }

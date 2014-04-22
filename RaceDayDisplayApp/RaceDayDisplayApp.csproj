@@ -401,11 +401,11 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Web.config" />
-    <Content Include="Views\Meetings\Index.cshtml" />
+    <Content Include="Views\Meetings\MeetingList.cshtml" />
     <Content Include="Views\Meetings\Details.cshtml" />
     <Content Include="Views\Meetings\_Race.cshtml" />
     <Content Include="Views\Meetings\_GridSettings.cshtml" />
-    <Content Include="Views\Meetings\RaceIndex.cshtml" />
+    <Content Include="Views\Meetings\RaceList.cshtml" />
     <Content Include="Views\Meetings\RaceDetails.cshtml" />
     <Content Include="Views\Meetings\_RaceData.cshtml" />
     <Content Include="Views\Meetings\_GridData.cshtml" />
@@ -419,6 +419,7 @@
     <Content Include="Views\RaceResearch\_Tables.cshtml" />
     <Content Include="Views\RaceResearch\DisplayTemplates\RaceStatisticsHeader.cshtml" />
     <Content Include="Views\RaceResearch\DisplayTemplates\RaceStatistics.cshtml" />
+    <Content Include="Views\Meetings\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
