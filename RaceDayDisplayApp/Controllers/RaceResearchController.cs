@@ -10,7 +10,8 @@ using System.Web.Mvc;
 
 namespace RaceDayDisplayApp.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = ConfigValues.FullAccessRole)]
+    //[Authorize]
     [InitializeSimpleMembership]
     public class RaceResearchController : Controller
     {
@@ -32,11 +33,16 @@ namespace RaceDayDisplayApp.Controllers
             if (ModelState.IsValid)
             {
                 var result = new RaceResearchViewModel();
-                result.MarketData = entities.GetMarketData(filters);
+                result.MarketData = entities.GetMarketData(filters, 0);
                 result.FormFactors = entities.GetFormFactors(filters);
                 return View("_Tables", result);
             }
             return null;
+        }
+
+        public ActionResult StatsTable(HistoryFilters filters)
+        {
+            return View("_StatsTable", entities.GetMarketData(filters, ConfigValues.MaxStatisticsResults));
         }
     }
 }

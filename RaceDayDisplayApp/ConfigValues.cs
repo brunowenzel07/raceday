@@ -5,6 +5,13 @@ namespace RaceDayDisplayApp
 {
     public static class ConfigValues
     {
+        public const string FullAccessRole = "Web Full Access";
+        //public const string GuestRole = "Web Guest";
+        public const string GuestUserName = "guest";
+        public const string GuestPassword = "password1";
+
+        public const int MaxStatisticsResults = 10;
+
         public const string RaceStatusDone = "PAYING";
         public const string DefaultAction = "Index";
 

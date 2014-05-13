@@ -31,6 +31,15 @@ namespace RaceDayDisplayApp.Models
     public class Meeting : MeetingBase
     {
         [CustomDisplay(DisplayOn.NONE)]
+        public int supermeetingtypeid { get; set; }
+
+        [CustomDisplay(DisplayOn.NONE)]
+        public int RaceCourseId { get; set; }
+
+        [CustomDisplay(DisplayOn.NONE)]
+        public int CountryId { get; set; }
+
+        [CustomDisplay(DisplayOn.NONE)]
         public string CountryCode { get; set; }
 
         //[Display(Name = "Weather", Order = 0)]

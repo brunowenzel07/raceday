@@ -523,14 +523,15 @@ namespace RaceDayDisplayApp.DAL
         }
 
 
-        public List<RaceStatistics> GetMarketData(HistoryFilters filters)
+        public List<RaceStatistics> GetMarketData(HistoryFilters filters, int maxResults)
         {
             using (var conn = new SqlConnection(connectionString))
             {
                 conn.Open();
 
-                return conn.Query<RaceStatistics>(@"Select
-                    totalruns,
+                return conn.Query<RaceStatistics>("Select" +
+                    (maxResults > 0 ? " top " + maxResults : "") +
+                    @" totalruns,
                     'F'+CONVERT(varchar(5), oddsrank) as MarketPos,
                     pc_firsts,
                     pc_seconds,

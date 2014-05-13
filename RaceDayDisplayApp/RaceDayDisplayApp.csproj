@@ -420,6 +420,7 @@
     <Content Include="Views\RaceResearch\DisplayTemplates\RaceStatisticsHeader.cshtml" />
     <Content Include="Views\RaceResearch\DisplayTemplates\RaceStatistics.cshtml" />
     <Content Include="Views\Meetings\Index.cshtml" />
+    <Content Include="Views\RaceResearch\_StatsTable.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

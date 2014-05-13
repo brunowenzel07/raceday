@@ -10,14 +10,66 @@ $(document).ready(function() {
     });
 
     $("#race-flip").click(function () {
-        $("#race-history").slideToggle("slow");
+        displayHideStats("#race-span", "#race-form", "#race-history")
     });
 
     $("#meeting-flip").click(function () {
-        $("#meeting-history").slideToggle("slow");
+        displayHideStats("#meeting-span", "#meeting-form", "#meeting-history")
     });
 
 });
+
+function displayHideStats(spanSelector, formSelector, destPanelSelector) {
+    //TODO submit form by ajax
+    $.ajax({
+        type: "POST",
+        url: '/RaceResearch/StatsTable',
+        data: $(formSelector).serialize(), // serializes the form's elements.
+        success: function (data) {
+            var panel = $(destPanelSelector);
+            panel.empty();
+            panel.append(data);
+            panel.slideToggle("slow");
+
+            var span = $(spanSelector)
+            if (span.text() == 'Show') {
+                span.text("Hide");
+            }
+            else {
+                span.text("Show");
+            }
+
+        }
+    });
+
+    //send user token or something to control security
+    //$.ajax({
+    //    type: 'POST',
+    //    url: '/Meetings/Race',
+    //    data: {
+    //        id: raceId
+    //    },
+    //    success: function (data) {
+    //        var index = data.search('<!--GRID STARTS HERE-->');
+    //        var details = data.substring(0, index);
+    //        var grid = data.substring(index);
+    //        $("#race_details").empty();
+    //        $("#form-box").empty();
+    //        $('#race_details').append(details);
+    //        $("#form-box").append(grid);
+    //        showHideColumns();
+
+    //        $("#race_grid").bind('jqGridLoadComplete', function (e, data) {
+    //            GridLoadComplete(e, data)
+    //        });
+
+    //        $(".chks_container").show();
+    //        $("#btns_div").show();
+    //        $("#panel_right").show();
+    //    }
+    //});
+
+}
 
 function GridLoadComplete(e, data)
 {

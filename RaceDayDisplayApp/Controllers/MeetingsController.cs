@@ -23,7 +23,10 @@ namespace RaceDayDisplayApp.Controllers
 
         public ActionResult Index()
         {
-            return View();
+            if (User.IsInRole(ConfigValues.FullAccessRole))
+                return View();
+            else
+                return RedirectToAction("RaceList");
         }
 
         //
@@ -57,6 +60,9 @@ namespace RaceDayDisplayApp.Controllers
             var userId = WebMatrix.WebData.WebSecurity.GetUserId(User.Identity.Name);
             ViewBag.UserSettings = entities.GetUserSettings(userId, meeting.MeetingId, meeting.IsHK);
 
+            //to render or not the statistics sections
+            ViewBag.FullAccess = User.IsInRole(ConfigValues.FullAccessRole);
+
             return View(meeting);
         }
 
@@ -85,6 +91,9 @@ namespace RaceDayDisplayApp.Controllers
 
             //columns to display for this race
             ViewBag.GridColumns = ModelHelper.GetGridColumns(meeting.Races[0] as Race);
+
+            //to render or not the statistics sections
+            ViewBag.FullAccess = User.IsInRole(ConfigValues.FullAccessRole);
 
             return View(meeting);
         }

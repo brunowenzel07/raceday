@@ -6,39 +6,8 @@
 
 <h2>Market Data</h2>
 
-@if (Model.MarketData.Count() == 0)
-{
-    <h3>No Market Data available for this combination of filters</h3>
-}
-else
-{
-    <table class="stats-table">
-        <thead>
-                @Html.DisplayFor(m => m.MarketData[0], "RaceStatisticsHeader")
-        </thead>
-        <tbody>
-                @Html.DisplayFor(m => m.MarketData)
-        </tbody>
-    </table>
-}    
+@{Html.RenderPartial("_StatsTable", Model.MarketData);}
+    
 <h2>Form Factors</h2>
 
-@if (Model.FormFactors.Count() == 0)
-{
-            <h3>No Form Factors available for this combination of filters</h3>
-}
-else
-{
-    <table class="stats-table">
-        <thead>
-            <tr>
-                @Html.DisplayFor(m => m.FormFactors[0], "RaceStatisticsHeader")
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                @Html.DisplayFor(m => m.FormFactors)
-            </tr>
-        </tbody>
-    </table>
-}
+@{Html.RenderPartial("_StatsTable", Model.FormFactors);}

@@ -17,17 +17,25 @@
         </div>
     }
 </div>
-<div class="history-container">
-    <div class="panel-flip" id="race-flip">Show more (FAV/LSW/TF/QN/F4 statistics)</div>
-    <div class="panel-history" id="race-history">
-        <table>
-            <tr><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td></tr>
-            <tr><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td></tr>
-            <tr><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td></tr>
-            <tr><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td></tr>
-            <tr><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td></tr>
-            <tr><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td></tr>
-            <tr><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td></tr>
-        </table>
+@if (ViewBag.FullAccess)
+{
+    <div class="history-container">
+
+    @using (Html.BeginForm("StatsTable", "RaceResearch", FormMethod.Post, new { id = "race-form" }))
+    {
+        @Html.AntiForgeryToken()
+    
+        @Html.Hidden("SelectedCountryId", Model.CountryId)
+        @Html.Hidden("SelectedRaceCourseId", Model.RaceCourseId)
+        @*@Html.Hidden("SelectedSeasonId", Model.SeasonId)*@ 
+        @Html.Hidden("SelectedSuperMeetTypeId", Model.supermeetingtypeid)
+        @Html.Hidden("SelectedSuperRaceTypeId", Model.superracetypeid)
+        @Html.Hidden("SelectedNumRunnersId", Model.NumberOfRunners)
+    }
+
+        <div class="panel-flip" id="race-flip"><span id="race-span">Show</span> more (FAV/LSW/TF/QN/F4 statistics)</div>
+        <div class="panel-history" id="race-history">
+            @*@{Html.RenderPartial("_StatsTable", Model.MarketData);}*@
+        </div>
     </div>
-</div>
+}

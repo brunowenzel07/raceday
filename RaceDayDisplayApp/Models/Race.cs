@@ -143,6 +143,18 @@ namespace RaceDayDisplayApp.Models
         public string RaceTypeName { get; set; }
 
         [CustomDisplay(DisplayOn.NONE)]
+        public int CountryId { get; set; }
+
+        [CustomDisplay(DisplayOn.NONE)]
+        public int supermeetingtypeid { get; set; }
+
+        [CustomDisplay(DisplayOn.NONE)]
+        public int superracetypeid { get; set; }
+
+        [CustomDisplay(DisplayOn.NONE)]
+        public int RaceCourseId { get; set; }
+
+        [CustomDisplay(DisplayOn.NONE)]
         public string DistanceName { get; set; }
 
         [Display(Name = "Distance", Order = 6)]

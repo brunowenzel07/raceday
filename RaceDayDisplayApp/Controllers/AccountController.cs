@@ -45,6 +45,17 @@ namespace RaceDayDisplayApp.Controllers
             return View(model);
         }
 
+        [AllowAnonymous]
+        public ActionResult GuestLogin(string returnUrl)
+        {
+            if (WebSecurity.Login(ConfigValues.GuestUserName, ConfigValues.GuestPassword, persistCookie: true))
+            {
+                return RedirectToLocal(returnUrl);
+            }
+
+            return RedirectToAction("Login", new { returnUrl = returnUrl });
+        }
+
         //
         // POST: /Account/LogOff
 

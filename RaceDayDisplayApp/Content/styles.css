@@ -84,12 +84,22 @@
 .panel-flip {
     float:right;    
     background-color:#e5e5e5;
+    cursor: pointer;
 }
 .panel-history {
     float: left;
     width:100%;
     padding:5px;
     display:none;
+}
+
+.panel-history .stats-table {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.panel-history h4{
+    text-align:center;
 }
 
 /*.race-history-table{
@@ -347,7 +357,7 @@
 }
 /************** ALL PAGES **************/
 
-h2, h3 {
+h2, h3, h4 {
     color: #666;
 }
 
@@ -449,6 +459,7 @@ Background gradients are completely unnecessary but a neat effect.
 .stats-table td {
     background: -moz-linear-gradient(100% 25% 90deg, #fefefe, #f9f9f9);
     background: -webkit-gradient(linear, 0% 0%, 0% 25%, from(#f9f9f9), to(#fefefe));
+    font-size: 0.87em;
 }
 
 .stats-table tr.odd-row td {
@@ -459,6 +470,8 @@ Background gradients are completely unnecessary but a neat effect.
 .stats-table th {
     background: -moz-linear-gradient(100% 20% 90deg, #e8eaeb, #ededed);
     background: -webkit-gradient(linear, 0% 0%, 0% 20%, from(#ededed), to(#e8eaeb));
+    font-size: 1.05em;
+    color:#666;
 }
 
 /*
@@ -550,4 +563,12 @@ And, since we've applied the background colors to td/th element because of IE, G
 
 .index_buttons input{
     width:300px;
+}
+
+
+/************************LOGIN PAGE************************/
+#loginForm{
+    border-right:none!important;
+    width:33%!important;
+    padding-left:33%!important;
 }

@@ -17,17 +17,24 @@
         </div>
     }
 </div>
-<div class="history-container">
-    <div class="panel-flip" id="meeting-flip">Show more (FAV/LSW/TF/QN/F4 statistics)</div>
-    <div class="panel-history" id="meeting-history">
-        <table>
-            <tr><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td></tr>
-            <tr><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td></tr>
-            <tr><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td></tr>
-            <tr><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td></tr>
-            <tr><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td></tr>
-            <tr><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td></tr>
-            <tr><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td><td>field</td></tr>
-        </table>
+@if (ViewBag.FullAccess)
+{
+    <div class="history-container">
+
+    @using (Html.BeginForm("StatsTable", "RaceResearch", FormMethod.Post, new { id = "meeting-form" }))
+    {
+        @Html.AntiForgeryToken()
+
+        @Html.Hidden("SelectedCountryId", Model.CountryId)
+        @Html.Hidden("SelectedRaceCourseId", Model.RaceCourseId)
+        @*@Html.Hidden("SelectedSeasonId", Model.SeasonId)*@ 
+        @Html.Hidden("SelectedSuperMeetTypeId", Model.supermeetingtypeid)
+        @*@Html.Hidden("SelectedSuperRaceTypeId", Model.SuperRaceId)*@
+        @*@Html.Hidden("SelectedNumRunnersId", Model.NumberOfRunners)*@
+    }
+
+        <div class="panel-flip" id="meeting-flip"><span id="meeting-span">Show</span> more (FAV/LSW/TF/QN/F4 statistics)</div>
+        <div class="panel-history" id="meeting-history">
+        </div>
     </div>
-</div>
+}
