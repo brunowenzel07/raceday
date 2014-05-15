@@ -430,7 +430,7 @@ CSS Tricks also has a nice writeup: http://css-tricks.com/feature-table-design/
 }
 
 .stats-table th {
-    padding-top: 10px;
+    /*padding-top: 10px;*/
     text-shadow: 1px 1px 1px #fff;
     background: #e8eaeb;
 }

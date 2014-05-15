@@ -4,7 +4,7 @@
         <meta charset="utf-8" />
         <title>@ViewBag.Title - RaceDay Display App</title>
         <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-        <meta name="viewport" content="width=device-width" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         @Scripts.Render("~/bundles/jquery")
         @Scripts.Render("~/bundles/jqueryui")
@@ -13,6 +13,11 @@
 
         @Styles.Render("~/Content/css")
         @Scripts.Render("~/bundles/modernizr")
+
+        @Styles.Render("~/bundles/bootstrap")
+        @Scripts.Render("~/content/bootstrap")
+
+        @Html.Partial("_html5shiv")
     </head>
     <body>
         <header>
