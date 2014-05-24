@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<runnerHistoryFields>
+  <group name="Horse" alwaysVisible="true">
+    <field>RI</field>
+    <field>Pla.</field>
+    <field>Ran</field>
+    <field>Date</field>
+    <field>DOW</field>
+    <field>RC</field>
+    <field>Track</field>
+    <field>Surface</field>
+    <field>Distance</field>
+    <field>Class</field>
+    <field>Rating</field>
+    <field>Jockey</field>
+  </group>
+
+  <group name="Times" alwaysVisible="false">
+    <field>JumpSec</field>
+    <field>LastSec</field>
+    <field>FinishTime</field>
+  </group>
+
+  <group name="Market" alwaysVisible="false">
+    <field>WinOdds</field>
+    <field>wasFav?</field>
+    <field>F4OddsRank</field>
+    <field>Odds Rank</field>
+  </group>
+
+  <group name="ThisVersusLast" alwaysVisible="false">
+    <field>Class +-</field>
+    <field>Gear</field>
+    <field>Gld?</field>
+    <field>CWt</field>
+    <field>%BW</field>
+    <field>Wt+-/</field>
+    <field>NewTr?</field>
+    <field>LSW?</field>
+    <field>RO?</field>
+    <field>LostLeadLast?</field>
+  </group>
+
+  <group name="Recent/Career" alwaysVisible="false">
+    <field>CD Winner?</field>
+    <field>KAD?</field>
+    <field>First ST?</field>
+  </group>
+</runnerHistoryFields>

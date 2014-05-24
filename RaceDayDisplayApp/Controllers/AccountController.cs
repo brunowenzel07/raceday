@@ -14,7 +14,7 @@ using RaceDayDisplayApp.Models;
 namespace RaceDayDisplayApp.Controllers
 {
     [Authorize]
-    [InitializeSimpleMembership]
+    [InitializeSimpleMembership] 
     public class AccountController : Controller
     {
         //
