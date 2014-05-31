@@ -1,15 +1,15 @@
 ﻿html {
-    background-color: #e2e2e2;
+    background-color: #052d1f;
     margin: 0;
     padding: 0;
 }
 
 body {
-    background-color: #fff;
+    background-color: #052d1f;
     border-top: solid 10px #000;
     color: #333;
     font-size: .85em;
-    font-family: "Segoe UI", Verdana, Helvetica, Sans-Serif;
+    font-family: 'Helvetica Neue',Arial,'Liberation Sans',FreeSans,sans-serif;
     margin: 0;
     padding: 0;
 }
@@ -99,7 +99,7 @@ h5, h6 {
 }
 
 #body {
-    background-color: #efeeef;
+    background-color: #052d1f;
     clear: both;
     padding-bottom: 35px;
 }
