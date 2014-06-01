@@ -49,7 +49,7 @@ namespace RaceDayDisplayApp.Models
         public bool HcpRatingAtJump { get; set; }
 
         [Display(Name = "Carried Wt.", Order = 5)]
-        [CustomDisplay(DisplayOn.BOTH)]
+        [CustomDisplay(DisplayOn.ALL)]
         public bool CarriedWt { get; set; }
 
         //[Display(Name = "SP Win", Order = 5)]
@@ -131,17 +131,17 @@ namespace RaceDayDisplayApp.Models
         public bool HK_FinishTime { get; set; }
 
         [Display(Order = 27)]
-        [CustomDisplay(DisplayOn.BOTH)]
+        [CustomDisplay(DisplayOn.ALL)]
         [LinkedTo("LSW")]
         public bool isLSW { get; set; }
 
         [Display(Order = 27)]
-        [CustomDisplay(DisplayOn.BOTH)]
+        [CustomDisplay(DisplayOn.ALL)]
         [LinkedTo("Wt")]
         public bool WtDiffLast { get; set; }
     
         [Display(Order = 27)]
-        [CustomDisplay(DisplayOn.BOTH)]
+        [CustomDisplay(DisplayOn.ALL)]
         [LinkedTo("Class")]
         public bool ClassDiffLast { get; set; }
     
@@ -156,7 +156,7 @@ namespace RaceDayDisplayApp.Models
         //public bool lostLeadAtLast { get; set; }                        
 
         [Display(Order = 27)]
-        [CustomDisplay(DisplayOn.BOTH)]
+        [CustomDisplay(DisplayOn.ALL)]
         [LinkedTo("Rtg")]
         public bool HK_RtgDiffLast { get; set; }                        
     
@@ -171,7 +171,7 @@ namespace RaceDayDisplayApp.Models
         //public bool carriedWtOfHorseWt { get; set; }                    
 
         [Display(Order = 27)]
-        [CustomDisplay(DisplayOn.BOTH)]
+        [CustomDisplay(DisplayOn.ALL)]
         [LinkedTo("KAD")]
         public bool isKAD { get; set; }
 
@@ -181,16 +181,16 @@ namespace RaceDayDisplayApp.Models
         //public bool isCDWinner { get; set; }                            
 
         [Display(Order = 27)]
-        [CustomDisplay(DisplayOn.BOTH)]
+        [CustomDisplay(DisplayOn.ALL)]
         [LinkedTo("FirstSt")]
         public bool isFirstStarter { get; set; }                        
     
         [Display(Order = 27)]
-        [CustomDisplay(DisplayOn.BOTH)]
+        [CustomDisplay(DisplayOn.ALL)]
         public bool nUp { get; set; }                                   
     
         [Display(Order = 27)]
-        [CustomDisplay(DisplayOn.BOTH)]
+        [CustomDisplay(DisplayOn.ALL)]
         [LinkedTo("Gld")]
         public bool isGeldedSinceLast { get; set; }                     
 

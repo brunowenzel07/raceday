@@ -14,7 +14,7 @@ namespace RaceDayDisplayApp.Models
         public DateTime MeetingDate { get; set; }
 
         [Display(Name = "Date", Order = 1)]
-        [CustomDisplay(DisplayOn.BOTH)]
+        [CustomDisplay(DisplayOn.ALL)]
         public string _MeetingDate { get { return MeetingDate.ToString(@"ddd MMM d\t\h yyyy"); } }
         
         [CustomDisplay(DisplayOn.NONE)]
@@ -24,7 +24,7 @@ namespace RaceDayDisplayApp.Models
         public TimeSpan MinJumpTimeLocal { get; set; }
 
         [Display(Name = "Venue", Order = 2)]
-        [CustomDisplay(DisplayOn.BOTH)]
+        [CustomDisplay(DisplayOn.ALL)]
         public string RaceCourseName { get; set; }
     }
 
@@ -51,7 +51,7 @@ namespace RaceDayDisplayApp.Models
         //public string DefaultGoingName { get; set; }
 
         [Display(Name = "No./Races", Order = 3)]
-        [CustomDisplay(DisplayOn.BOTH)]
+        [CustomDisplay(DisplayOn.ALL)]
         public int NumberOfRaces { get; set; }
 
         //[CustomDisplay(DisplayOn.NONE)]
@@ -66,7 +66,7 @@ namespace RaceDayDisplayApp.Models
         //public string TimeOfDay { get; set; }
 
         [Display(Name = "Track Variant", Order = 5)]
-        [CustomDisplay(DisplayOn.BOTH)]
+        [CustomDisplay(DisplayOn.ALL)]
         public string CourseVariantName { get; set; }
         
         //public string Code { get; set; }

@@ -20,7 +20,7 @@ namespace RaceDayDisplayApp.Models
 
         public bool RenderCheckbox { get; set; }
 
-        public CustomDisplayAttribute(DisplayOn disp = DisplayOn.BOTH, CustomFormatters form = CustomFormatters.none, int colSize = -1, bool checkbox = true)
+        public CustomDisplayAttribute(DisplayOn disp = DisplayOn.ALL, CustomFormatters form = CustomFormatters.none, int colSize = -1, bool checkbox = true)
         {
             Display = disp;
             CustomFormatter = form;
@@ -34,7 +34,7 @@ namespace RaceDayDisplayApp.Models
         NONE,
         AUS,
         HK,
-        BOTH
+        ALL
     }
 
     /// <summary>

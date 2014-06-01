@@ -33,9 +33,9 @@ namespace RaceDayDisplayApp.DAL
                     FROM Country AS c INNER JOIN Meeting AS m ON c.Id = m.CountryId
 			                          LEFT JOIN RaceCourse AS rc ON m.RaceCourseId = rc.Id
 									  LEFT JOIN Race AS r on r.MeetingId = m.Id
-                    WHERE c.inUse = 1" + (filterByToday ? " AND m.MeetingDate >= CONVERT(date, getdate())" : "") + @"
+                    WHERE c.inUse = 1" + (filterByToday ? " AND m.MeetingDate >= CONVERT(date, getdate()) and m.MeetingDate <= DATEADD(day," + ConfigValues.UpcomingRacesDaysLimit + ",CONVERT(date, getdate()))" : "") + @"
 					GROUP BY c.Id, c.Name, m.Id, m.MeetingDate, rc.Name
-					ORDER BY m.MeetingDate ASC, MinRaceJumpDateTimeUTC ASC",
+					ORDER BY " + (filterByToday ? "m.MeetingDate ASC, MinRaceJumpDateTimeUTC ASC" : "m.MeetingDate DESC, MinRaceJumpDateTimeUTC DESC"),
                     (c, m) =>
                     {
                         Country country;
@@ -73,8 +73,8 @@ namespace RaceDayDisplayApp.DAL
                            LocalJumpTime, AUS_StateId as StateId, RaceStatus
                     FROM Race INNER JOIN Meeting on Meeting.Id = Race.MeetingId
 		                      INNER JOIN RaceCourse on Meeting.RaceCourseId = RaceCourse.Id
-                    " + (today ? "WHERE Meeting.MeetingDate >= CONVERT(date, getdate())" : "") + @"
-                    ORDER BY MeetingDate ASC, RaceJumpDateTimeUTC ASC");
+                    " + (today ? "WHERE Meeting.MeetingDate >= CONVERT(date, getdate()) and Meeting.MeetingDate <= DATEADD(day," + ConfigValues.UpcomingRacesDaysLimit + ",CONVERT(date, getdate()))" : "") + @"
+                    ORDER BY " + (today ? "MeetingDate ASC, RaceJumpDateTimeUTC ASC" : "MeetingDate DESC, RaceJumpDateTimeUTC DESC"));
                 //TODO review the WHERE condition            
             }
         }

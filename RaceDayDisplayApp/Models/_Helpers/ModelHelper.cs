@@ -51,7 +51,7 @@ namespace RaceDayDisplayApp.Models
             //loops through all the properties of the class UserSettings
             return typeof(Runner).GetProperties()
                 .Where(p => (attr = getCustomDisplayAttribute(p)).RenderCheckbox &&
-                                        (attr.Display == DisplayOn.BOTH
+                                        (attr.Display == DisplayOn.ALL
                             || (isHK  && attr.Display == DisplayOn.HK)
                             || (!isHK && attr.Display == DisplayOn.AUS)))
                 .OrderBy(p => (lookup[p.Name] = getDisplayAttribute(p)).Order)
@@ -82,7 +82,7 @@ namespace RaceDayDisplayApp.Models
             
             //loops through all the properties of the class UserSettings
             t.GetProperties()
-                .Where(p => (attr = getCustomDisplayAttribute(p)).Display == DisplayOn.BOTH
+                .Where(p => (attr = getCustomDisplayAttribute(p)).Display == DisplayOn.ALL
                             || (isHK && attr.Display == DisplayOn.HK)
                             || (!isHK && attr.Display == DisplayOn.AUS))
                 .OrderBy(p => (lookup[p.Name] = getDisplayAttribute(p)).Order)
@@ -114,7 +114,7 @@ namespace RaceDayDisplayApp.Models
             CustomDisplayAttribute attr = null;
             //loops through all the properties of the class Runner
             var columns = typeof(Runner).GetProperties()
-                .Where(p => (lookup2[p.Name] = attr = getCustomDisplayAttribute(p)).Display == DisplayOn.BOTH
+                .Where(p => (lookup2[p.Name] = attr = getCustomDisplayAttribute(p)).Display == DisplayOn.ALL
                             || (race.IsHK && attr.Display == DisplayOn.HK)
                             || (!race.IsHK && attr.Display == DisplayOn.AUS))
                 .OrderBy(p => (lookup[p.Name] = getDisplayAttribute(p)).Order)
@@ -164,7 +164,7 @@ namespace RaceDayDisplayApp.Models
             {
                 return (CustomDisplayAttribute)attributes[0];
             }
-            return new CustomDisplayAttribute { Display = DisplayOn.BOTH };
+            return new CustomDisplayAttribute { Display = DisplayOn.ALL };
         }
 
         private static LinkedToAttribute getLinkedToAttribute(PropertyInfo info)

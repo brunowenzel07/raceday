@@ -15,7 +15,7 @@ namespace RaceDayDisplayApp.Models
         public int RaceId { get; set; }
 
         [Display(Name = "Race No.", Order = 2)]
-        [CustomDisplay(DisplayOn.BOTH)]
+        [CustomDisplay(DisplayOn.ALL)]
         public int RaceNumber { get; set; }
     }
 
@@ -72,11 +72,11 @@ namespace RaceDayDisplayApp.Models
         public virtual bool isDone { get; set; }
 
         [Display(Name = "Win Pool", Order = 0)]
-        [CustomDisplay(DisplayOn.BOTH)]
+        [CustomDisplay(DisplayOn.ALL)]
         public float RaceWinPool { get; set; }
 
         [Display(Name = "PP Pool", Order = 0)]
-        [CustomDisplay(DisplayOn.BOTH)]
+        [CustomDisplay(DisplayOn.ALL)]
         public float RacePPPool { get; set; }
 
         [Display(Name = "EX Pool Total", Order = 0)]
@@ -135,11 +135,11 @@ namespace RaceDayDisplayApp.Models
         public int MeetingId { get; set; }
 
         [Display(Name = "Name", Order = 4)]
-        [CustomDisplay(DisplayOn.BOTH)]
+        [CustomDisplay(DisplayOn.ALL)]
         public string RaceName { get; set; }
 
         [Display(Name = "Type", Order = 5)]
-        [CustomDisplay(DisplayOn.BOTH)]
+        [CustomDisplay(DisplayOn.ALL)]
         public string RaceTypeName { get; set; }
 
         [CustomDisplay(DisplayOn.NONE)]
@@ -158,7 +158,7 @@ namespace RaceDayDisplayApp.Models
         public string DistanceName { get; set; }
 
         [Display(Name = "Distance", Order = 6)]
-        [CustomDisplay(DisplayOn.BOTH)]
+        [CustomDisplay(DisplayOn.ALL)]
         public string _DistanceName { get { return DistanceName + "m"; } }
 
         [Display(Name = "Race Index", Order = 1)]
@@ -168,7 +168,7 @@ namespace RaceDayDisplayApp.Models
         //public System.TimeSpan RaceWinningTime { get; set; }
 
         [Display(Name = "Race Going", Order = 7)]
-        [CustomDisplay(DisplayOn.BOTH)]
+        [CustomDisplay(DisplayOn.ALL)]
         public string RaceGoingName { get; set; }
 
         //[CustomDisplay(DisplayOn.NONE)]
@@ -179,11 +179,11 @@ namespace RaceDayDisplayApp.Models
         //public string IsTurf { get { return isTurf ? null : "No"; } }//only displays "No" if not isTurf
 
         [Display(Name = "Surface", Order = 8)]
-        [CustomDisplay(DisplayOn.BOTH)]
+        [CustomDisplay(DisplayOn.ALL)]
         public string RaceTrackType { get; set; }
 
         [Display(Name = "No./Runners", Order = 9)]
-        [CustomDisplay(DisplayOn.BOTH)]
+        [CustomDisplay(DisplayOn.ALL)]
         public short NumberOfRunners { get; set; }
 
         //[CustomDisplay(DisplayOn.NONE)]
@@ -194,7 +194,7 @@ namespace RaceDayDisplayApp.Models
         //public string Formatted_JumpDateTimeUTC { get { return RaceJumpDateTimeUTC.ToString() + " UTC"; } }
 
         [Display(Name = "Status", Order = 10)]
-        [CustomDisplay(DisplayOn.BOTH)]
+        [CustomDisplay(DisplayOn.ALL)]
         public string RaceStatus { get; set; }
 
         bool _isDone;
@@ -220,7 +220,7 @@ namespace RaceDayDisplayApp.Models
         public TimeSpan LocalJumpTime { get; set; }
 
         [Display(Name = "Jump Time", Order = 3)]
-        [CustomDisplay(DisplayOn.BOTH)]
+        [CustomDisplay(DisplayOn.ALL)]
         public string _LocalJumpTime { get { return string.Format("{0}:{1}", LocalJumpTime.Hours, LocalJumpTime.Minutes); } }
 
         [CustomDisplay(DisplayOn.NONE)]
