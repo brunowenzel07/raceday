@@ -9,7 +9,7 @@
 
 <h3>Race Details</h3>
 <div class="details_attrs">
-    @foreach (var field in ModelHelper.ToNameValuePairs(Model, Model.IsHK))
+    @foreach (var field in ModelHelper.ToNameValuePairs(Model, Model.CountryEnum))
     {
         <div class="details_attrs_wrapper">
             @field.DisplayName:

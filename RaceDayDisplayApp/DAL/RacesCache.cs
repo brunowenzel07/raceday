@@ -24,37 +24,34 @@ namespace RaceDayDisplayApp.DAL
             timer.Enabled = true;
         }
 
-        public RaceCache this[int id]
+        public RaceCache GetRace(int id, CountryEnum country)
         {
-            get
+            RaceCache race;
+            lock (races)
             {
-                RaceCache race;
-                lock (races)
-                {
-                    if (!races.TryGetValue(id, out race))
-                        racesLocks.Add(id, new object());
-                }
-
-                lock (racesLocks[id])
-                {
-                    //try again because it may have been updated while waiting on the lock
-                    if (race == null && !races.TryGetValue(id, out race))
-                    {
-                        try
-                        {
-                            race = getRace(id, null);
-                        }
-                        catch (Exception)
-                        {
-                            lock (races) { racesLocks.Remove(id); }
-                            throw;
-                        }
-
-                        lock (races) { races.Add(id, race); }
-                    }
-                }
-                return race;
+                if (!races.TryGetValue(id, out race))
+                    racesLocks.Add(id, new object());
             }
+
+            lock (racesLocks[id])
+            {
+                //try again because it may have been updated while waiting on the lock
+                if (race == null && !races.TryGetValue(id, out race))
+                {
+                    try
+                    {
+                        race = getRace(id, null, country);
+                    }
+                    catch (Exception)
+                    {
+                        lock (races) { racesLocks.Remove(id); }
+                        throw;
+                    }
+
+                    lock (races) { races.Add(id, race); }
+                }
+            }
+            return race;
         }
 
         void timer_Elapsed(object sender, ElapsedEventArgs e)
@@ -86,7 +83,7 @@ namespace RaceDayDisplayApp.DAL
                             lock (racesLocks[id])
                             {
                                 //retrieve from database and update
-                                updatedRaces.Add(getRace(id, races[id]));
+                                updatedRaces.Add(getRace(races[id]));
                             }
                         });
 
@@ -104,7 +101,13 @@ namespace RaceDayDisplayApp.DAL
         }
 
 
-        private RaceCache getRace(int id, RaceCache oldRace)
+        private RaceCache getRace(RaceCache oldRace)
+        {
+            return getRace(oldRace.RaceId, oldRace, oldRace.Country);
+        }
+
+
+        private RaceCache getRace(int id, RaceCache oldRace, CountryEnum country)
         {
             var now = DateTime.UtcNow;
             var dbGateway = new DBGateway();
@@ -114,7 +117,7 @@ namespace RaceDayDisplayApp.DAL
 
             //retrieve grid static fields
             //if it's the first time that this race is requested -> retrieve from DB
-            var r = oldRace ?? dbGateway.GetRaceWithRunnersStat(id);
+            var r = oldRace ?? dbGateway.GetRaceWithRunnersStat(id, country);
 
             //when was it last updated?
             int refreshInterval;
@@ -122,7 +125,7 @@ namespace RaceDayDisplayApp.DAL
 
             //if the race is inactive (refreshed every hour) or finished, the static fields are retrieved from DB 
             if (oldRace != null && (raceDyn.isDone || refreshInterval > ConfigValues.MinSecsToUpdateRaceStat))
-                r = dbGateway.GetRaceWithRunnersStat(id);
+                r = dbGateway.GetRaceWithRunnersStat(id, country);
 
             //update the race and runners info with the dynamic fields
             r.Update(raceDyn);

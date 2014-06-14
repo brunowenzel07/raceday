@@ -94,9 +94,9 @@ namespace RaceDayDisplayApp.Models
         [CustomDisplay(DisplayOn.ALL, checkbox: false)]
         public int Barrier { get; set; }
         
-        [Display(Name = "Horse", Order = 2)]
-        [CustomDisplay(DisplayOn.AUS, CustomFormatters.linkFormatter, checkbox: false, colSize: ConfigValues.NameColumnWidth)]
-        public string Name { get; set; }
+        //[Display(Name = "Horse", Order = 2)]
+        //[CustomDisplay(DisplayOn.AUS, CustomFormatters.linkFormatter, checkbox: false, colSize: ConfigValues.NameColumnWidth)]
+        //public string Name { get; set; }
 
         [Display(Name = "Horse", Order = 2)]
         [CustomDisplay(DisplayOn.HK, CustomFormatters.linkFormatter, checkbox: false, colSize: ConfigValues.NameColumnWidth)]
@@ -105,14 +105,18 @@ namespace RaceDayDisplayApp.Models
         [Display(Name = "Jockey", Order = 99)]
         [CustomDisplay(DisplayOn.ALL, colSize: ConfigValues.NameColumnWidth)]
         public string Jockey { get; set; }
-        
+
+        [Display(Name = "JockeyPoints", Order = 99)]
+        [CustomDisplay(DisplayOn.ALL)]
+        public int jockeypoints { get; set; }
+
         [Display(Name = "Trainer", Order = 99)]
         [CustomDisplay(DisplayOn.ALL, colSize: ConfigValues.NameColumnWidth)]
         public string Trainer { get; set; }
 
-        [Display(Name = "Gear", Order = 99)]
-        [CustomDisplay(DisplayOn.ALL)]
-        public string Gear { get; set; }
+        //[Display(Name = "Gear", Order = 99)]
+        //[CustomDisplay(DisplayOn.ALL)]
+        //public string Gear { get; set; }
 
         //[Display(Name = "NewTr?", Order = 99)]
         //[CustomDisplay(DisplayOn.BOTH)]
@@ -134,25 +138,25 @@ namespace RaceDayDisplayApp.Models
         [CustomDisplay(DisplayOn.ALL)]
         public string Color { get; set; }
 
-        [Display(Name = "Weight", Order = 99)]
-        [CustomDisplay(DisplayOn.AUS)]
-        public float AUS_HcpWT { get; set; }
+        //[Display(Name = "Weight", Order = 99)]
+        //[CustomDisplay(DisplayOn.AUS)]
+        //public float AUS_HcpWT { get; set; }
 
         //[Display(Name = "Horse Wt.", Order = 0)]
         //[CustomDisplay(DisplayOn.HK)]
         //public float HK_DeclaredHorseWtLbs { get; set; }
 
-        [Display(Name = "HcpRtg", Order = 99)]
-        [CustomDisplay(DisplayOn.AUS)]
-        public int AUS_HcpRatingAtJump { get; set; }
+        //[Display(Name = "HcpRtg", Order = 99)]
+        //[CustomDisplay(DisplayOn.AUS)]
+        //public int AUS_HcpRatingAtJump { get; set; }
 
-        [Display(Name = "Wt.", Order = 99)]
-        [CustomDisplay(DisplayOn.HK)]
-        public float HK_ActualWtLbs { get; set; }
+        //[Display(Name = "Wt.", Order = 99)]
+        //[CustomDisplay(DisplayOn.HK)]
+        //public float HK_ActualWtLbs { get; set; }
 
-        [Display(Name = "Rating", Order = 99)]
-        [CustomDisplay(DisplayOn.HK)]
-        public int HK_Rating { get; set; }
+        //[Display(Name = "Rating", Order = 99)]
+        //[CustomDisplay(DisplayOn.HK)]
+        //public int HK_Rating { get; set; }
 
         [Display(Name = "Plc.", Order = 11)]
         [CustomDisplay(DisplayOn.ALL, checkbox:false)]
@@ -179,7 +183,7 @@ namespace RaceDayDisplayApp.Models
         public string Class { get; set; } 
 
         [Display(Order = 99)]
-        [CustomDisplay(DisplayOn.ALL)]
+        [CustomDisplay(DisplayOn.HK)]
         public int Rtg { get; set; } 
     
         [Display(Name = "Gld?", Order = 99)]
@@ -187,17 +191,45 @@ namespace RaceDayDisplayApp.Models
         public string Gld { get; set; } 
     
         [Display(Order = 99)]
-        [CustomDisplay(DisplayOn.ALL)]
+        [CustomDisplay(DisplayOn.HK)]
         public float CWt { get; set; } 
     
         [Display(Name = "Cwt%BW", Order = 99)]
-        [CustomDisplay(DisplayOn.ALL, CustomFormatters.percentageFormatter)]
-        public float BW { get; set; } 
-    
+        [CustomDisplay(DisplayOn.HK, CustomFormatters.percentageFormatter)]
+        public float BW { get; set; }
+
+        [Display(Name = "Wt", Order = 99)]
+        [CustomDisplay(DisplayOn.RSA)]
+        public float Wt { get; set; } 
+
         [Display(Name = "Wt+/-", Order = 99)]
         [CustomDisplay(DisplayOn.ALL)]
-        public float Wt { get; set; } 
+        public float WtPlusLess { get; set; } 
     
+        [Display(Order = 99)]
+        [CustomDisplay(DisplayOn.ALL)]
+        public int DSLR { get; set; } 
+
+        [Display(Name = "BFAVL?", Order = 99)]
+        [CustomDisplay(DisplayOn.ALL)]
+        public string BFAVL { get; set; } 
+
+        [Display(Name = "Mdn?", Order = 99)]
+        [CustomDisplay(DisplayOn.ALL)]
+        public string Mdn { get; set; } 
+
+        [Display(Order = 99)]
+        [CustomDisplay(DisplayOn.ALL)]
+        public float MktRel { get; set; } 
+        
+        [Display(Order = 99)]
+        [CustomDisplay(DisplayOn.HK)]
+        public int JmpRnk { get; set; } 
+        
+        [Display(Order = 99)]
+        [CustomDisplay(DisplayOn.HK)]
+        public int FinishRnk { get; set; } 
+            
         [Display(Name = "NewTr?", Order = 99)]
         [CustomDisplay(DisplayOn.ALL)]
         public string NewTr { get; set; } 
@@ -214,22 +246,81 @@ namespace RaceDayDisplayApp.Models
         [CustomDisplay(DisplayOn.ALL)]
         public string KAD { get; set; }
 
+        [Display(Name = "RanOnL?", Order = 99)]
+        [CustomDisplay(DisplayOn.HK)]
+        public string RanOnL { get; set; }
+
+        [Display(Name = "LostLeadL?", Order = 99)]
+        [CustomDisplay(DisplayOn.HK)]
+        public string LostLeadL { get; set; }
+
         [Display(Name = "ROLast?", Order = 99)]
-        [CustomDisplay(DisplayOn.ALL)]
+        [CustomDisplay(DisplayOn.RSA)] //TODO display for AUS?
         public string ROLast { get; set; }
 
         [Display(Name = "SwampedLast?", Order = 99)]
-        [CustomDisplay(DisplayOn.ALL)]
+        [CustomDisplay(DisplayOn.RSA)] //TODO display for AUS?
         public string SwampedLast { get; set; }
         
         [Display(Name = "FUP?", Order = 99)]
         [CustomDisplay(DisplayOn.ALL)]
         public string FUP { get; set; } 
     
-    
         [Display(Name = "LUP?", Order = 99)]
         [CustomDisplay(DisplayOn.ALL)]
         public string LUP { get; set; } 
+
+        [Display(Name = "QBU?", Order = 99)]
+        [CustomDisplay(DisplayOn.ALL)]
+        public string QBU { get; set; } 
+
+        [Display(Name = "GJD?", Order = 99)]
+        [CustomDisplay(DisplayOn.ALL)]
+        public string GJD { get; set; } 
+
+        [Display(Name = "DRPD?", Order = 99)]
+        [CustomDisplay(DisplayOn.ALL)]
+        public string DRPD { get; set; } 
+
+        [Display(Name = "H4CRSE?", Order = 99)]
+        [CustomDisplay(DisplayOn.ALL)]
+        public string H4CRSE { get; set; } 
+
+        [Display(Name = "H&J?", Order = 99)]
+        [CustomDisplay(DisplayOn.ALL)]
+        public string HJ { get; set; } 
+
+        [Display(Name = "1TRICKJ?", Order = 99)]
+        [CustomDisplay(DisplayOn.HK)]
+        public string TRICKJ { get; set; } 
+
+        [Display(Name = "NewGear?", Order = 99)]
+        [CustomDisplay(DisplayOn.HK)]
+        public string NewGear { get; set; } 
+
+        [Display(Order = 99)]
+        [CustomDisplay(DisplayOn.ALL)]
+        public int BeenThere { get; set; } 
+
+        [Display(Order = 99)]
+        [CustomDisplay(DisplayOn.RSA)]
+        public float SandPts { get; set; }
+
+        [Display(Order = 99)]
+        [CustomDisplay(DisplayOn.ALL)]
+        public float TurfPts { get; set; } 
+
+        [Display(Order = 99)]
+        [CustomDisplay(DisplayOn.RSA)]
+        public float PolyPts { get; set; }        
+
+        [Display(Order = 99)]
+        [CustomDisplay(DisplayOn.HK)]
+        public float AWTPts { get; set; } 
+
+        [Display(Order = 99)]
+        [CustomDisplay(DisplayOn.ALL)]
+        public string LAST10 { get; set; } 
 
         //[CustomDisplay(DisplayOn.NONE)]
         //public DateTime Z_AUS_FinishTime { get; set; }

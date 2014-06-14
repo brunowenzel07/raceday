@@ -58,7 +58,7 @@ namespace RaceDayDisplayApp.Controllers
 
             //get the user settings
             var userId = WebMatrix.WebData.WebSecurity.GetUserId(User.Identity.Name);
-            ViewBag.UserSettings = entities.GetUserSettings(userId, meeting.MeetingId, meeting.IsHK);
+            ViewBag.UserSettings = entities.GetUserSettings(userId, meeting.CountryEnum);
 
             //to render or not the statistics sections
             ViewBag.FullAccess = User.IsInRole(ConfigValues.FullAccessRole);
@@ -66,7 +66,7 @@ namespace RaceDayDisplayApp.Controllers
             return View(meeting);
         }
 
-        public ActionResult RaceDetails(int id = 0, bool today = true)
+        public ActionResult RaceDetails(int id, CountryEnum country, bool today = true)
         {
             //get the meeting and Race info
             Meeting meeting = entities.GetMeetingByRaceId(id);
@@ -76,7 +76,7 @@ namespace RaceDayDisplayApp.Controllers
             }
 
             //get race info from cache
-            meeting.Races = new List<RaceBase>(new[] { RacesCache.Instance[id] });
+            meeting.Races = new List<RaceBase>(new[] { RacesCache.Instance.GetRace(id, country) });
 
             //set previous and next race in the sequence
             var racesList = entities.GetRacesList(today).ToList();
@@ -87,7 +87,7 @@ namespace RaceDayDisplayApp.Controllers
 
             //get the user settings
             var userId = WebMatrix.WebData.WebSecurity.GetUserId(User.Identity.Name);
-            ViewBag.UserSettings = entities.GetUserSettings(userId, meeting.MeetingId, meeting.IsHK);
+            ViewBag.UserSettings = entities.GetUserSettings(userId, meeting.CountryEnum);
 
             //columns to display for this race
             ViewBag.GridColumns = ModelHelper.GetGridColumns(meeting.Races[0] as Race);
@@ -98,9 +98,9 @@ namespace RaceDayDisplayApp.Controllers
             return View(meeting);
         }
 
-        public ActionResult Race(int id)
+        public ActionResult Race(int id, CountryEnum country)
         {
-            var r = RacesCache.Instance[id];
+            var r = RacesCache.Instance.GetRace(id, country);
             if (r == null)
             {
                 return HttpNotFound();
@@ -114,9 +114,9 @@ namespace RaceDayDisplayApp.Controllers
         /// Called async by the jqGrid on details view
         /// </summary>
         /// <returns>A list of runners</returns>
-        public JsonResult GridData(int id, GridSettings gridSettings)
+        public JsonResult GridData(int id, CountryEnum country, GridSettings gridSettings)
         {
-            var race = RacesCache.Instance[id];
+            var race = RacesCache.Instance.GetRace(id, country);
             var runners = race.Runners;
 
             if (runners == null)
@@ -159,11 +159,11 @@ namespace RaceDayDisplayApp.Controllers
             return Json(jsonData, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult GridSettings(int meetingId, bool isHK)
+        public ActionResult GridSettings(CountryEnum country)
         {
             //get the user settings
             var userId = WebMatrix.WebData.WebSecurity.GetUserId(User.Identity.Name);
-            var settings = entities.GetUserSettings(userId, meetingId, isHK);
+            var settings = entities.GetUserSettings(userId, country);
 
             return View("_GridSettings", settings);
         }

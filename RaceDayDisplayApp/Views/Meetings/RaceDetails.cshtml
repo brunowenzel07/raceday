@@ -11,8 +11,7 @@
     @Scripts.Render("~/bundles/jqGrid")
 }
 
-@Html.HiddenFor(m => m.MeetingId)
-@Html.HiddenFor(m => m.IsHK)
+@Html.HiddenFor(m => m.CountryEnum)
 
 
 <div class="main_container">
@@ -25,14 +24,14 @@
                     @if (prev != null)
                     {
                         @Html.ActionLink(String.Format("Previous ({0} No {1})", prev.RaceName, prev.RaceNumber),
-                                     "RaceDetails", new { id = prev.RaceId, today = ViewBag.Today });
+                                     "RaceDetails", new { id = prev.RaceId, country = prev.CountryEnum, today = ViewBag.Today });
                     }
                 </div>
                 <div class="next">
                     @if (next != null)
                     {
                         @Html.ActionLink(String.Format("Next ({0} No {1})", next.RaceName, next.RaceNumber),
-                                     "RaceDetails", new { id = next.RaceId, today = ViewBag.Today });
+                                          "RaceDetails", new { id = next.RaceId, country = next.CountryEnum, today = ViewBag.Today });
                     }
                 </div>
             </div>

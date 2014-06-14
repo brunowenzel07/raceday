@@ -270,16 +270,14 @@ function resizeGrid() {
 
 function defaultSettings() {
 
-    var MeetingId = $("#MeetingId").val();
-    var IsHK = $("#IsHK").val();
+    var CountryEnum = $("#CountryEnum").val();
 
     if (MeetingId != "") {
         $.ajax({
             type: 'POST',
             url: '/Meetings/GridSettings',
             data: {
-                meetingId: MeetingId,
-                isHK: IsHK
+                country: CountryEnum
             },
             success: function (data) {
                 $("#chks_container").empty();

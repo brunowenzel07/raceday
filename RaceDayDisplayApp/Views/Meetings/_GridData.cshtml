@@ -27,7 +27,7 @@
 .SetAltRows(true)
 .SetAltClass("alt_rows")
 .AddColumns(ViewBag.GridColumns)
-.SetUrl(Url.Action("GridData", "Meetings", new { id = Model.RaceId }))
+.SetUrl(Url.Action("GridData", "Meetings", new { id = Model.RaceId, country = Model.CountryEnum }))
 //.SetUrl("Meetings/GridData/" + Model.RaceId + "?isStarted='+$('#isStarted').val()+'&isDone='+$('#isDone').val()+'")
 .SetAutoWidth(true)
 .SetLoadUi(MvcJqGrid.Enums.LoadUi.Block)

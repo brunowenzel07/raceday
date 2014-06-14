@@ -77,11 +77,10 @@ namespace RaceDayDisplayApp.Models
         public IList<RaceBase> Races { get; set; }
 
 
-
         [CustomDisplay(DisplayOn.NONE)]
-        public bool IsHK
+        public CountryEnum CountryEnum
         {
-            get { return CountryCode == "HKG"; }
+            get { return Country.GetEnum(CountryCode); }
         }
 
         //[CustomDisplay(DisplayOn.NONE)]

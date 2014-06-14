@@ -34,8 +34,10 @@ namespace RaceDayDisplayApp.Models
         NONE,
         AUS,
         HK,
+        RSA,
         ALL
     }
+
 
     /// <summary>
     /// Each value is associated to a JavaScriptFormatter

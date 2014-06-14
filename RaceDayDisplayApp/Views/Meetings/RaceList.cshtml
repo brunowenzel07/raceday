@@ -28,6 +28,7 @@
     <div class="race_table">
         <table>
             <tr>
+                <th>Country</th>
                 <th>Date</th>
                 <th>JT local</th>
                 <th>JT UTC</th>
@@ -51,17 +52,17 @@
                 }
                 
                 <tr @Html.Raw(classTxt)>
- 
+                    <td>@race.CountryCode</td>
                     <td>@race.MeetingDate.ToShortDateString()</td>
                     <td>@race.LocalJumpTime.ToString()</td>
                     <td>@race.RaceJumpDateTimeUTC.ToString("hh:mm")</td>
                     <td>@race.RaceCourseName</td>
                     <td>@race.RaceNumber</td>
-                    <td class='race_column'>@Html.ActionLink(race.RaceName ?? "(no name)", "RaceDetails", new { id = race.RaceId, today = ViewBag.Today })</td>
+                    <td class='race_column'>@Html.ActionLink(race.RaceName ?? "(no name)", "RaceDetails", new { id = race.RaceId, country = race.CountryEnum, today = ViewBag.Today })</td>
                     <td>@race.RaceStatus</td>
                 </tr>
                 
-                if (i++ > 300) { break; }
+                if (i++ > RaceDayDisplayApp.ConfigValues.RaceListLimit) { break; }
             }
             }
         </table>

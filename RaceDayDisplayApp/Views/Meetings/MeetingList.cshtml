@@ -39,6 +39,7 @@
                         <th>UTC</th>
                         <th>Racecourse</th>
                     </tr>
+                    @{ int i = 0; }
                     @foreach (var meeting in country.Meetings)
                     {
                         @*var linkText = string.Format("{0}{1} - {2}", 
@@ -52,6 +53,8 @@
                             <td>@(meeting.MinRaceJumpDateTimeUTC.ToShortTimeString())</td>
                             <td>@Html.ActionLink(meeting.RaceCourseName??"(no race course name)", "Details", new { id = meeting.MeetingId })</td>
                         </tr>
+
+                        if (i++ > RaceDayDisplayApp.ConfigValues.MeetingListLimit) { break; }
                     
                     }
                 </table>
