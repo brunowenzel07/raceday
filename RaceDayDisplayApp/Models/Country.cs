@@ -38,6 +38,10 @@ namespace RaceDayDisplayApp.Models
                     return country == CountryEnum.HK;
                 case DisplayOn.RSA:
                     return country == CountryEnum.RSA;
+                case DisplayOn.AUSnRSA:
+                    return country == CountryEnum.RSA || country == CountryEnum.AUS;
+                case DisplayOn.AUSnHK:
+                    return country == CountryEnum.HK || country == CountryEnum.AUS;
                 case DisplayOn.ALL:
                     return true;
                 default:

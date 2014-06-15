@@ -199,7 +199,7 @@ namespace RaceDayDisplayApp.Models
         public float BW { get; set; }
 
         [Display(Name = "Wt", Order = 99)]
-        [CustomDisplay(DisplayOn.RSA)]
+        [CustomDisplay(DisplayOn.AUSnRSA)]
         public float Wt { get; set; } 
 
         [Display(Name = "Wt+/-", Order = 99)]
@@ -255,11 +255,11 @@ namespace RaceDayDisplayApp.Models
         public string LostLeadL { get; set; }
 
         [Display(Name = "ROLast?", Order = 99)]
-        [CustomDisplay(DisplayOn.RSA)] //TODO display for AUS?
+        [CustomDisplay(DisplayOn.AUSnRSA)] 
         public string ROLast { get; set; }
 
         [Display(Name = "SwampedLast?", Order = 99)]
-        [CustomDisplay(DisplayOn.RSA)] //TODO display for AUS?
+        [CustomDisplay(DisplayOn.AUSnRSA)] 
         public string SwampedLast { get; set; }
         
         [Display(Name = "FUP?", Order = 99)]
@@ -315,7 +315,7 @@ namespace RaceDayDisplayApp.Models
         public float PolyPts { get; set; }        
 
         [Display(Order = 99)]
-        [CustomDisplay(DisplayOn.HK)]
+        [CustomDisplay(DisplayOn.AUSnHK)]
         public float AWTPts { get; set; } 
 
         [Display(Order = 99)]

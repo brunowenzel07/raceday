@@ -169,6 +169,7 @@
 #form-box
 {
     padding-top:15px;
+    color:#FFF;
 }
 
 .alt_rows
@@ -284,6 +285,11 @@
     float:left; 
     width:100%
 }
+
+.index_head a {
+    color:#FFF;
+}
+
 .index_link1{
     float:left; 
     padding-top:10px;
@@ -355,9 +361,15 @@
 .nextRace{
     background: #e4e4e4;
 }
+
+
 /************** ALL PAGES **************/
 
-h2, h3, h4 {
+h2{
+    color: #FFF;
+}
+
+h3, h4 {
     color: #666;
 }
 
@@ -521,6 +533,7 @@ And, since we've applied the background colors to td/th element because of IE, G
 .filters-container{
     float:left;
     width:100%;
+    color: #FFF;
 }
 
 .filter, .short-filter, .long-filter{
@@ -571,4 +584,9 @@ And, since we've applied the background colors to td/th element because of IE, G
     border-right:none!important;
     width:33%!important;
     padding-left:33%!important;
+    color:#FFF;
+}
+
+#loginForm a {
+    color:#FFF;
 }

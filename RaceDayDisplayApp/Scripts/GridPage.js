@@ -137,7 +137,8 @@ function percentageFormatter(cellvalue, options, rowObject) {
 }
 
 function linkFormatter(cellvalue, options, rowObject) {
-    return "<a href=\"../RunnerHistory/" + rowObject.HorseId + "\" onclick=\"window.open(this.href, 'mywin','left=20,top=20,width=1120,height=500,toolbar=1,resizable=0'); return false;\" >" + cellvalue + "</a>";
+    var CountryCode = $("#CountryCode").val();
+    return "<a href=\"../RunnerHistory/" + rowObject.HorseId + "?CountryCode=" + CountryCode + "\" onclick=\"window.open(this.href, 'mywin','left=20,top=20,width=1120,height=500,toolbar=1,resizable=0'); return false;\" >" + cellvalue + "</a>";
     //+ "?RaceId=" + $("#RaceId").val() 
 }
 

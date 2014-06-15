@@ -68,7 +68,8 @@ namespace RaceDayDisplayApp.DAL
                 conn.Open();
 
                 return conn.Query<RaceDisplay>(@"
-                    SELECT Race.Id AS RaceId, Race.RaceNumber, Race.RaceName, Race.RaceJumpDateTimeUTC, 
+                    SELECT TOP " + ConfigValues.RaceListLimit + @"
+                           Race.Id AS RaceId, Race.RaceNumber, Race.RaceName, Race.RaceJumpDateTimeUTC, 
                            Meeting.MeetingDate, RaceCourse.Name AS RaceCourseName, 
                            LocalJumpTime, AUS_StateId as StateId, RaceStatus, Country.Code as CountryCode
                     FROM Race INNER JOIN Meeting on Meeting.Id = Race.MeetingId
@@ -210,7 +211,7 @@ namespace RaceDayDisplayApp.DAL
                             query = @"
                                 SELECT	RaceId, HorseNumber, Barrier, RunnerId, 
                                         Horse, isScratched, 
-                                        HorseHKGId as HorseId, Jockey, jockeypoints, Trainer, Age, Color, Place,
+                                        HorseRSAId as HorseId, Jockey, jockeypoints, Trainer, Age, Color, Place,
                                         Z_WinOddsRank, AVG3WinOddsRank, nUp, [Class+/-] as Class, 
                                         [Gld?] as Gld, Wt, [Wt+/-] as WtPlusLess,
                                         DSLR, [BFAVL?] as BFAVL, [Mdn?] as Mdn, Sex, MktRel, [NewTr?] as NewTr, 
@@ -220,6 +221,21 @@ namespace RaceDayDisplayApp.DAL
                                         [QBU?] as QBU, [GJD?] as GJD, [DRPD?] as DRPD, [H4CRSE?] as H4CRSE, 
                                         [H&J?] as HJ, BeenThere, SandPts, TurfPts, PolyPts, LAST10
                                 from DataGrid_staFNRSA(@RaceId)";
+                            break;
+                        case CountryEnum.AUS:
+                            query = @"
+                                SELECT	RaceId, HorseNumber, Barrier, RunnerId, 
+                                        Horse, isScratched, 
+                                        HorseAUSNZId as HorseId, Jockey, jockeypoints, Trainer, Age, Color, Place,
+                                        Z_WinOddsRank, AVG3WinOddsRank, nUp, [Class+/-] as Class, 
+                                        [Gld?] as Gld, Wt, [Wt+/-] as WtPlusLess,
+                                        DSLR, [BFAVL?] as BFAVL, [Mdn?] as Mdn, Sex, MktRel, [NewTr?] as NewTr, 
+                                        [LSW?] as LSW, [FirstStart?] as FirstStart, 
+                                        [KAD?] as KAD, [ROLast?] as ROLast, [SwampedLast?] as SwampedLast,
+                                        [FUP?] as FUP, [LUP?] as LUP,
+                                        [QBU?] as QBU, [GJD?] as GJD, [DRPD?] as DRPD, [H4CRSE?] as H4CRSE, 
+                                        [H&J?] as HJ, BeenThere, AWTPts, TurfPts, LAST10
+                                from DataGrid_staFNAUSNZ(@RaceId)";
                             break;
                         default:
 //                            query = @"
@@ -390,17 +406,18 @@ namespace RaceDayDisplayApp.DAL
         }
 
 
-        public IEnumerable<dynamic> GetRunnerHistory(int horseId)
+        public IEnumerable<dynamic> GetRunnerHistory(int horseId, string countryCode)
         {
             using (var conn = new SqlConnection(connectionString))
             {
                 conn.Open();
 
-                return conn.Query("Select * from getRunnerHistory(@horseid, @date)",
+                return conn.Query("Select * from getRunnerHistory(@horseid, @date, @countrycode)",
                                     new 
                                     { 
                                         horseid = horseId,
                                         date = DateTime.UtcNow.Date,
+                                        countrycode = countryCode
                                     });
             }
         }

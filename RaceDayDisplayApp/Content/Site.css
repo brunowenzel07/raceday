@@ -129,7 +129,7 @@ footer {
 /* site title
 ----------------------------------------------------------*/
 .site-title {
-    color: #c8c8c8;
+    color: #FFF;/*#c8c8c8;*/
     font-family: Rockwell, Consolas, "Courier New", Courier, monospace;
     font-size: 2.3em;
     margin: 0;
@@ -138,7 +138,7 @@ footer {
 
 .site-title a, .site-title a:hover, .site-title a:active {
     background: none;
-    color: #c8c8c8;
+    color: #FFF;/*#c8c8c8;*/
     outline: none;
     text-decoration: none;
 }
@@ -151,14 +151,16 @@ footer {
     font-size: .85em;
     margin: 0 0 10px;
     text-align: right;
+    color:#FFF;
 }
 
     #login a {
-        background-color: #d3dce0;
+        /*background-color: #d3dce0;*/
         margin-left: 10px;
         margin-right: 3px;
         padding: 2px 3px;
         text-decoration: none;
+        color:#FFF;
     }
 
     #login a.username {

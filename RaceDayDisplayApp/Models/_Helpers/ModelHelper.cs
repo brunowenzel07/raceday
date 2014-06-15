@@ -74,12 +74,11 @@ namespace RaceDayDisplayApp.Models
         {
             Type t = obj.GetType();
             Dictionary<string, DisplayAttribute> lookup = new Dictionary<string, DisplayAttribute>();
-            CustomDisplayAttribute attr = null;
             List<DisplayProperty> result = new List<DisplayProperty>();
             
             //loops through all the properties of the class UserSettings
             t.GetProperties()
-                .Where(p => Country.Match(country, attr.Display))
+                .Where(p => Country.Match(country, getCustomDisplayAttribute(p).Display))
                 .OrderBy(p => (lookup[p.Name] = getDisplayAttribute(p)).Order)
                 .ToList().ForEach(p =>
                 {

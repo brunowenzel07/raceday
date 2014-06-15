@@ -35,6 +35,8 @@ namespace RaceDayDisplayApp.Models
         AUS,
         HK,
         RSA,
+        AUSnRSA,
+        AUSnHK,
         ALL
     }
 
