@@ -175,7 +175,7 @@ namespace RaceDayDisplayApp.Controllers
 
             var runnerHistory = entities.GetRunnerHistory(id, countryCode);
             model.RunnerHistory = runnerHistory;
-            model.Fields = RunnerHistoryHelper.GetFieldsIndexes(runnerHistory.First());
+            model.Fields = RunnerHistoryHelper.GetFieldsIndexes(countryCode, runnerHistory.First());
 
             return View(model);
         }

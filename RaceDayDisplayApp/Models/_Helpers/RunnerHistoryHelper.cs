@@ -13,7 +13,7 @@ namespace RaceDayDisplayApp.Models
         public static string[] ControlFields = new[] { "Season" };//,  "SwampedLast?", "FU", "LU" };
 
         static string fixedGroupName;
-        static Dictionary<string, List<string>> fields;
+        static Dictionary<KeyValuePair<string, string>, List<string>> fields;
         static Dictionary<string, string> formatters;
 
         static RunnerHistoryHelper()
@@ -23,26 +23,38 @@ namespace RaceDayDisplayApp.Models
 
         private static void loadConfigFile()
         {
-            fields = new Dictionary<string, List<string>>();
+            fields = new Dictionary<KeyValuePair<string, string>, List<string>>();
             formatters = new Dictionary<string, string>();
 
             XDocument doc = XDocument.Load(AppDomain.CurrentDomain.BaseDirectory + "RunnerHistoryFields.config");
             doc.Root.Elements("group").ToList().ForEach(g =>
                 {
-                    var groupFields = new List<string>();
-                    g.Elements("field").ToList().ForEach(f =>
-                        {
-                            if (f.Attribute("formatter") != null)
-                                formatters.Add(f.Value, f.Attribute("formatter").Value);
+                    string name = "", value = "", countryCode = "";
+                    try
+                    {
+                        name = (string)g.Attribute("name").Value;
+                        if (g.Attribute("countrycode") != null)
+                            countryCode = (string)g.Attribute("countrycode").Value;
 
-                            groupFields.Add(f.Value);
-                        });
+                        var groupFields = new List<string>();
+                        g.Elements("field").ToList().ForEach(f =>
+                            {
+                                value = f.Value;
+                                if (f.Attribute("formatter") != null && !formatters.ContainsKey(value))
+                                    formatters.Add(value, f.Attribute("formatter").Value);
 
-                    var name = (string)g.Attribute("name").Value;
-                    fields.Add(name, groupFields);
+                                groupFields.Add(value);
+                            });
 
-                    if (bool.Parse(g.Attribute("alwaysVisible").Value))
-                        fixedGroupName = name;
+                        fields.Add(new KeyValuePair<string, string>(countryCode, name), groupFields);
+
+                        if (bool.Parse(g.Attribute("alwaysVisible").Value))
+                            fixedGroupName = name;
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception("Error parsing RunnerHistoryFields.xml - group=" + name + " country=" + countryCode + " value=" + value, e);
+                    }
                 });
         }
 
@@ -76,21 +88,22 @@ namespace RaceDayDisplayApp.Models
             return value.ToString();
         }
 
-        internal static Dictionary<string,string> GetFieldsIndexes(dynamic runnerHistoryItem)
+        internal static Dictionary<string,string> GetFieldsIndexes(string countryCode, dynamic runnerHistoryItem)
         {
             var groups = new Dictionary<string, List<int>>();
 
-            fields.ToList().ForEach(f => groups.Add(f.Key, new List<int>(f.Value.Count())));
+            var countryFields = fields.Where(f => f.Key.Key == "" || f.Key.Key == countryCode).ToList();            
+            countryFields.ForEach(f => groups.Add(f.Key.Value, new List<int>(f.Value.Count())));
 
             int i=1;
             foreach (KeyValuePair<string, object> kvp in runnerHistoryItem)
             {
                 if (!ControlFields.Contains(kvp.Key))
                 {
-                    foreach (var f in fields)
+                    foreach (var f in countryFields)
                     {
                         if (f.Value.Contains(kvp.Key))
-                            groups[f.Key].Add(i);
+                            groups[f.Key.Value].Add(i);
                     }
                     i++;
                 }
