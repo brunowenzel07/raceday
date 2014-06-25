@@ -412,7 +412,8 @@ namespace RaceDayDisplayApp.DAL
             {
                 conn.Open();
 
-                return conn.Query("Select * from getRunnerHistory(@horseid, @date, @countrycode)",
+                return conn.Query(@"Select * from getRunnerHistory(@horseid, @date, @countrycode)
+                                    order by Season desc",
                                     new 
                                     { 
                                         horseid = horseId,
