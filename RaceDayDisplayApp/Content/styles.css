@@ -1,4 +1,26 @@
-﻿
+﻿/************** GENERAL COLOR **************/
+
+.background 
+{
+    background-color: #052d1f;
+    color: #FFF;
+}
+
+.boxes,
+#nextPreviousRace .next a,
+#nextPreviousRace .prev a
+{
+    background-color:#f4f0e1;
+    color: #666;
+}
+
+.buttons
+{
+    background-color: #e1e0e1!important;
+    color: #333;
+}
+
+
 /************** MEETING DETAILS PAGE **************/
 
 /*#top_panel
@@ -49,7 +71,7 @@
 {
     float:left;
     width:96%;
-    background-color:#f4f0e1;
+    /*background-color:#f4f0e1;*/
     padding:0px 10px;
 }
 
@@ -82,8 +104,8 @@
     padding:5px;
 }
 .panel-flip {
-    float:right;    
-    background-color:#e5e5e5;
+    float:right;
+    /*background-color:#e5e5e5;*/
     cursor: pointer;
 }
 .panel-history {
@@ -124,7 +146,7 @@
     float:left;
     width:96%;
     display:none;
-    background-color:#f4f0e1;
+    /*background-color:#f4f0e1;*/
     padding:10px;
 }
 
@@ -158,7 +180,7 @@
 .lbl_checkbox
 {
     display:inline;
-    color: #333;
+    /*color: #333;*/
     font-size: 1.1em;
     font-family: "Segoe UI", Verdana, Helvetica, Sans-Serif;
     font-weight:400;
@@ -169,7 +191,7 @@
 #form-box
 {
     padding-top:15px;
-    color:#FFF;
+    /*color:#FFF;*/
 }
 
 .alt_rows
@@ -241,7 +263,7 @@
 #nextPreviousRace {
     float:left; 
     width:100%;
-    background-color: #fff;
+    /*background-color: #fff;*/
     height:50px;
 
 }
@@ -272,7 +294,7 @@
         }
         #nextPreviousRace .next a,
         #nextPreviousRace .prev a {
-            color: #666;
+            /*color: #666;*/
             font-size: 0.85em;
             font-family: "Segoe UI", Verdana, Helvetica, Sans-Serif;
             font-weight: bold;
@@ -365,13 +387,23 @@
 
 /************** ALL PAGES **************/
 
-h2{
+.boxes,
+.buttons,
+.btn_hist
+{
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+}
+
+
+/*h2{
     color: #FFF;
 }
 
 h3, h4 {
     color: #666;
-}
+}*/
 
 ul
 {
@@ -393,10 +425,9 @@ ul
     float:left;
 }
 
-.history-body {
-    /*font: 12px/15px "Helvetica Neue",Arial, Helvetica, sans-serif;*/
-    color: #555;
-}
+/*.runner-history {
+    font: 12px/15px "Helvetica Neue",Arial, Helvetica, sans-serif;
+}*/
 
 .runner-history h2 {
     margin-top: 0px!important;
@@ -420,6 +451,7 @@ Pretty Table Styling
 CSS Tricks also has a nice writeup: http://css-tricks.com/feature-table-design/
 */
 .stats-table {
+    color: #555;
     overflow: hidden;
     border: 1px solid #d3d3d3;
     background: #fefefe;

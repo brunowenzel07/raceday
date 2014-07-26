@@ -17,7 +17,7 @@
 <div class="main_container">
     <div id="top_panel">
         @*<div id="panel_left">*@
-            <div id="nextPreviousRace">
+            <div id="nextPreviousRace" class="boxes">
                 @{ var prev = ViewBag.Previous as RaceDisplay; }
                 @{ var next = ViewBag.Next as RaceDisplay; }
                 <div class="prev">
@@ -37,28 +37,30 @@
             </div>
             <div class="select">
                 <div class="select_div">
-                    <h2>Race Details</h2>
+                    @*<h2>Race Details</h2>*@
+                    <h2>@Model.RaceCourseName</h2>
+                    
                 </div>
                 <div class="select_div visible" id="btns_div">
                     <div class="btn_container">
-                        <input id="btn_refresh" type="button" value="Refresh" onclick="refreshGrid()" />
+                        <input class="buttons" id="btn_refresh" type="button" value="Refresh" onclick="refreshGrid()" />
                     </div>
                     <div class="btn_container">
-                        <input id="btn_default" type="button" value="Default" onclick="defaultSettings()" />
+                        <input class="buttons" id="btn_default" type="button" value="Default" onclick="defaultSettings()" />
                     </div>
                 </div>
             </div>
             <div class="details_container">
-                <div id="meeting_details">
+                <div id="meeting_details" class="boxes">
                     @{Html.RenderPartial("_MeetingData", Model);}
                 </div>
-                <div id="race_details">
+                <div id="race_details" class="boxes">
                     @{Html.RenderPartial("_RaceData", Model.Races[0]);}
                 </div>
             </div>
-            <div id="chks_container" class="chks_container visible">
-                @{Html.RenderPartial("_GridSettings", (IEnumerable<ViewUserSetting>)ViewBag.UserSettings);}
-            </div>
+        <div id="chks_container" class="chks_container boxes visible">
+            @{Html.RenderPartial("_GridSettings", (IEnumerable<ViewUserSetting>)ViewBag.UserSettings);}
+        </div>
         @*</div>
         <div id="panel_right" class="visible">
             <h2>Chart Details</h2>
