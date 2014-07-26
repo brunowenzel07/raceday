@@ -83,7 +83,7 @@ function GridLoadComplete(e, data)
         txtRefresh = "<b>RACE IS DONE</b>";
     }
     else {
-        txtRefresh = "Next client refresh in " + data.nextRefreshSecs + " secs";
+        txtRefresh = "Next client refresh in " + formatNum(data.nextRefreshSecs) + " secs";
         //set next refresh
         setTimeout(refreshGrid, data.nextRefreshSecs * 1000);
     }
@@ -93,12 +93,17 @@ function GridLoadComplete(e, data)
         txtDbUpdated = "DB has never been updated<br/>";
     }
     else{
-        txtDbUpdated = "DB was last updated " + data.dbUpdatedSecs + " secs before displaying<br/>";
+        txtDbUpdated = "DB was last updated " + formatNum(data.dbUpdatedSecs) + " secs before displaying<br/>";
     }
 
     $('#refreshInfo').html( txtDbUpdated +
-                            "Server was last updated " + data.serverUpdatedSecs + " secs before displaying<br/>"
+                            "Server was last updated " + formatNum(data.serverUpdatedSecs) + " secs before displaying<br/>"
                             + txtRefresh);
+}
+
+function formatNum(num)
+{
+    return parseFloat(Math.round(num * 100) / 100).toFixed(2);
 }
 
 function refreshGrid() {

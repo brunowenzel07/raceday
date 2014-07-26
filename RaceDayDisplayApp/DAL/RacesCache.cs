@@ -151,7 +151,9 @@ namespace RaceDayDisplayApp.DAL
                 }
                 else if (secsSinceLastRefresh < refreshInterval) //normal case
                     secsToAdd = refreshInterval - secsSinceLastRefresh + ConfigValues.ServerAddedDelay;
-                else //db update is taking more than usual
+                else if (secsSinceLastRefresh > ConfigValues.DefaultRefreshInterval) //race is probably done
+                    secsToAdd = ConfigValues.DefaultRefreshInterval;
+                else //race is active and parser db update is taking more than usual
                     secsToAdd = ConfigValues.ServerAddedDelay;
             }
 
