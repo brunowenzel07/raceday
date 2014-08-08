@@ -15,6 +15,20 @@ namespace RaceDayDisplayApp.DAL
         readonly string connectionString =
             ConfigurationManager.ConnectionStrings["RaceDayDB"].ConnectionString;
 
+        public IEnumerable<Country> GetCountries()
+        {
+            using (var conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                return conn.Query<Country>(@"
+                    SELECT Id as CountryId, Code as CountryCode, Name                           
+                    FROM Country
+                    WHERE InUse = 1 
+                    ORDER BY Name");
+            }
+        }
+
         /// <summary>
         /// Used in the MeetingList page
         /// </summary>
@@ -658,6 +672,54 @@ namespace RaceDayDisplayApp.DAL
                     }).ToList();
             }
         }
+
+        public IEnumerable<Language> GetLanguages()
+        {
+            using (var conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                return conn.Query<Language>(@"
+                    SELECT Id, Code, EnName, LocalName, InUse
+                    FROM UILanguage
+                    WHERE InUse=1
+                    ORDER BY EnName");                           
+            }
+        } 
+
+        public Language GetLanguageById(int id)
+        {
+            using (var conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                var languages = conn.Query<Language>(@"
+                    SELECT Id, Code, EnName, LocalName, InUse
+                    FROM UILanguage
+                    WHERE Id = @Id", new { Id = id });
+
+                return languages.FirstOrDefault();
+            }
+        }
+
+        public void SaveUserCountryPreferences(string[] countryIds, int userId)
+        {
+            using (var conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                foreach (var countryId in countryIds)
+                {
+                    var id = 0;
+                    int.TryParse(countryId, out id);
+
+                    conn.Execute(@"INSERT INTO User_CountryInterest
+                              (UserId, CountryId)
+                              VALUES (@userId, @id)",
+                              new { userId, id });
+                }
+            }
+        } 
     }
 
 }

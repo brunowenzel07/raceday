@@ -1,0 +1,13 @@
+﻿@{
+    Layout = null;
+}
+
+To: @ViewBag.To
+From: noreply@raceday.dev
+Subject: @RaceDayDisplayApp.App_GlobalResources.Emails.RegistrationConfirmationEmail_Subject
+
+@RaceDayDisplayApp.App_GlobalResources.Emails.RegistrationConfirmationEmail_Body.Replace("[username]", ViewBag.UserName)
+
+<a href="@Url.Action("ConfirmRegistration", "Account", new { @token = ViewBag.ConfirmationToken }, Request.Url.Scheme)">@RaceDayDisplayApp.App_GlobalResources.Emails.RegistrationConfirmationEmail_ConfirmLink_Text</a>
+
+

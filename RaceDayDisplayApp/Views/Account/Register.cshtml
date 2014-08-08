@@ -1,4 +1,6 @@
-﻿@model RaceDayDisplayApp.Models.RegisterModel
+﻿@using MvcCheckBoxList
+
+@model RaceDayDisplayApp.Models.RegisterModel
 @{
     ViewBag.Title = "Register";
 }
@@ -26,6 +28,26 @@
             <li>
                 @Html.LabelFor(m => m.ConfirmPassword)
                 @Html.PasswordFor(m => m.ConfirmPassword)
+            </li>
+            <li>
+                @Html.LabelFor(m => m.Email)
+                @Html.TextBoxFor(m => m.Email)
+            </li>
+            <li>
+                @Html.LabelFor(m => m.NoNewsletter)
+                @Html.CheckBoxFor(m => m.NoNewsletter)
+            </li>
+            <li>
+                @Html.LabelFor(m => m.CountryIDs)
+                @Html.CheckBoxListFor(m => m.CountryIDs, m => m.AllCountries, m => m.CountryId, m => m.Name, m => m.SelectedCountries, new MvcCheckBoxList.Model.HtmlListInfo(MvcCheckBoxList.Model.HtmlTag.vertical_columns, 2, null, MvcCheckBoxList.Model.TextLayout.RightToLeft))
+            </li>
+            <li>
+                @Html.LabelFor(m => m.SignUpComment)
+                @Html.TextAreaFor(m => m.SignUpComment)
+            </li>
+            <li>
+                @Html.LabelFor(m => m.UILanguageId)
+                @Html.DropDownListFor(m => m.UILanguageId, Model.LanguageSelectList)
             </li>
         </ol>
         <input type="submit" value="Register" />
