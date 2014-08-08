@@ -1,4 +1,4 @@
-﻿/************** GENERAL COLOR **************/
+﻿/************** GENERAL COLOURS **************/
 
 .background 
 {
@@ -6,9 +6,7 @@
     color: #FFF;
 }
 
-.boxes,
-#nextPreviousRace .next a,
-#nextPreviousRace .prev a
+.boxes
 {
     background-color:#f4f0e1;
     color: #666;

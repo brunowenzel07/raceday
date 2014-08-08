@@ -24,7 +24,7 @@
                     @if (prev != null)
                     {
                         @Html.ActionLink(String.Format("Previous ({0} No {1})", prev.RaceName, prev.RaceNumber),
-                                     "RaceDetails", new { id = prev.RaceId, country = prev.CountryEnum, today = ViewBag.Today });
+                                     "RaceDetails", new { id = prev.RaceId, country = prev.CountryEnum, today = ViewBag.Today, @class = "boxes"});
                     }
                 </div>
                 <div class="next">
