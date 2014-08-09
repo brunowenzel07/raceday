@@ -105,7 +105,7 @@ namespace RaceDayDisplayApp.Controllers
                     new SelectListItem
                     {
                         Value = c.Id.ToString(),
-                        Text = c.EnName
+                        Text = c.LocalName
                     });
 
             model.AllCountries = entities.GetCountries();
