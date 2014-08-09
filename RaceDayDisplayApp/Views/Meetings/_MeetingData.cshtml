@@ -9,7 +9,7 @@
 
 <h3>Meeting Details</h3>
 <div class="details_attrs">
-    @foreach (var field in ModelHelper.ToNameValuePairs(Model, Model.IsHK))
+    @foreach (var field in ModelHelper.ToNameValuePairs(Model, Model.CountryEnum))
     {
         <div class="details_attrs_wrapper">
             @field.DisplayName:
@@ -33,7 +33,7 @@
         @*@Html.Hidden("SelectedNumRunnersId", Model.NumberOfRunners)*@
     }
 
-        <div class="panel-flip" id="meeting-flip"><span id="meeting-span">Show</span> more (FAV/LSW/TF/QN/F4 statistics)</div>
+        <div class="panel-flip buttons" id="meeting-flip"><span id="meeting-span">Show</span> more (FAV/LSW/TF/QN/F4 statistics)</div>
         <div class="panel-history" id="meeting-history">
         </div>
     </div>

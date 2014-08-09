@@ -30,6 +30,8 @@ namespace RaceDayDisplayApp.Models
 
         public string CountryCode { get; set; }
 
+        public CountryEnum CountryEnum { get { return Country.GetEnum(CountryCode);  } }
+
         public DateTime MeetingDate { get; set; }
 
         public TimeSpan LocalJumpTime { get; set; }
@@ -230,9 +232,9 @@ namespace RaceDayDisplayApp.Models
         public string CountryCode { get; set; }
 
         [CustomDisplay(DisplayOn.NONE)]
-        public bool IsHK
+        public CountryEnum CountryEnum
         {
-            get { return CountryCode == "HKG"; }
+            get { return Country.GetEnum(CountryCode); }
         }
 
 
@@ -308,6 +310,8 @@ namespace RaceDayDisplayApp.Models
         }
 
         public RefreshInfo RefreshValues = new RefreshInfo();
+
+        public CountryEnum Country;
     }
 
 

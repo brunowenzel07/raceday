@@ -5,6 +5,12 @@ namespace RaceDayDisplayApp
 {
     public static class ConfigValues
     {
+        //number of meeting to display per country on the meetings list
+        public const int MeetingListLimit = 50;
+        
+        //number of races to display on the race list
+        public const int RaceListLimit = 150;
+
         //only the races/meetings of the following 7 days will be displayed
         public const int UpcomingRacesDaysLimit = 7; 
 

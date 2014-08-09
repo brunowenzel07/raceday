@@ -29,7 +29,7 @@ namespace RaceDayDisplayApp.Models
         //        });
         //}
 
-        public static IEnumerable<ViewUserSetting> ToViewUserSettings(UserSettings userSettings, bool isHK)
+        public static IEnumerable<ViewUserSetting> ToViewUserSettings(UserSettings userSettings, CountryEnum country)
         {
             Dictionary<string, bool> userConfig = new Dictionary<string, bool>();
             //loops through all the properties of the class UserSettings
@@ -50,10 +50,7 @@ namespace RaceDayDisplayApp.Models
 
             //loops through all the properties of the class UserSettings
             return typeof(Runner).GetProperties()
-                .Where(p => (attr = getCustomDisplayAttribute(p)).RenderCheckbox &&
-                                        (attr.Display == DisplayOn.ALL
-                            || (isHK  && attr.Display == DisplayOn.HK)
-                            || (!isHK && attr.Display == DisplayOn.AUS)))
+                .Where(p => (attr = getCustomDisplayAttribute(p)).RenderCheckbox  && Country.Match(country, attr.Display))
                 .OrderBy(p => (lookup[p.Name] = getDisplayAttribute(p)).Order)
                 .Select(p =>
                 {
@@ -73,18 +70,15 @@ namespace RaceDayDisplayApp.Models
         /// <summary>
         /// Converts an object to a collection of name-value pair that can be consumed by the view
         /// </summary>
-        public static IEnumerable<DisplayProperty> ToNameValuePairs(object obj, bool isHK)
+        public static IEnumerable<DisplayProperty> ToNameValuePairs(object obj, CountryEnum country)
         {
             Type t = obj.GetType();
             Dictionary<string, DisplayAttribute> lookup = new Dictionary<string, DisplayAttribute>();
-            CustomDisplayAttribute attr = null;
             List<DisplayProperty> result = new List<DisplayProperty>();
             
             //loops through all the properties of the class UserSettings
             t.GetProperties()
-                .Where(p => (attr = getCustomDisplayAttribute(p)).Display == DisplayOn.ALL
-                            || (isHK && attr.Display == DisplayOn.HK)
-                            || (!isHK && attr.Display == DisplayOn.AUS))
+                .Where(p => Country.Match(country, getCustomDisplayAttribute(p).Display))
                 .OrderBy(p => (lookup[p.Name] = getDisplayAttribute(p)).Order)
                 .ToList().ForEach(p =>
                 {
@@ -111,12 +105,9 @@ namespace RaceDayDisplayApp.Models
         {
             Dictionary<string, DisplayAttribute> lookup = new Dictionary<string, DisplayAttribute>();
             Dictionary<string, CustomDisplayAttribute> lookup2 = new Dictionary<string, CustomDisplayAttribute>();
-            CustomDisplayAttribute attr = null;
             //loops through all the properties of the class Runner
             var columns = typeof(Runner).GetProperties()
-                .Where(p => (lookup2[p.Name] = attr = getCustomDisplayAttribute(p)).Display == DisplayOn.ALL
-                            || (race.IsHK && attr.Display == DisplayOn.HK)
-                            || (!race.IsHK && attr.Display == DisplayOn.AUS))
+                .Where(p => Country.Match(race.CountryEnum, (lookup2[p.Name] = getCustomDisplayAttribute(p)).Display))
                 .OrderBy(p => (lookup[p.Name] = getDisplayAttribute(p)).Order)
                 .Select(p => {
                     var col = new MvcJqGrid.Column(p.Name);
@@ -130,7 +121,7 @@ namespace RaceDayDisplayApp.Models
                     } 
                     
                     //assign cell formatter
-                    attr = lookup2[p.Name];
+                    CustomDisplayAttribute attr = lookup2[p.Name];
                     if (attr.CustomFormatter != CustomFormatters.none)
                     {
                         col.SetCustomFormatter(attr.CustomFormatter.ToString());

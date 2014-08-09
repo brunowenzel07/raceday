@@ -15,6 +15,20 @@ namespace RaceDayDisplayApp.DAL
         readonly string connectionString =
             ConfigurationManager.ConnectionStrings["RaceDayDB"].ConnectionString;
 
+        public IEnumerable<Country> GetCountries()
+        {
+            using (var conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                return conn.Query<Country>(@"
+                    SELECT Id as CountryId, Code as CountryCode, Name                           
+                    FROM Country
+                    WHERE InUse = 1 
+                    ORDER BY Name");
+            }
+        }
+
         /// <summary>
         /// Used in the MeetingList page
         /// </summary>
@@ -68,11 +82,13 @@ namespace RaceDayDisplayApp.DAL
                 conn.Open();
 
                 return conn.Query<RaceDisplay>(@"
-                    SELECT Race.Id AS RaceId, Race.RaceNumber, Race.RaceName, Race.RaceJumpDateTimeUTC, 
+                    SELECT TOP " + ConfigValues.RaceListLimit + @"
+                           Race.Id AS RaceId, Race.RaceNumber, Race.RaceName, Race.RaceJumpDateTimeUTC, 
                            Meeting.MeetingDate, RaceCourse.Name AS RaceCourseName, 
-                           LocalJumpTime, AUS_StateId as StateId, RaceStatus
+                           LocalJumpTime, AUS_StateId as StateId, RaceStatus, Country.Code as CountryCode
                     FROM Race INNER JOIN Meeting on Meeting.Id = Race.MeetingId
 		                      INNER JOIN RaceCourse on Meeting.RaceCourseId = RaceCourse.Id
+                              INNER JOIN Country on Race.CountryId = Country.Id
                     " + (today ? "WHERE Meeting.MeetingDate >= CONVERT(date, getdate()) and Meeting.MeetingDate <= DATEADD(day," + ConfigValues.UpcomingRacesDaysLimit + ",CONVERT(date, getdate()))" : "") + @"
                     ORDER BY " + (today ? "MeetingDate ASC, RaceJumpDateTimeUTC ASC" : "MeetingDate DESC, RaceJumpDateTimeUTC DESC"));
                 //TODO review the WHERE condition            
@@ -159,7 +175,7 @@ namespace RaceDayDisplayApp.DAL
         /// <summary>
         /// used in the cache layer
         /// </summary>
-        public RaceCache GetRaceWithRunnersStat(int raceId)
+        public RaceCache GetRaceWithRunnersStat(int raceId, CountryEnum country)
         {
             //return Race.DummyRace;
 
@@ -183,21 +199,74 @@ namespace RaceDayDisplayApp.DAL
                 var race = conn.Query<RaceCache>("Select * from getRaceDetailsData(@RaceId)",
                     new { RaceId = raceId }).FirstOrDefault();
 
+                race.Country = country;
+
                 if (race != null)
                 {
-                    //Z_WinOddsRank, AVG3WinOddsRank, 
-                    var runners = conn.Query<Runner>(@"
-                        SELECT	RaceId, HorseNumber, Barrier, RunnerId, 
-                                Name, Horse, isScratched, 
-                                HorseId, Jockey, Trainer, Gear, Age, Sex, Color,
-                                AUS_HcpWt, AUS_HcpRatingAtJump, HK_ActualWtLbs, HK_Rating, Place, 
-                                nUp, [Class+/-] as Class, 
-                                Rtg, [Gld?] as Gld, CWt, [%BW] as BW, [Wt+/-] as Wt, [NewTr?] as NewTr, 
-                                [LSW?] as LSW, [FirstStart?] as FirstStart, 
-                                [KAD?] as KAD, [ROLast?] as ROLast, [SwampedLast?] as SwampedLast, 
-                                [FUP?] as FUP, [LUP?] as LUP
-                        from DataGrid_staFN(@RaceId)",
-                        new { RaceId = raceId });
+                    string query;
+                    switch (country)
+                    {
+                        case CountryEnum.HK:
+                            query = @"
+                                SELECT	RaceId, HorseNumber, Barrier, RunnerId, 
+                                        Horse, isScratched, 
+                                        HorseHKGId as HorseId, Jockey, jockeypoints, Trainer, Age, Color, Place,
+                                        Z_WinOddsRank, AVG3WinOddsRank, nUp, [Class+/-] as Class, 
+                                        Rtg, [Gld?] as Gld, CWt, [%BW] as BW, [Wt+/-] as WtPlusLess,
+                                        DSLR, [BFAVL?] as BFAVL, [Mdn?] as Mdn, Sex, MktRel, JmpRnk, FinishRnk, [NewTr?] as NewTr, 
+                                        [LSW?] as LSW, [FirstStart?] as FirstStart, 
+                                        [KAD?] as KAD, [RanOnL?] as RanOnL, [LostLeadL?] as LostLeadL, [FUP?] as FUP, [LUP?] as LUP,
+                                        [QBU?] as QBU, [GJD?] as GJD, [DRPD?] as DRPD, [H4CRSE?] as H4CRSE, 
+                                        [H&J?] as HJ, [1TRICKJ?] as TRICKJ, 
+                                        [NewGear?] as NewGear, BeenThere, TurfPts, AWTPts, LAST10
+                                from DataGrid_staFNHKG(@RaceId)";
+                            break;
+                        case CountryEnum.RSA:
+                            query = @"
+                                SELECT	RaceId, HorseNumber, Barrier, RunnerId, 
+                                        Horse, isScratched, 
+                                        HorseRSAId as HorseId, Jockey, jockeypoints, Trainer, Age, Color, Place,
+                                        Z_WinOddsRank, AVG3WinOddsRank, nUp, [Class+/-] as Class, 
+                                        [Gld?] as Gld, Wt, [Wt+/-] as WtPlusLess,
+                                        DSLR, [BFAVL?] as BFAVL, [Mdn?] as Mdn, Sex, MktRel, [NewTr?] as NewTr, 
+                                        [LSW?] as LSW, [FirstStart?] as FirstStart, 
+                                        [KAD?] as KAD, [ROLast?] as ROLast, [SwampedLast?] as SwampedLast,
+                                        [FUP?] as FUP, [LUP?] as LUP,
+                                        [QBU?] as QBU, [GJD?] as GJD, [DRPD?] as DRPD, [H4CRSE?] as H4CRSE, 
+                                        [H&J?] as HJ, BeenThere, SandPts, TurfPts, PolyPts, LAST10
+                                from DataGrid_staFNRSA(@RaceId)";
+                            break;
+                        case CountryEnum.AUS:
+                            query = @"
+                                SELECT	RaceId, HorseNumber, Barrier, RunnerId, 
+                                        Horse, isScratched, 
+                                        HorseAUSNZId as HorseId, Jockey, jockeypoints, Trainer, Age, Color, Place,
+                                        Z_WinOddsRank, AVG3WinOddsRank, nUp, [Class+/-] as Class, 
+                                        [Gld?] as Gld, Wt, [Wt+/-] as WtPlusLess,
+                                        DSLR, [BFAVL?] as BFAVL, [Mdn?] as Mdn, Sex, MktRel, [NewTr?] as NewTr, 
+                                        [LSW?] as LSW, [FirstStart?] as FirstStart, 
+                                        [KAD?] as KAD, [ROLast?] as ROLast, [SwampedLast?] as SwampedLast,
+                                        [FUP?] as FUP, [LUP?] as LUP,
+                                        [QBU?] as QBU, [GJD?] as GJD, [DRPD?] as DRPD, [H4CRSE?] as H4CRSE, 
+                                        [H&J?] as HJ, BeenThere, AWTPts, TurfPts, LAST10
+                                from DataGrid_staFNAUSNZ(@RaceId)";
+                            break;
+                        default:
+//                            query = @"
+//                                SELECT	RaceId, HorseNumber, Barrier, RunnerId, 
+//                                        Name, Horse, isScratched, 
+//                                        HorseId, Jockey, Trainer, Gear, Age, Sex, Color,
+//                                        AUS_HcpWt, AUS_HcpRatingAtJump, HK_ActualWtLbs, HK_Rating, Place, 
+//                                        nUp, [Class+/-] as Class, 
+//                                        Rtg, [Gld?] as Gld, CWt, [%BW] as BW, [Wt+/-] as Wt, [NewTr?] as NewTr, 
+//                                        [LSW?] as LSW, [FirstStart?] as FirstStart, 
+//                                        [KAD?] as KAD, [ROLast?] as ROLast, [SwampedLast?] as SwampedLast, 
+//                                        [FUP?] as FUP, [LUP?] as LUP
+//                                from DataGrid_staFN(@RaceId)";
+                            throw new NotImplementedException();
+                    }
+
+                    var runners= conn.Query<Runner>(query, new { RaceId = raceId });
 
                     race.Runners = runners.ToList();
                 }
@@ -273,7 +342,7 @@ namespace RaceDayDisplayApp.DAL
         /// <summary>
         /// used in meeting details page, race details page and _GridSettings partial view
         /// </summary>
-        public IEnumerable<ViewUserSetting> GetUserSettings(int userId, int meetingId, bool isHK)
+        public IEnumerable<ViewUserSetting> GetUserSettings(int userId, CountryEnum country)
         {
             using (var conn = new SqlConnection(connectionString))
             {
@@ -289,7 +358,7 @@ namespace RaceDayDisplayApp.DAL
                 if (settings == null)
                     settings = UserSettings.DEFAULT;
 
-                var viewSettings = ModelHelper.ToViewUserSettings(settings, isHK);
+                var viewSettings = ModelHelper.ToViewUserSettings(settings, country);
                 return viewSettings;
 
 //                //retrieve the statistical columns
@@ -351,17 +420,19 @@ namespace RaceDayDisplayApp.DAL
         }
 
 
-        public IEnumerable<dynamic> GetRunnerHistory(int horseId)
+        public IEnumerable<dynamic> GetRunnerHistory(int horseId, string countryCode)
         {
             using (var conn = new SqlConnection(connectionString))
             {
                 conn.Open();
 
-                return conn.Query("Select * from getRunnerHistory(@horseid, @date)",
+                return conn.Query(@"Select * from getRunnerHistory(@horseid, @date, @countrycode)
+                                    order by Season desc",
                                     new 
                                     { 
                                         horseid = horseId,
                                         date = DateTime.UtcNow.Date,
+                                        countrycode = countryCode
                                     });
             }
         }
@@ -601,6 +672,54 @@ namespace RaceDayDisplayApp.DAL
                     }).ToList();
             }
         }
+
+        public IEnumerable<Language> GetLanguages()
+        {
+            using (var conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                return conn.Query<Language>(@"
+                    SELECT Id, Code, EnName, LocalName, InUse
+                    FROM UILanguage
+                    WHERE InUse=1
+                    ORDER BY EnName");                           
+            }
+        } 
+
+        public Language GetLanguageById(int id)
+        {
+            using (var conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                var languages = conn.Query<Language>(@"
+                    SELECT Id, Code, EnName, LocalName, InUse
+                    FROM UILanguage
+                    WHERE Id = @Id", new { Id = id });
+
+                return languages.FirstOrDefault();
+            }
+        }
+
+        public void SaveUserCountryPreferences(string[] countryIds, int userId)
+        {
+            using (var conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                foreach (var countryId in countryIds)
+                {
+                    var id = 0;
+                    int.TryParse(countryId, out id);
+
+                    conn.Execute(@"INSERT INTO User_CountryInterest
+                              (UserId, CountryId)
+                              VALUES (@userId, @id)",
+                              new { userId, id });
+                }
+            }
+        } 
     }
 
 }

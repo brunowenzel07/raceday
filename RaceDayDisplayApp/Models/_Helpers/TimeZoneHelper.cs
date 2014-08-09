@@ -17,7 +17,13 @@ namespace RaceDayDisplayApp.Models
             var codes = new DBGateway().GetTimeZones();
 
             winRegEntries = new Dictionary<int, string>();
-            codes.ToList().ForEach(c => winRegEntries.Add(c.Key, config[c.Value]));
+            codes.ToList().ForEach(c => 
+                {
+                    string aux;
+                    if (!config.TryGetValue(c.Value, out aux))
+                        throw new Exception("Timezone " + c.Value + " not present in timezones.config");
+                    winRegEntries.Add(c.Key, aux);
+                });
         }
 
         private static Dictionary<string, string> loadConfigFile()

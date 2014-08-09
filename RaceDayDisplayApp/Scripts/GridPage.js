@@ -83,7 +83,7 @@ function GridLoadComplete(e, data)
         txtRefresh = "<b>RACE IS DONE</b>";
     }
     else {
-        txtRefresh = "Next client refresh in " + data.nextRefreshSecs + " secs";
+        txtRefresh = "Next client refresh in " + formatNum(data.nextRefreshSecs) + " secs";
         //set next refresh
         setTimeout(refreshGrid, data.nextRefreshSecs * 1000);
     }
@@ -93,12 +93,17 @@ function GridLoadComplete(e, data)
         txtDbUpdated = "DB has never been updated<br/>";
     }
     else{
-        txtDbUpdated = "DB was last updated " + data.dbUpdatedSecs + " secs before displaying<br/>";
+        txtDbUpdated = "DB was last updated " + formatNum(data.dbUpdatedSecs) + " secs before displaying<br/>";
     }
 
     $('#refreshInfo').html( txtDbUpdated +
-                            "Server was last updated " + data.serverUpdatedSecs + " secs before displaying<br/>"
+                            "Server was last updated " + formatNum(data.serverUpdatedSecs) + " secs before displaying<br/>"
                             + txtRefresh);
+}
+
+function formatNum(num)
+{
+    return parseFloat(Math.round(num * 100) / 100).toFixed(2);
 }
 
 function refreshGrid() {
@@ -137,7 +142,8 @@ function percentageFormatter(cellvalue, options, rowObject) {
 }
 
 function linkFormatter(cellvalue, options, rowObject) {
-    return "<a href=\"../RunnerHistory/" + rowObject.HorseId + "\" onclick=\"window.open(this.href, 'mywin','left=20,top=20,width=1120,height=500,toolbar=1,resizable=0'); return false;\" >" + cellvalue + "</a>";
+    var CountryCode = $("#CountryCode").val();
+    return "<a href=\"../RunnerHistory/" + rowObject.HorseId + "?CountryCode=" + CountryCode + "\" onclick=\"window.open(this.href, 'mywin','left=20,top=20,width=1120,height=500,toolbar=1,resizable=0'); return false;\" >" + cellvalue + "</a>";
     //+ "?RaceId=" + $("#RaceId").val() 
 }
 
@@ -270,16 +276,14 @@ function resizeGrid() {
 
 function defaultSettings() {
 
-    var MeetingId = $("#MeetingId").val();
-    var IsHK = $("#IsHK").val();
+    var CountryEnum = $("#CountryEnum").val();
 
     if (MeetingId != "") {
         $.ajax({
             type: 'POST',
             url: '/Meetings/GridSettings',
             data: {
-                meetingId: MeetingId,
-                isHK: IsHK
+                country: CountryEnum
             },
             success: function (data) {
                 $("#chks_container").empty();
