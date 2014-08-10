@@ -58,7 +58,7 @@ namespace RaceDayDisplayApp.Controllers
 
             //get the user settings
             var userId = WebMatrix.WebData.WebSecurity.GetUserId(User.Identity.Name);
-            ViewBag.UserSettings = entities.GetUserSettings(userId, meeting.CountryEnum);
+            //ViewBag.UserSettings = entities.GetUserSettings(userId, meeting.CountryEnum);
 
             //to render or not the statistics sections
             ViewBag.FullAccess = User.IsInRole(ConfigValues.FullAccessRole);
@@ -87,7 +87,7 @@ namespace RaceDayDisplayApp.Controllers
 
             //get the user settings
             var userId = WebMatrix.WebData.WebSecurity.GetUserId(User.Identity.Name);
-            ViewBag.UserSettings = entities.GetUserSettings(userId, meeting.CountryEnum);
+            //ViewBag.UserSettings = entities.GetUserSettings(userId, meeting.CountryEnum);
 
             //columns to display for this race
             ViewBag.GridColumns = ModelHelper.GetGridColumns(meeting.Races[0] as Race);
@@ -159,14 +159,14 @@ namespace RaceDayDisplayApp.Controllers
             return Json(jsonData, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult GridSettings(CountryEnum country)
-        {
-            //get the user settings
-            var userId = WebMatrix.WebData.WebSecurity.GetUserId(User.Identity.Name);
-            var settings = entities.GetUserSettings(userId, country);
+        //public ActionResult GridSettings(CountryEnum country)
+        //{
+        //    //get the user settings
+        //    var userId = WebMatrix.WebData.WebSecurity.GetUserId(User.Identity.Name);
+        //    var settings = entities.GetUserSettings(userId, country);
 
-            return View("_GridSettings", settings);
-        }
+        //    return View("_GridSettings", settings);
+        //}
 
         public ActionResult RunnerHistory(int id, string countryCode)
         {

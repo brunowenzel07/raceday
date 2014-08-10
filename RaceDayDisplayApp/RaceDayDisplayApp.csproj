@@ -49,8 +49,17 @@
     <Reference Include="Microsoft.Web.Mvc">
       <HintPath>..\packages\Mvc4Futures.4.0.20710.0\lib\net40\Microsoft.Web.Mvc.dll</HintPath>
     </Reference>
+    <Reference Include="MvcCheckBoxList">
+      <HintPath>..\packages\MvcCheckBoxList.1.4.4.5\lib\net45\MvcCheckBoxList.dll</HintPath>
+    </Reference>
     <Reference Include="MvcJqGrid">
       <HintPath>..\packages\MvcJqGrid.1.0.13\lib\net40\MvcJqGrid.dll</HintPath>
+    </Reference>
+    <Reference Include="Postal">
+      <HintPath>..\packages\Postal.Mvc4.1.0.0\lib\net40\Postal.dll</HintPath>
+    </Reference>
+    <Reference Include="RazorEngine">
+      <HintPath>..\packages\RazorEngine.2.1\lib\.NetFramework 4.0\RazorEngine.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -64,6 +73,10 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Razor, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\RazorEngine.2.1\lib\.NetFramework 4.0\System.Web.Razor.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
@@ -111,10 +124,6 @@
     </Reference>
     <Reference Include="System.Web.Optimization">
       <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.0.0\lib\net40\System.Web.Optimization.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <Private>True</Private>
-      <HintPath>..\packages\Microsoft.AspNet.Razor.2.0.30506.0\lib\net40\System.Web.Razor.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
@@ -190,9 +199,30 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_GlobalResources\Emails.designer.cs">
+      <DependentUpon>Emails.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="App_GlobalResources\Emails.zh-hk.Designer.cs">
+      <DependentUpon>Emails.zh-hk.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Include="App_GlobalResources\Labels.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Labels.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App_GlobalResources\Labels.zh-hk.Designer.cs">
+      <DependentUpon>Labels.zh-hk.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
     <Compile Include="App_Start\AuthConfig.cs" />
     <Compile Include="App_Start\BootstrapBundleConfig.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\ExceptionHandlingAttribute.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
@@ -200,6 +230,7 @@
     <Compile Include="BootstrapSupport\HtmlHelpers\GlyphIcons.cs" />
     <Compile Include="BootstrapSupport\HtmlHelpers\Paging.cs" />
     <Compile Include="BootstrapSupport\ViewHelperExtensions.cs" />
+    <Compile Include="Common\Util.cs" />
     <Compile Include="ConfigValues.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BootstrapBaseController.cs" />
@@ -212,6 +243,7 @@
     </Compile>
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="DAL\RacesCache.cs" />
+    <Compile Include="Models\Language.cs" />
     <Compile Include="Models\Country.cs" />
     <Compile Include="Models\CustomAttributes.cs" />
     <Compile Include="DAL\DBGateway.cs" />
@@ -222,7 +254,7 @@
     <Compile Include="Models\_Helpers\ModelHelper.cs" />
     <Compile Include="Models\Race.cs" />
     <Compile Include="Models\Runner.cs" />
-    <Compile Include="Models\Settings.cs" />
+    <Compile Include="Models\_Helpers\LiveDataGridHelper.cs" />
     <Compile Include="Models\_Helpers\RunnerHistoryHelper.cs" />
     <Compile Include="Models\_Helpers\TimeZoneHelper.cs" />
     <Compile Include="NavigationRoutes\INavigationRouteFilter.cs" />
@@ -238,6 +270,14 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="App_GlobalResources\Emails.zh-hk.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Emails.zh-hk.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App_GlobalResources\Labels.zh-hk.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Labels.zh-hk.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <Content Include="Content\body.css" />
     <Content Include="Content\bootstrap-mvc-validation.css" />
     <Content Include="Content\bootstrap-responsive.css" />
@@ -368,6 +408,9 @@
     <Content Include="Scripts\i18n\grid.locale-vi.js" />
     <Content Include="Scripts\GridPage.js" />
     <None Include="Properties\PublishProfiles\RaceDayDisplayApp.pubxml" />
+    <Content Include="LiveDataGrid.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="Scripts\jquery-2.0.3.intellisense.js" />
     <Content Include="Scripts\jquery-2.0.3.js" />
     <Content Include="Scripts\jquery-2.0.3.min.js" />
@@ -433,7 +476,6 @@
     <Content Include="Views\Meetings\MeetingList.cshtml" />
     <Content Include="Views\Meetings\Details.cshtml" />
     <Content Include="Views\Meetings\_Race.cshtml" />
-    <Content Include="Views\Meetings\_GridSettings.cshtml" />
     <Content Include="Views\Meetings\RaceList.cshtml" />
     <Content Include="Views\Meetings\RaceDetails.cshtml" />
     <Content Include="Views\Meetings\_RaceData.cshtml" />
@@ -460,6 +502,10 @@
     <Content Include="Views\Shared\_BootstrapLayout.basic.cshtml" />
     <Content Include="Views\Shared\_alerts.cshtml" />
     <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Emails\Web.config" />
+    <Content Include="Views\Emails\_ViewStart.cshtml" />
+    <Content Include="Views\Emails\ConfirmationEmail.cshtml" />
+    <Content Include="Views\Account\_ConfirmationFailurePartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -471,6 +517,14 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="App_GlobalResources\Labels.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Labels.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App_GlobalResources\Emails.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Emails.designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resource1.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resource1.Designer.cs</LastGenOutput>

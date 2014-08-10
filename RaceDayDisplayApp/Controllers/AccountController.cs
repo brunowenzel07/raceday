@@ -10,6 +10,9 @@ using Microsoft.Web.WebPages.OAuth;
 using WebMatrix.WebData;
 using RaceDayDisplayApp.Filters;
 using RaceDayDisplayApp.Models;
+using RaceDayDisplayApp.DAL;
+using RaceDayDisplayApp.Common;
+using System.Globalization;
 
 namespace RaceDayDisplayApp.Controllers
 {
@@ -17,6 +20,8 @@ namespace RaceDayDisplayApp.Controllers
     [InitializeSimpleMembership] 
     public class AccountController : Controller
     {
+        private DBGateway entities = new DBGateway();
+
         //
         // GET: /Account/Login
 
@@ -35,9 +40,28 @@ namespace RaceDayDisplayApp.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Login(LoginModel model, string returnUrl)
         {
-            if (ModelState.IsValid && WebSecurity.Login(model.UserName, model.Password, persistCookie: model.RememberMe))
+            try
             {
-                return RedirectToLocal(returnUrl);
+                if (ModelState.IsValid && WebSecurity.Login(model.UserName, model.Password, persistCookie: model.RememberMe))
+                {
+                    var currentLanguageId = 0;
+
+                    using (UsersContext db = new UsersContext())
+                    {
+                        var user = db.UserProfiles.FirstOrDefault(u => u.UserName.ToLower() == model.UserName.ToLower());
+                        currentLanguageId = user.UILanguageId;
+                    }
+
+                    //set current culture to language selected by user during registration
+                    var language = entities.GetLanguageById(currentLanguageId);
+                    RaceDayDisplayApp.App_GlobalResources.Labels.Culture = new CultureInfo(language.Code);
+
+                    return RedirectToLocal(returnUrl);
+                }
+            }
+            catch (Exception ex)
+            {
+                //TODO log
             }
 
             // If we got this far, something failed, redisplay form
@@ -68,13 +92,36 @@ namespace RaceDayDisplayApp.Controllers
             return RedirectToAction(ConfigValues.DefaultAction, "Meetings");
         }
 
+        private void InitializeRegisterModel(ref RegisterModel model)
+        {
+            var languages = entities.GetLanguages();
+
+            if (model == null)
+            {
+                model = new RegisterModel();
+            }
+
+            model.LanguageSelectList = languages.Select(c =>
+                    new SelectListItem
+                    {
+                        Value = c.Id.ToString(),
+                        Text = c.LocalName
+                    });
+
+            model.AllCountries = entities.GetCountries();
+        }
+
         //
         // GET: /Account/Register
 
         [AllowAnonymous]
         public ActionResult Register()
         {
-            return View();
+            var model = new RegisterModel();
+
+            InitializeRegisterModel(ref model);
+
+            return View(model);
         }
 
         //
@@ -90,10 +137,22 @@ namespace RaceDayDisplayApp.Controllers
                 // Attempt to register the user
                 try
                 {
-                    //WebSecurity.CreateUserAndAccount(model.UserName, model.Password, new { Email = model.Email });
-                    WebSecurity.CreateUserAndAccount(model.UserName, model.Password);
-                    WebSecurity.Login(model.UserName, model.Password);
-                    return RedirectToAction(ConfigValues.DefaultAction, "Meetings");
+                    var confirmationToken = WebSecurity.CreateUserAndAccount(model.UserName, model.Password, propertyValues: new
+                    {
+                        Email = model.Email,
+                        NoNewsLetter = model.NoNewsletter,
+                        SignUpComment = model.SignUpComment,
+                        UILanguageId = model.UILanguageId,
+                    }, 
+                    requireConfirmationToken: true);
+
+                    var userId = WebSecurity.GetUserId(model.UserName);
+
+                    entities.SaveUserCountryPreferences(model.CountryIDs, userId);
+
+                    Util.SendEmailConfirmation(model.Email, model.UserName, confirmationToken);
+
+                    return RedirectToAction(ConfigValues.DefaultAction, "Home");
                 }
                 catch (MembershipCreateUserException e)
                 {
@@ -102,7 +161,28 @@ namespace RaceDayDisplayApp.Controllers
             }
 
             // If we got this far, something failed, redisplay form
+
+            InitializeRegisterModel(ref model);
+
             return View(model);
+        }
+
+        [AllowAnonymous]
+        public ActionResult ConfirmRegistration(string token)
+        {
+            try
+            {
+                if (WebSecurity.ConfirmAccount(token))
+                {
+                    return RedirectToAction("Login");
+                }
+            }
+            catch (Exception ex)
+            {
+                //todo log
+            }
+
+            return View("ConfirmationFailurePartial");
         }
 
         //

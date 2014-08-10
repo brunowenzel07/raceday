@@ -29,43 +29,43 @@ namespace RaceDayDisplayApp.Models
         //        });
         //}
 
-        public static IEnumerable<ViewUserSetting> ToViewUserSettings(UserSettings userSettings, CountryEnum country)
-        {
-            Dictionary<string, bool> userConfig = new Dictionary<string, bool>();
-            //loops through all the properties of the class UserSettings
-            typeof(UserSettings).GetProperties().ToList().ForEach(p => 
-                {
-                    var prop = typeof(UserSettings).GetProperty(p.Name);
-                    if (prop.PropertyType == typeof(bool))
-                    {
-                        var name = getLinkedToAttribute(p).Attribute;
-                        var chkd = (bool)prop.GetValue(userSettings);
-                        userConfig.Add(name, chkd);
-                    }
-                });
+        //public static IEnumerable<ViewUserSetting> ToViewUserSettings(UserSettings userSettings, CountryEnum country)
+        //{
+        //    Dictionary<string, bool> userConfig = new Dictionary<string, bool>();
+        //    //loops through all the properties of the class UserSettings
+        //    typeof(UserSettings).GetProperties().ToList().ForEach(p => 
+        //        {
+        //            var prop = typeof(UserSettings).GetProperty(p.Name);
+        //            if (prop.PropertyType == typeof(bool))
+        //            {
+        //                var name = getLinkedToAttribute(p).Attribute;
+        //                var chkd = (bool)prop.GetValue(userSettings);
+        //                userConfig.Add(name, chkd);
+        //            }
+        //        });
 
 
-            Dictionary<string, DisplayAttribute> lookup = new Dictionary<string, DisplayAttribute>();
-            CustomDisplayAttribute attr = null;
+        //    Dictionary<string, DisplayAttribute> lookup = new Dictionary<string, DisplayAttribute>();
+        //    CustomDisplayAttribute attr = null;
 
-            //loops through all the properties of the class UserSettings
-            return typeof(Runner).GetProperties()
-                .Where(p => (attr = getCustomDisplayAttribute(p)).RenderCheckbox  && Country.Match(country, attr.Display))
-                .OrderBy(p => (lookup[p.Name] = getDisplayAttribute(p)).Order)
-                .Select(p =>
-                {
-                    bool val;
-                    if (!userConfig.TryGetValue(p.Name, out val))
-                        val = false;
+        //    //loops through all the properties of the class UserSettings
+        //    return typeof(Runner).GetProperties()
+        //        .Where(p => (attr = getCustomDisplayAttribute(p)).RenderCheckbox  && Country.Match(country, attr.Display))
+        //        .OrderBy(p => (lookup[p.Name] = getDisplayAttribute(p)).Order)
+        //        .Select(p =>
+        //        {
+        //            bool val;
+        //            if (!userConfig.TryGetValue(p.Name, out val))
+        //                val = false;
                     
-                    return new ViewUserSetting 
-                    {
-                        PropertyName = p.Name,
-                        DisplayName = lookup[p.Name].Name ?? p.Name,
-                        Checked = val 
-                    };
-                });
-        }
+        //            return new ViewUserSetting 
+        //            {
+        //                PropertyName = p.Name,
+        //                DisplayName = lookup[p.Name].Name ?? p.Name,
+        //                Checked = val 
+        //            };
+        //        });
+        //}
 
         /// <summary>
         /// Converts an object to a collection of name-value pair that can be consumed by the view

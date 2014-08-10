@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
@@ -23,15 +24,23 @@ namespace RaceDayDisplayApp.Models
     {
         [Key]
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        public int UserId { get; set; }
+
         public string UserName { get; set; }
-        //public string Email { get; set; }
+
+        public string Email { get; set; }
+
+        public bool NoNewsletter { get; set; }
+
+        public string SignUpComment { get; set; }
+
+        public int UILanguageId { get; set; }
     }
 
     public class RegisterExternalLoginModel
     {
         [Required]
-        [Display(Name = "User name")]
+        [Display(Name = "Label_RegistrationPage_UsernameDisplayName", ResourceType = typeof(RaceDayDisplayApp.App_GlobalResources.Labels))]
         public string UserName { get; set; }
 
         public string ExternalLoginData { get; set; }
@@ -74,22 +83,45 @@ namespace RaceDayDisplayApp.Models
     public class RegisterModel
     {
         [Required]
-        [Display(Name = "User name")]
+        [Display(Name = "Label_RegistrationPage_UsernameDisplayName", ResourceType = typeof(RaceDayDisplayApp.App_GlobalResources.Labels))]
         public string UserName { get; set; }
 
         //[Required]
         //public string Email { get; set; }
 
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
+        [StringLength(100, ErrorMessageResourceName = "ErrorMessage_RegistrationPage_Password_StringLength", ErrorMessageResourceType = typeof(RaceDayDisplayApp.App_GlobalResources.Labels), MinimumLength = 6)]
         [DataType(DataType.Password)]
-        [Display(Name = "Password")]
+        [Display(Name = "Label_RegistrationPage_PasswordDisplayName", ResourceType = typeof(RaceDayDisplayApp.App_GlobalResources.Labels))]
         public string Password { get; set; }
 
         [DataType(DataType.Password)]
-        [Display(Name = "Confirm password")]
-        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        [Display(Name = "Label_RegistrationPage_ConfirmPasswordDisplayName", ResourceType = typeof(RaceDayDisplayApp.App_GlobalResources.Labels))]
+        [Compare("Password", ErrorMessageResourceName = "ErrorMessage_RegistrationPage_ConfirmPassword_Compare", ErrorMessageResourceType = typeof(RaceDayDisplayApp.App_GlobalResources.Labels))]
         public string ConfirmPassword { get; set; }
+
+        [Required]
+        [StringLength(100, ErrorMessageResourceName = "ErrorMessage_RegistrationPage_Email_StringLength", ErrorMessageResourceType = typeof(RaceDayDisplayApp.App_GlobalResources.Labels), MinimumLength = 6)]
+        [Display(Name = "Label_RegistrationPage_EmailDisplayName", ResourceType = typeof(RaceDayDisplayApp.App_GlobalResources.Labels))]
+        public string Email { get; set; }
+
+        [Display(Name = "Label_RegistrationPage_NoToNewsletterDisplayName", ResourceType = typeof(RaceDayDisplayApp.App_GlobalResources.Labels))]
+        public bool NoNewsletter { get; set; }
+
+        [Display(Name = "Label_RegistrationPage_CountriesDisplayName", ResourceType = typeof(RaceDayDisplayApp.App_GlobalResources.Labels))]
+        public string[] CountryIDs { get; set; }
+
+        public IEnumerable<Country> SelectedCountries { get; set; }
+
+        [Display(Name = "Label_RegistrationPage_SignUpCommentDisplayName", ResourceType = typeof(RaceDayDisplayApp.App_GlobalResources.Labels))]
+        public string SignUpComment { get; set; }
+
+        [Display(Name = "Label_RegistrationPage_SelectLanguageDisplayName", ResourceType = typeof(RaceDayDisplayApp.App_GlobalResources.Labels))]
+        public int UILanguageId { get; set; }
+
+        public IEnumerable<System.Web.Mvc.SelectListItem> LanguageSelectList { get; set; }
+
+        public IEnumerable<Country> AllCountries { get; set; }
     }
 
     public class ExternalLogin

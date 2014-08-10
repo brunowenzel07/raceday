@@ -1,35 +1,92 @@
-﻿@model RaceDayDisplayApp.Models.RegisterModel
+﻿@using MvcCheckBoxList
+
+@model RaceDayDisplayApp.Models.RegisterModel
 @{
-    ViewBag.Title = "Register";
+    ViewBag.Title = Resources.Labels.View_Register_Title;
 }
 
 <hgroup class="title">
-    <h1>@ViewBag.Title.</h1>
-    <h2>Create a new account.</h2>
+    <h1>@ViewBag.Title</h1>
+    <h2>@Resources.Labels.View_Register_CreateNewAccount</h2>
 </hgroup>
 
-@using (Html.BeginForm()) {
+@using (Html.BeginForm(
+    new { @class = "form-horizontal" }
+
+    ))
+{
     @Html.AntiForgeryToken()
     @Html.ValidationSummary()
-
-    <fieldset>
+    <fieldset id="userregform">
         <legend>Registration Form</legend>
-        <ol>
-            <li>
-                @Html.LabelFor(m => m.UserName)
+        <div class="control-group">
+
+            @Html.LabelFor(m => m.UserName)
+            <div class="controls">
                 @Html.TextBoxFor(m => m.UserName)
-            </li>
-            <li>
-                @Html.LabelFor(m => m.Password)
+            </div>
+        </div>
+        <div class="control-group">
+
+            @Html.LabelFor(m => m.Password)
+            <div class="controls">
                 @Html.PasswordFor(m => m.Password)
-            </li>
-            <li>
-                @Html.LabelFor(m => m.ConfirmPassword)
+            </div>
+            @Html.LabelFor(m => m.ConfirmPassword)
+            <div class="controls">
                 @Html.PasswordFor(m => m.ConfirmPassword)
-            </li>
-        </ol>
-        <input type="submit" value="Register" />
-    </fieldset>
+            </div>
+          </div>
+
+        <div class="control-group">
+            @Html.LabelFor(m => m.Email)
+            
+            <div class="controls">
+                @Html.TextBoxFor(m => m.Email)
+             </div>
+
+            </div>       
+           
+        <div class="control-group">
+            @Html.LabelFor(m => m.NoNewsletter)
+
+            <div class="controls">
+                @Html.CheckBoxFor(m => m.NoNewsletter)
+
+
+            </div>
+        
+        </div>
+
+        <div class="control-group">
+            @Html.LabelFor(m => m.CountryIDs)
+      
+            <div class="controls">
+                @Html.CheckBoxListFor(m => m.CountryIDs, m => m.AllCountries, m => m.CountryId, m => m.Name, m => m.SelectedCountries, new MvcCheckBoxList.Model.HtmlListInfo(MvcCheckBoxList.Model.HtmlTag.vertical_columns, 2, null, MvcCheckBoxList.Model.TextLayout.RightToLeft))
+
+            </div>
+
+        </div>
+
+        <div class="control-group">
+            @Html.LabelFor(m => m.SignUpComment)
+    
+            <div class="controls">
+                @Html.TextAreaFor(m => m.SignUpComment) 
+            </div>
+
+        </div>
+
+        <div class="control-group">
+            @Html.LabelFor(m => m.UILanguageId)
+  
+           <div class="controls">
+                @Html.DropDownListFor(m => m.UILanguageId, Model.LanguageSelectList)
+            </div>
+
+        </div>
+        <button type="submit"> Register </button>
+</fieldset>
 }
 
 @section Scripts {

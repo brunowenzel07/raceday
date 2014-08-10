@@ -620,3 +620,15 @@ And, since we've applied the background colors to td/th element because of IE, G
 #loginForm a {
     color:#FFF;
 }
+
+/************************USER REGISTRATION PAGE************************/
+/* registration form fieldset userregform*/
+
+#userregform {
+    /* Text and background colour, blue on light gray */
+    color:#190707;
+    background-color:#F2F2F2;
+    padding:2em;
+}
+
+
