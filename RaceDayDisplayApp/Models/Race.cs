@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.Linq;
 
 namespace RaceDayDisplayApp.Models
@@ -68,7 +69,8 @@ namespace RaceDayDisplayApp.Models
     public class RaceDyn : RaceBase
     {
         [CustomDisplay(DisplayOn.NONE)]
-        public IEnumerable<RunnerDyn> Runners { get; set; }
+        public List<dynamic> Runners { get; set; }
+        //public IEnumerable<RunnerDyn> Runners { get; set; }
 
         [CustomDisplay(DisplayOn.NONE)]
         public virtual bool isDone { get; set; }
@@ -279,8 +281,24 @@ namespace RaceDayDisplayApp.Models
             this.Runners.ToList().ForEach(r =>
                 {
                     var runDyn = race.Runners.FirstOrDefault(rd => rd.RunnerId == r.RunnerId);
-                    if (runDyn != null)
-                        ((Runner)r).Update(runDyn);
+                    //if (runDyn != null)
+                    //    ((Runner)r).Update(runDyn);
+                    
+                    if (runDyn == null)
+                    {
+                        Debug.WriteLine("mismatch between data retrieved from DataGrid_dynFN and DataGrid_staFN for RaceId=" + race.RaceId);
+                        race.Runners.Add(r);
+                    }
+                    else //update existing one
+                    {
+                        //TODO this does not work
+                        foreach (KeyValuePair<string, object> kvp in runDyn)
+                        {
+                            if (kvp.Value != null)
+                                r[kvp.Key] = kvp.Value;
+                        }
+                    }
+
                 });
             this.isDone = this.isDone || race.isDone;
             this.RaceWinPool = race.RaceWinPool;

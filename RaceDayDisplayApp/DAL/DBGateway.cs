@@ -206,49 +206,52 @@ namespace RaceDayDisplayApp.DAL
                 switch (country)
                 {
                     case CountryEnum.HK:
-                        query = @"
-                            SELECT	RaceId, HorseNumber, Barrier, RunnerId, 
-                                    Horse, isScratched, 
-                                    HorseHKGId as HorseId, Jockey, jockeypoints, Trainer, Age, Color, Place,
-                                    Z_WinOddsRank, AVG3WinOddsRank, nUp, [Class+/-] as Class, 
-                                    Rtg, [Gld?] as Gld, CWt, [%BW] as BW, [Wt+/-] as WtPlusLess,
-                                    DSLR, [BFAVL?] as BFAVL, [Mdn?] as Mdn, Sex, MktRel, JmpRnk, FinishRnk, [NewTr?] as NewTr, 
-                                    [LSW?] as LSW, [FirstStart?] as FirstStart, 
-                                    [KAD?] as KAD, [RanOnL?] as RanOnL, [LostLeadL?] as LostLeadL, [FUP?] as FUP, [LUP?] as LUP,
-                                    [QBU?] as QBU, [GJD?] as GJD, [DRPD?] as DRPD, [H4CRSE?] as H4CRSE, 
-                                    [H&J?] as HJ, [1TRICKJ?] as TRICKJ, 
-                                    [NewGear?] as NewGear, BeenThere, TurfPts, AWTPts, LAST10
-                            from DataGrid_staFNHKG(@RaceId)";
+                        query = "SELECT * from DataGrid_staFNHKG(@RaceId)";
+//                        query = @"
+//                            SELECT	RaceId, HorseNumber, Barrier, RunnerId, 
+//                                    Horse, isScratched, 
+//                                    HorseHKGId as HorseId, Jockey, jockeypoints, Trainer, Age, Color, Place,
+//                                    Z_WinOddsRank, AVG3WinOddsRank, nUp, [Class+/-] as Class, 
+//                                    Rtg, [Gld?] as Gld, CWt, [%BW] as BW, [Wt+/-] as WtPlusLess,
+//                                    DSLR, [BFAVL?] as BFAVL, [Mdn?] as Mdn, Sex, MktRel, JmpRnk, FinishRnk, [NewTr?] as NewTr, 
+//                                    [LSW?] as LSW, [FirstStart?] as FirstStart, 
+//                                    [KAD?] as KAD, [RanOnL?] as RanOnL, [LostLeadL?] as LostLeadL, [FUP?] as FUP, [LUP?] as LUP,
+//                                    [QBU?] as QBU, [GJD?] as GJD, [DRPD?] as DRPD, [H4CRSE?] as H4CRSE, 
+//                                    [H&J?] as HJ, [1TRICKJ?] as TRICKJ, 
+//                                    [NewGear?] as NewGear, BeenThere, TurfPts, AWTPts, LAST10
+//                            from DataGrid_staFNHKG(@RaceId)";
                         break;
                     case CountryEnum.RSA:
-                        query = @"
-                            SELECT	RaceId, HorseNumber, Barrier, RunnerId, 
-                                    Horse, isScratched, 
-                                    HorseRSAId as HorseId, Jockey, jockeypoints, Trainer, Age, Color, Place,
-                                    Z_WinOddsRank, AVG3WinOddsRank, nUp, [Class+/-] as Class, 
-                                    [Gld?] as Gld, Wt, [Wt+/-] as WtPlusLess,
-                                    DSLR, [BFAVL?] as BFAVL, [Mdn?] as Mdn, Sex, MktRel, [NewTr?] as NewTr, 
-                                    [LSW?] as LSW, [FirstStart?] as FirstStart, 
-                                    [KAD?] as KAD, [ROLast?] as ROLast, [SwampedLast?] as SwampedLast,
-                                    [FUP?] as FUP, [LUP?] as LUP,
-                                    [QBU?] as QBU, [GJD?] as GJD, [DRPD?] as DRPD, [H4CRSE?] as H4CRSE, 
-                                    [H&J?] as HJ, BeenThere, SandPts, TurfPts, PolyPts, LAST10
-                            from DataGrid_staFNRSA(@RaceId)";
+                        query = "SELECT * from DataGrid_staFNRSA(@RaceId)";
+//                        query = @"
+//                            SELECT	RaceId, HorseNumber, Barrier, RunnerId, 
+//                                    Horse, isScratched, 
+//                                    HorseRSAId as HorseId, Jockey, jockeypoints, Trainer, Age, Color, Place,
+//                                    Z_WinOddsRank, AVG3WinOddsRank, nUp, [Class+/-] as Class, 
+//                                    [Gld?] as Gld, Wt, [Wt+/-] as WtPlusLess,
+//                                    DSLR, [BFAVL?] as BFAVL, [Mdn?] as Mdn, Sex, MktRel, [NewTr?] as NewTr, 
+//                                    [LSW?] as LSW, [FirstStart?] as FirstStart, 
+//                                    [KAD?] as KAD, [ROLast?] as ROLast, [SwampedLast?] as SwampedLast,
+//                                    [FUP?] as FUP, [LUP?] as LUP,
+//                                    [QBU?] as QBU, [GJD?] as GJD, [DRPD?] as DRPD, [H4CRSE?] as H4CRSE, 
+//                                    [H&J?] as HJ, BeenThere, SandPts, TurfPts, PolyPts, LAST10
+//                            from DataGrid_staFNRSA(@RaceId)";
                         break;
                     case CountryEnum.AUS:
-                        query = @"
-                            SELECT	RaceId, HorseNumber, Barrier, RunnerId, 
-                                    Horse, isScratched, 
-                                    HorseAUSNZId as HorseId, Jockey, jockeypoints, Trainer, Age, Color, Place,
-                                    Z_WinOddsRank, AVG3WinOddsRank, nUp, [Class+/-] as Class, 
-                                    [Gld?] as Gld, Wt, [Wt+/-] as WtPlusLess,
-                                    DSLR, [BFAVL?] as BFAVL, [Mdn?] as Mdn, Sex, MktRel, [NewTr?] as NewTr, 
-                                    [LSW?] as LSW, [FirstStart?] as FirstStart, 
-                                    [KAD?] as KAD, [ROLast?] as ROLast, [SwampedLast?] as SwampedLast,
-                                    [FUP?] as FUP, [LUP?] as LUP,
-                                    [QBU?] as QBU, [GJD?] as GJD, [DRPD?] as DRPD, [H4CRSE?] as H4CRSE, 
-                                    [H&J?] as HJ, BeenThere, AWTPts, TurfPts, LAST10
-                            from DataGrid_staFNAUSNZ(@RaceId)";
+                        query = "SELECT	from DataGrid_staFNAUSNZ(@RaceId)";
+//                        query = @"
+//                            SELECT	RaceId, HorseNumber, Barrier, RunnerId, 
+//                                    Horse, isScratched, 
+//                                    HorseAUSNZId as HorseId, Jockey, jockeypoints, Trainer, Age, Color, Place,
+//                                    Z_WinOddsRank, AVG3WinOddsRank, nUp, [Class+/-] as Class, 
+//                                    [Gld?] as Gld, Wt, [Wt+/-] as WtPlusLess,
+//                                    DSLR, [BFAVL?] as BFAVL, [Mdn?] as Mdn, Sex, MktRel, [NewTr?] as NewTr, 
+//                                    [LSW?] as LSW, [FirstStart?] as FirstStart, 
+//                                    [KAD?] as KAD, [ROLast?] as ROLast, [SwampedLast?] as SwampedLast,
+//                                    [FUP?] as FUP, [LUP?] as LUP,
+//                                    [QBU?] as QBU, [GJD?] as GJD, [DRPD?] as DRPD, [H4CRSE?] as H4CRSE, 
+//                                    [H&J?] as HJ, BeenThere, AWTPts, TurfPts, LAST10
+//                            from DataGrid_staFNAUSNZ(@RaceId)";
                         break;
                     default:
 //                            query = @"
@@ -267,7 +270,7 @@ namespace RaceDayDisplayApp.DAL
 
                 race.Country = country;
 
-                var runners= conn.Query<Runner>(query, new { RaceId = raceId });
+                var runners= conn.Query(query, new { RaceId = raceId });
                 race.Runners = runners.ToList();
 
                 return race;
@@ -292,15 +295,18 @@ namespace RaceDayDisplayApp.DAL
 
                 if (race != null)
                 {
-                    var resultList = conn.Query<RunnerDyn>(@"
-                        select isScratched, RunnerId, RaceId, HorseNumber, 
-                        WinOdds, PlaceOdds, isWinFavorite, WinDropby20, WinDropby50,
-                        isPlaceFavorite, PlaceDropby20, PlaceDropby50, 
-                        ODDSLAST1, ODDSLAST2, ODDSLAST3, Z_WinOddsRank, AVG3WinOddsRank
-                        from DataGrid_dynFN(@RaceId)",
+                    var resultList = conn.Query("select * from DataGrid_dynFN(@RaceId)",
                         new { RaceId = raceId });
 
-                    race.Runners = resultList;
+//                    var resultList = conn.Query<RunnerDyn>(@"
+//                        select isScratched, RunnerId, RaceId, HorseNumber, 
+//                        WinOdds, PlaceOdds, isWinFavorite, WinDropby20, WinDropby50,
+//                        isPlaceFavorite, PlaceDropby20, PlaceDropby50, 
+//                        ODDSLAST1, ODDSLAST2, ODDSLAST3, Z_WinOddsRank, AVG3WinOddsRank
+//                        from DataGrid_dynFN(@RaceId)",
+//                        new { RaceId = raceId });
+
+                    race.Runners = resultList.ToList();
                 }
 
                 return race;

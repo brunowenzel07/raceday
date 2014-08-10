@@ -114,7 +114,7 @@ namespace RaceDayDisplayApp.Controllers
         /// Called async by the jqGrid on details view
         /// </summary>
         /// <returns>A list of runners</returns>
-        public JsonResult GridData(int id, CountryEnum country, GridSettings gridSettings)
+        public ActionResult GridData(int id, CountryEnum country, GridSettings gridSettings)
         {
             var race = RacesCache.Instance.GetRace(id, country);
             var runners = race.Runners;
@@ -131,13 +131,16 @@ namespace RaceDayDisplayApp.Controllers
                 //sorting
                 if (gridSettings.SortColumn != "")
                 {
+                    //TODO this does not work
                     if (gridSettings.SortOrder == "asc")
-                        runners = runners.OrderBy(o => typeof(Runner).GetProperty(gridSettings.SortColumn).GetValue(o)).ToList();
+                        runners = runners.OrderBy(o => o.GetType().GetProperty(gridSettings.SortColumn).GetValue(o, null)).ToList();
+                        //runners = runners.OrderBy(o => typeof(Runner).GetProperty(gridSettings.SortColumn).GetValue(o)).ToList();
                     else
-                        runners = runners.OrderByDescending(o => typeof(Runner).GetProperty(gridSettings.SortColumn).GetValue(o)).ToList();
+                        runners = runners.OrderBy(o => o.GetType().GetProperty(gridSettings.SortColumn).GetValue(o, null)).ToList();
+                        //runners = runners.OrderByDescending(o => typeof(Runner).GetProperty(gridSettings.SortColumn).GetValue(o)).ToList();
                 }
                 else
-                    runners = runners.Cast<Runner>().OrderBy(o => o.HorseNumber).ToList(); //default sorting criteria
+                    runners = runners.OrderBy(o => o.HorseNumber).ToList(); //default sorting criteria
             }
             
             var now = DateTime.UtcNow;
@@ -156,7 +159,10 @@ namespace RaceDayDisplayApp.Controllers
                         (race.RefreshValues.NextRefresh - now).TotalSeconds + ConfigValues.ClientAddedDelay 
             };
 
-            return Json(jsonData, JsonRequestBehavior.AllowGet);
+            JsonNetResult jsonNetResult = new JsonNetResult();
+            jsonNetResult.Formatting = Newtonsoft.Json.Formatting.Indented;
+            jsonNetResult.Data = jsonData;
+            return jsonNetResult;
         }
 
         //public ActionResult GridSettings(CountryEnum country)
