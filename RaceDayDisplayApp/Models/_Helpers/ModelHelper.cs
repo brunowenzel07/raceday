@@ -29,43 +29,43 @@ namespace RaceDayDisplayApp.Models
         //        });
         //}
 
-        public static IEnumerable<ViewUserSetting> ToViewUserSettings(UserSettings userSettings, CountryEnum country)
-        {
-            Dictionary<string, bool> userConfig = new Dictionary<string, bool>();
-            //loops through all the properties of the class UserSettings
-            typeof(UserSettings).GetProperties().ToList().ForEach(p => 
-                {
-                    var prop = typeof(UserSettings).GetProperty(p.Name);
-                    if (prop.PropertyType == typeof(bool))
-                    {
-                        var name = getLinkedToAttribute(p).Attribute;
-                        var chkd = (bool)prop.GetValue(userSettings);
-                        userConfig.Add(name, chkd);
-                    }
-                });
+        //public static IEnumerable<ViewUserSetting> ToViewUserSettings(UserSettings userSettings, CountryEnum country)
+        //{
+        //    Dictionary<string, bool> userConfig = new Dictionary<string, bool>();
+        //    //loops through all the properties of the class UserSettings
+        //    typeof(UserSettings).GetProperties().ToList().ForEach(p => 
+        //        {
+        //            var prop = typeof(UserSettings).GetProperty(p.Name);
+        //            if (prop.PropertyType == typeof(bool))
+        //            {
+        //                var name = getLinkedToAttribute(p).Attribute;
+        //                var chkd = (bool)prop.GetValue(userSettings);
+        //                userConfig.Add(name, chkd);
+        //            }
+        //        });
 
 
-            Dictionary<string, DisplayAttribute> lookup = new Dictionary<string, DisplayAttribute>();
-            CustomDisplayAttribute attr = null;
+        //    Dictionary<string, DisplayAttribute> lookup = new Dictionary<string, DisplayAttribute>();
+        //    CustomDisplayAttribute attr = null;
 
-            //loops through all the properties of the class UserSettings
-            return typeof(Runner).GetProperties()
-                .Where(p => (attr = getCustomDisplayAttribute(p)).RenderCheckbox  && Country.Match(country, attr.Display))
-                .OrderBy(p => (lookup[p.Name] = getDisplayAttribute(p)).Order)
-                .Select(p =>
-                {
-                    bool val;
-                    if (!userConfig.TryGetValue(p.Name, out val))
-                        val = false;
+        //    //loops through all the properties of the class UserSettings
+        //    return typeof(Runner).GetProperties()
+        //        .Where(p => (attr = getCustomDisplayAttribute(p)).RenderCheckbox  && Country.Match(country, attr.Display))
+        //        .OrderBy(p => (lookup[p.Name] = getDisplayAttribute(p)).Order)
+        //        .Select(p =>
+        //        {
+        //            bool val;
+        //            if (!userConfig.TryGetValue(p.Name, out val))
+        //                val = false;
                     
-                    return new ViewUserSetting 
-                    {
-                        PropertyName = p.Name,
-                        DisplayName = lookup[p.Name].Name ?? p.Name,
-                        Checked = val 
-                    };
-                });
-        }
+        //            return new ViewUserSetting 
+        //            {
+        //                PropertyName = p.Name,
+        //                DisplayName = lookup[p.Name].Name ?? p.Name,
+        //                Checked = val 
+        //            };
+        //        });
+        //}
 
         /// <summary>
         /// Converts an object to a collection of name-value pair that can be consumed by the view
@@ -98,45 +98,77 @@ namespace RaceDayDisplayApp.Models
             return result;
         }
 
+        ///// <summary>
+        ///// Creates a collection of grid column based on the properties of the class Runner and their attributes
+        ///// </summary>
+        //public static IEnumerable<MvcJqGrid.Column> GetGridColumns(Race race)
+        //{
+        //    Dictionary<string, DisplayAttribute> lookup = new Dictionary<string, DisplayAttribute>();
+        //    Dictionary<string, CustomDisplayAttribute> lookup2 = new Dictionary<string, CustomDisplayAttribute>();
+        //    //loops through all the properties of the class Runner
+        //    var columns = typeof(Runner).GetProperties()
+        //        .Where(p => Country.Match(race.CountryEnum, (lookup2[p.Name] = getCustomDisplayAttribute(p)).Display))
+        //        .OrderBy(p => (lookup[p.Name] = getDisplayAttribute(p)).Order)
+        //        .Select(p => {
+        //            var col = new MvcJqGrid.Column(p.Name);
+        //            col.SetLabel(lookup[p.Name].Name ?? p.Name);
+                    
+        //            //check if it's key
+        //            object[] attributes = p.GetCustomAttributes(typeof(KeyAttribute), false);
+        //            if (attributes != null && attributes.Length > 0)
+        //            {
+        //                col.SetKey(true).SetHidden(true);
+        //            } 
+                    
+        //            //assign cell formatter
+        //            CustomDisplayAttribute attr = lookup2[p.Name];
+        //            if (attr.CustomFormatter != CustomFormatters.none)
+        //            {
+        //                col.SetCustomFormatter(attr.CustomFormatter.ToString());
+        //            }
+                    
+        //            //assign col width
+        //            if (attr.FixedColumnSize != -1)
+        //                col.SetWidth(attr.FixedColumnSize).SetFixedWidth(true);
+        //            return col;
+        //        });
+
+        //    return columns;
+        //    //var statisticalColumns = new DBGateway().GetGridColumns(race);
+        //    //return columns.Concat(statisticalColumns);
+        //}
+
+
         /// <summary>
-        /// Creates a collection of grid column based on the properties of the class Runner and their attributes
+        /// Creates a collection of grid column based on the dynamic field retrieved from database
         /// </summary>
         public static IEnumerable<MvcJqGrid.Column> GetGridColumns(Race race)
         {
-            Dictionary<string, DisplayAttribute> lookup = new Dictionary<string, DisplayAttribute>();
-            Dictionary<string, CustomDisplayAttribute> lookup2 = new Dictionary<string, CustomDisplayAttribute>();
-            //loops through all the properties of the class Runner
-            var columns = typeof(Runner).GetProperties()
-                .Where(p => Country.Match(race.CountryEnum, (lookup2[p.Name] = getCustomDisplayAttribute(p)).Display))
-                .OrderBy(p => (lookup[p.Name] = getDisplayAttribute(p)).Order)
-                .Select(p => {
-                    var col = new MvcJqGrid.Column(p.Name);
-                    col.SetLabel(lookup[p.Name].Name ?? p.Name);
-                    
-                    //check if it's key
-                    object[] attributes = p.GetCustomAttributes(typeof(KeyAttribute), false);
-                    if (attributes != null && attributes.Length > 0)
-                    {
-                        col.SetKey(true).SetHidden(true);
-                    } 
-                    
-                    //assign cell formatter
-                    CustomDisplayAttribute attr = lookup2[p.Name];
-                    if (attr.CustomFormatter != CustomFormatters.none)
-                    {
-                        col.SetCustomFormatter(attr.CustomFormatter.ToString());
-                    }
-                    
-                    //assign col width
-                    if (attr.FixedColumnSize != -1)
-                        col.SetWidth(attr.FixedColumnSize).SetFixedWidth(true);
-                    return col;
-                });
+            List<MvcJqGrid.Column> columns = new List<MvcJqGrid.Column>();
+            if (race.Runners.Count == 0)
+                return columns;
+
+            foreach (KeyValuePair<string, object> kvp in race.Runners[0])
+            {
+                var col = new MvcJqGrid.Column(kvp.Key);
+                //TODO label != name
+                col.SetLabel(kvp.Key);
+
+                //TODO check if it's key
+                //col.SetKey(true).SetHidden(true);
+
+                //TODO assign cell formatter
+                //col.SetCustomFormatter(attr.CustomFormatter.ToString());
+
+                //TODO assign col width
+                //col.SetWidth(attr.FixedColumnSize).SetFixedWidth(true);
+                
+                columns.Add(col);
+            }
 
             return columns;
-            //var statisticalColumns = new DBGateway().GetGridColumns(race);
-            //return columns.Concat(statisticalColumns);
-        }
+       }
+
 
         private static DisplayAttribute getDisplayAttribute(PropertyInfo info)
         {

@@ -58,7 +58,7 @@ namespace RaceDayDisplayApp.Controllers
 
             //get the user settings
             var userId = WebMatrix.WebData.WebSecurity.GetUserId(User.Identity.Name);
-            ViewBag.UserSettings = entities.GetUserSettings(userId, meeting.CountryEnum);
+            //ViewBag.UserSettings = entities.GetUserSettings(userId, meeting.CountryEnum);
 
             //to render or not the statistics sections
             ViewBag.FullAccess = User.IsInRole(ConfigValues.FullAccessRole);
@@ -87,7 +87,7 @@ namespace RaceDayDisplayApp.Controllers
 
             //get the user settings
             var userId = WebMatrix.WebData.WebSecurity.GetUserId(User.Identity.Name);
-            ViewBag.UserSettings = entities.GetUserSettings(userId, meeting.CountryEnum);
+            //ViewBag.UserSettings = entities.GetUserSettings(userId, meeting.CountryEnum);
 
             //columns to display for this race
             ViewBag.GridColumns = ModelHelper.GetGridColumns(meeting.Races[0] as Race);
@@ -114,7 +114,7 @@ namespace RaceDayDisplayApp.Controllers
         /// Called async by the jqGrid on details view
         /// </summary>
         /// <returns>A list of runners</returns>
-        public JsonResult GridData(int id, CountryEnum country, GridSettings gridSettings)
+        public ActionResult GridData(int id, CountryEnum country, GridSettings gridSettings)
         {
             var race = RacesCache.Instance.GetRace(id, country);
             var runners = race.Runners;
@@ -131,13 +131,16 @@ namespace RaceDayDisplayApp.Controllers
                 //sorting
                 if (gridSettings.SortColumn != "")
                 {
+                    //TODO this does not work
                     if (gridSettings.SortOrder == "asc")
-                        runners = runners.OrderBy(o => typeof(Runner).GetProperty(gridSettings.SortColumn).GetValue(o)).ToList();
+                        runners = runners.OrderBy(o => o.GetType().GetProperty(gridSettings.SortColumn).GetValue(o, null)).ToList();
+                        //runners = runners.OrderBy(o => typeof(Runner).GetProperty(gridSettings.SortColumn).GetValue(o)).ToList();
                     else
-                        runners = runners.OrderByDescending(o => typeof(Runner).GetProperty(gridSettings.SortColumn).GetValue(o)).ToList();
+                        runners = runners.OrderBy(o => o.GetType().GetProperty(gridSettings.SortColumn).GetValue(o, null)).ToList();
+                        //runners = runners.OrderByDescending(o => typeof(Runner).GetProperty(gridSettings.SortColumn).GetValue(o)).ToList();
                 }
                 else
-                    runners = runners.Cast<Runner>().OrderBy(o => o.HorseNumber).ToList(); //default sorting criteria
+                    runners = runners.OrderBy(o => o.HorseNumber).ToList(); //default sorting criteria
             }
             
             var now = DateTime.UtcNow;
@@ -156,17 +159,20 @@ namespace RaceDayDisplayApp.Controllers
                         (race.RefreshValues.NextRefresh - now).TotalSeconds + ConfigValues.ClientAddedDelay 
             };
 
-            return Json(jsonData, JsonRequestBehavior.AllowGet);
+            JsonNetResult jsonNetResult = new JsonNetResult();
+            jsonNetResult.Formatting = Newtonsoft.Json.Formatting.Indented;
+            jsonNetResult.Data = jsonData;
+            return jsonNetResult;
         }
 
-        public ActionResult GridSettings(CountryEnum country)
-        {
-            //get the user settings
-            var userId = WebMatrix.WebData.WebSecurity.GetUserId(User.Identity.Name);
-            var settings = entities.GetUserSettings(userId, country);
+        //public ActionResult GridSettings(CountryEnum country)
+        //{
+        //    //get the user settings
+        //    var userId = WebMatrix.WebData.WebSecurity.GetUserId(User.Identity.Name);
+        //    var settings = entities.GetUserSettings(userId, country);
 
-            return View("_GridSettings", settings);
-        }
+        //    return View("_GridSettings", settings);
+        //}
 
         public ActionResult RunnerHistory(int id, string countryCode)
         {

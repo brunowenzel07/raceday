@@ -156,4 +156,10 @@
   <data name="Title_ConfirmationFailure_Page" xml:space="preserve">
     <value>Confirmation failed</value>
   </data>
+  <data name="View_Register_CreateNewAccount" xml:space="preserve">
+    <value>Register today</value>
+  </data>
+  <data name="View_Register_Title" xml:space="preserve">
+    <value>Sign Up!</value>
+  </data>
 </root>
