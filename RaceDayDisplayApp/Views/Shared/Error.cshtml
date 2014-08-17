@@ -10,7 +10,7 @@
     <div class="alert alert-error">
         An unexpected error has occurred. Please check log file for more info.
     </div>
-    @if (Model != null && HttpContext.Current.IsDebuggingEnabled)
+    @if (Model != null) //&& HttpContext.Current.IsDebuggingEnabled)
     {
         //TODO Quite a bad practice to reference the logger from the view. Find a better way
         RaceDayDisplayApp.Common.Log.Instance.Error(Model.Exception.Message, Model.Exception);
