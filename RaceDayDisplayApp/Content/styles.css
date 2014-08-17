@@ -92,6 +92,12 @@
     /*padding:0.3em;*/
 }
 
+.grid_buttons_div
+{
+    width:100%;
+    float:left;
+}
+
 /************************** RACE HISTORY ******************************/
 
 .history-container {

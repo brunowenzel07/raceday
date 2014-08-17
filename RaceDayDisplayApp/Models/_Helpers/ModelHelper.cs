@@ -69,6 +69,7 @@ namespace RaceDayDisplayApp.Models
 
         /// <summary>
         /// Converts an object to a collection of name-value pair that can be consumed by the view
+        /// Used to display Meeting and Race details
         /// </summary>
         public static IEnumerable<DisplayProperty> ToNameValuePairs(object obj, CountryEnum country)
         {

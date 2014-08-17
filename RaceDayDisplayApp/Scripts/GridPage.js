@@ -17,7 +17,39 @@ $(document).ready(function() {
         displayHideStats("#meeting-span", "#meeting-form", "#meeting-history")
     });
 
+    //click first button
+    $("#btn_0").click();
 });
+
+
+function showFields(index, fields) {
+    $(".btn_hist").css('background-color', '#e1e0e1');
+    $("#btn_" + index).css('background-color', '#cccccc');
+
+    $("table td, table th").hide(); //css('display', 'table-cell');
+
+    $.each(fields, function (index, value) {
+        $("table td:nth-child(" + value + ")").show();
+        $("table th:nth-child(" + value + ")").show();
+    });
+
+    //TODO
+    var columnsShow = [];
+    var columnsHide = [];
+    $(".chk_settings").each(function (index, li) {
+        if ($(this).is(":checked")) {
+            columnsShow.push(this.id.substring(4));
+        } else if ($(this).not(":checked")) {
+            columnsHide.push(this.id.substring(4));
+        }
+        jQuery("#race_grid").jqGrid('showCol', columnsShow);
+        jQuery("#race_grid").jqGrid('hideCol', columnsHide);
+    });
+
+    resizeGrid();
+
+}
+
 
 function displayHideStats(spanSelector, formSelector, destPanelSelector) {
     //TODO submit form by ajax
@@ -232,6 +264,7 @@ function hideColumnsFirstTime(){
 //every time a new grid or settings are loaded, this function hides the unchecked columns
 function showHideColumns() {
 
+    //TODO this funcion has not use anymore
     var columnsShow = [];
     var columnsHide = [];
     $(".chk_settings").each(function (index, li) {

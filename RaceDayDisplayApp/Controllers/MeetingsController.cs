@@ -11,6 +11,7 @@ using System.Configuration;
 using RaceDayDisplayApp.Filters;
 using RaceDayDisplayApp.DAL;
 using System.Dynamic;
+using RaceDayDisplayApp.Common;
 
 namespace RaceDayDisplayApp.Controllers
 {
@@ -75,7 +76,6 @@ namespace RaceDayDisplayApp.Controllers
                 return HttpNotFound();
             }
 
-            //get race info from cache
             meeting.Races = new List<RaceBase>(new[] { RacesCache.Instance.GetRace(id, country) });
 
             //set previous and next race in the sequence

@@ -9,6 +9,25 @@
 
 @Html.HiddenFor(m => m.RaceId)
 
+
+<div class="grid_buttons_div">
+    @{if (Model.Runners.Count > 0)
+    {
+        var i = 0;
+        foreach (var item in LiveDataGridHelper.GetFieldsIndexes(Model.CountryCode, Model.Runners[0]))
+        {
+            <div class="hist_table_controls">
+                <input id="btn_@(i)" class="btn_hist" type="button" value="@(item.Key)" onclick="showFields(@(i++), @(item.Value))" />
+            </div>
+        }
+    }
+    }
+</div>
+
+
+
+
+
 <tr>
     <td width="10"><span class="cell_favorite">00</span></td>
     <td width="70" align="left">Favourite</td>

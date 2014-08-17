@@ -55,6 +55,9 @@
     <Reference Include="MvcJqGrid">
       <HintPath>..\packages\MvcJqGrid.1.0.13\lib\net40\MvcJqGrid.dll</HintPath>
     </Reference>
+    <Reference Include="NLog">
+      <HintPath>..\packages\NLog.3.1.0.0\lib\net45\NLog.dll</HintPath>
+    </Reference>
     <Reference Include="Postal">
       <HintPath>..\packages\Postal.Mvc4.1.0.0\lib\net40\Postal.dll</HintPath>
     </Reference>
@@ -222,6 +225,7 @@
     <Compile Include="App_Start\AuthConfig.cs" />
     <Compile Include="App_Start\BootstrapBundleConfig.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\ErrorController.cs" />
     <Compile Include="App_Start\ExceptionHandlingAttribute.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
@@ -230,8 +234,9 @@
     <Compile Include="BootstrapSupport\HtmlHelpers\GlyphIcons.cs" />
     <Compile Include="BootstrapSupport\HtmlHelpers\Paging.cs" />
     <Compile Include="BootstrapSupport\ViewHelperExtensions.cs" />
+    <Compile Include="Common\Log.cs" />
     <Compile Include="Common\Util.cs" />
-    <Compile Include="ConfigValues.cs" />
+    <Compile Include="Common\ConfigValues.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BootstrapBaseController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -254,7 +259,6 @@
     <Compile Include="Models\RaceStatistics.cs" />
     <Compile Include="Models\_Helpers\ModelHelper.cs" />
     <Compile Include="Models\Race.cs" />
-    <Compile Include="Models\Runner.cs" />
     <Compile Include="Models\_Helpers\LiveDataGridHelper.cs" />
     <Compile Include="Models\_Helpers\RunnerHistoryHelper.cs" />
     <Compile Include="Models\_Helpers\TimeZoneHelper.cs" />
@@ -408,6 +412,10 @@
     <Content Include="Scripts\i18n\grid.locale-ua.js" />
     <Content Include="Scripts\i18n\grid.locale-vi.js" />
     <Content Include="Scripts\GridPage.js" />
+    <Content Include="NLog.config" />
+    <None Include="NLog.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Properties\PublishProfiles\RaceDayDisplayApp.pubxml" />
     <Content Include="LiveDataGrid.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

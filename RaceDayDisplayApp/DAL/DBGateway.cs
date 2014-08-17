@@ -7,6 +7,7 @@ using System.Data.SqlClient;
 using Dapper;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
+using RaceDayDisplayApp.Common;
 
 namespace RaceDayDisplayApp.DAL
 {
@@ -196,8 +197,16 @@ namespace RaceDayDisplayApp.DAL
                     //            left join RaceCourse on Meeting.RaceCourseId=RaceCourse.Id
                     //where Race.Id = @RaceId
 
-                var race = conn.Query<RaceCache>("Select * from getRaceDetailsData(@RaceId)",
-                    new { RaceId = raceId }).FirstOrDefault();
+                RaceCache race = null;
+                try
+                {
+                    race = conn.Query<RaceCache>("Select * from getRaceDetailsData(@RaceId)",
+                                new { RaceId = raceId }).FirstOrDefault();
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("DB function getRaceDetailsData(" + raceId + ") raised the following error: " + ex.Message, ex);
+                }
 
                 if (race == null)
                     throw new Exception("DB function getRaceDetailsData(" + raceId + ") didn't return any data");
@@ -238,7 +247,7 @@ namespace RaceDayDisplayApp.DAL
 //                            from DataGrid_staFNRSA(@RaceId)";
                         break;
                     case CountryEnum.AUS:
-                        query = "SELECT	from DataGrid_staFNAUSNZ(@RaceId)";
+                        query = "SELECT * from DataGrid_staFNAUSNZ(@RaceId)";
 //                        query = @"
 //                            SELECT	RaceId, HorseNumber, Barrier, RunnerId, 
 //                                    Horse, isScratched, 

@@ -58,6 +58,9 @@ namespace RaceDayDisplayApp.Models
                 });
         }
 
+        /// <summary>
+        /// Used at view level to format fields before displaying them
+        /// </summary>
         public static string FormatField(string name, object value)
         {
             if (value == null)
@@ -88,6 +91,11 @@ namespace RaceDayDisplayApp.Models
             return value.ToString();
         }
 
+        /// <summary>
+        /// Used on the Runner History page to render group buttons based on the config file. 
+        /// The view will use the result to render buttons this way:
+        /// <input id="btn_@(i)" class="btn_hist" type="button" value="@(item.Key)" onclick="showFields(@(i++), @(item.Value))" />
+        /// </summary>
         internal static Dictionary<string,string> GetFieldsIndexes(string countryCode, dynamic runnerHistoryItem)
         {
             var groups = new Dictionary<string, List<int>>();
@@ -113,7 +121,7 @@ namespace RaceDayDisplayApp.Models
             groups.ToList().ForEach(g => 
                 {
                     var aux = g.Value;
-                    if (g.Key != fixedGroupName)
+                    if (fixedGroupName != null && g.Key != fixedGroupName)
                         aux.AddRange(groups[fixedGroupName]);
                     
                     result.Add(g.Key, "['" + string.Join("','", aux) + "']");
@@ -122,6 +130,9 @@ namespace RaceDayDisplayApp.Models
             return result;
         }
 
+        /// <summary>
+        /// Just returns the number of DISPLAY attributes for Runners. It is used by the view to calculate the colspan on the html table
+        /// </summary>
         public static int GetNumAttrs(dynamic obj)
         {
             return ((IEnumerable<KeyValuePair<string, object>>)obj).Where(kvp => !ControlFields.Contains(kvp.Key)).Count();

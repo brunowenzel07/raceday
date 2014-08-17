@@ -53,11 +53,14 @@ namespace RaceDayDisplayApp.Models
                     }
                     catch (Exception e)
                     {
-                        throw new Exception("Error parsing LiveDataGrid.xml - group=" + name + " country=" + countryCode + " value=" + value, e);
+                        throw new Exception("Error parsing RunnerHistoryFields.xml - group=" + name + " country=" + countryCode + " value=" + value, e);
                     }
                 });
         }
 
+        /// <summary>
+        /// Used at view level to format fields before displaying them
+        /// </summary>
         public static string FormatField(string name, object value)
         {
             if (value == null)
@@ -88,21 +91,27 @@ namespace RaceDayDisplayApp.Models
             return value.ToString();
         }
 
-        internal static Dictionary<string,string> GetFieldsIndexes(string countryCode, dynamic runnerHistoryItem)
+        /// <summary>
+        /// Used on the Runner History page to render group buttons based on the config file. 
+        /// The view will use the result to render buttons this way:
+        /// <input id="btn_@(i)" class="btn_hist" type="button" value="@(item.Key)" onclick="showFields(@(i++), @(item.Value))" />
+        /// </summary>
+        public static Dictionary<string,string> GetFieldsIndexes(string countryCode, dynamic runnerHistoryItem)
         {
             var groups = new Dictionary<string, List<int>>();
 
-            var countryFields = fields.Where(f => f.Key.Key == "" || f.Key.Key == countryCode).ToList();            
-            countryFields.ForEach(f => groups.Add(f.Key.Value, new List<int>(f.Value.Count())));
+            var countryFields = fields.Where(f => f.Key.Key == "" || f.Key.Key == countryCode).ToList();
+            //get field groups for this country from config file and create a container for each group
+            countryFields.ForEach(f => groups.Add(f.Key.Value, new List<int>(f.Value.Count()))); 
 
             int i=1;
-            foreach (KeyValuePair<string, object> kvp in runnerHistoryItem)
+            foreach (KeyValuePair<string, object> kvp in runnerHistoryItem) //loop through dynamic data
             {
-                if (!ControlFields.Contains(kvp.Key))
+                if (!ControlFields.Contains(kvp.Key)) //filter control fields
                 {
-                    foreach (var f in countryFields)
+                    foreach (var f in countryFields) //loop through field groups for this country
                     {
-                        if (f.Value.Contains(kvp.Key))
+                        if (f.Value.Contains(kvp.Key)) //only add those fields contained in the config file
                             groups[f.Key.Value].Add(i);
                     }
                     i++;
@@ -113,7 +122,7 @@ namespace RaceDayDisplayApp.Models
             groups.ToList().ForEach(g => 
                 {
                     var aux = g.Value;
-                    if (g.Key != fixedGroupName)
+                    if (fixedGroupName != null && g.Key != fixedGroupName) //TODO allow more than one fixedGroupName
                         aux.AddRange(groups[fixedGroupName]);
                     
                     result.Add(g.Key, "['" + string.Join("','", aux) + "']");
@@ -122,6 +131,9 @@ namespace RaceDayDisplayApp.Models
             return result;
         }
 
+        /// <summary>
+        /// Just returns the number of DISPLAY attributes for Runners. It is used by the view to calculate the colspan on the html table
+        /// </summary>
         public static int GetNumAttrs(dynamic obj)
         {
             return ((IEnumerable<KeyValuePair<string, object>>)obj).Where(kvp => !ControlFields.Contains(kvp.Key)).Count();

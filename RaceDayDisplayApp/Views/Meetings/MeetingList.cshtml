@@ -54,7 +54,7 @@
                         <td>@Html.ActionLink(meeting.RaceCourseName ?? "(no race course name)", "Details", new { id = meeting.MeetingId })</td>
                     </tr>
 
-                    if (i++ > RaceDayDisplayApp.ConfigValues.MeetingListLimit) { break; }
+                    if (i++ > RaceDayDisplayApp.Common.ConfigValues.MeetingListLimit) { break; }
 
                 }
             </table>

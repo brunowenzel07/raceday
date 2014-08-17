@@ -1,4 +1,5 @@
-﻿using RaceDayDisplayApp.DAL;
+﻿using RaceDayDisplayApp.Common;
+using RaceDayDisplayApp.DAL;
 using RaceDayDisplayApp.Filters;
 using RaceDayDisplayApp.Models;
 using System;

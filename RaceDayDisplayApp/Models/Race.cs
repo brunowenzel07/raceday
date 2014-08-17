@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RaceDayDisplayApp.Common;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
@@ -286,7 +287,7 @@ namespace RaceDayDisplayApp.Models
                     
                     if (runDyn == null)
                     {
-                        Debug.WriteLine("mismatch between data retrieved from DataGrid_dynFN and DataGrid_staFN for RaceId=" + race.RaceId);
+                        Log.Instance.Warn("mismatch between data retrieved from DataGrid_dynFN and DataGrid_staFN for RaceId=" + race.RaceId);
                         race.Runners.Add(r);
                     }
                     else //update existing one
