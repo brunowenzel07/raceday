@@ -52,6 +52,8 @@ namespace RaceDayDisplayApp.Controllers
                         currentLanguageId = user.UILanguageId;
                     }
 
+                    Session["UserId"] = WebSecurity.GetUserId(model.UserName);
+
                     //set current culture to language selected by user during registration
                     var language = entities.GetLanguageById(currentLanguageId);
                     RaceDayDisplayApp.App_GlobalResources.Labels.Culture = new CultureInfo(language.Code);

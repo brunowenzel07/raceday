@@ -47,6 +47,9 @@ namespace RaceDayDisplayApp
                         "~/Content/jquery.ui.combobox.css"
                         ));
 
+            bundles.Add(new ScriptBundle("~/bundles/subscription").Include(
+                        "~/Scripts/subscriptions.js"));
+
 
             //bundles.Add(new StyleBundle("~/Content/themes/base/css").Include(
             //            "~/Content/themes/base/jquery.ui.core.css",

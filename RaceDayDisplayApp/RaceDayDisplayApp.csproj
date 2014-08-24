@@ -249,6 +249,7 @@
     <Compile Include="Controllers\JsonNetResult.cs" />
     <Compile Include="Controllers\MeetingsController.cs" />
     <Compile Include="Controllers\RaceResearchController.cs" />
+    <Compile Include="Controllers\SubscriptionController.cs" />
     <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -263,6 +264,7 @@
     <Compile Include="Models\Meeting.cs" />
     <Compile Include="Models\HistoryFilters.cs" />
     <Compile Include="Models\RaceStatistics.cs" />
+    <Compile Include="Models\SubscriptionModels.cs" />
     <Compile Include="Models\_Helpers\ModelHelper.cs" />
     <Compile Include="Models\Race.cs" />
     <Compile Include="Models\_Helpers\LiveDataGridHelper.cs" />
@@ -450,6 +452,7 @@
     <Content Include="Scripts\knockout-2.2.0.debug.js" />
     <Content Include="Scripts\knockout-2.2.0.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\subscriptions.js" />
     <Content Include="Scripts\RaceResearch.js" />
     <Content Include="Scripts\RunnerHistory.js" />
     <Content Include="SQL\LastUpdates.sql" />
@@ -489,7 +492,9 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Web.config" />
+    <Content Include="Views\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Views\Meetings\MeetingList.cshtml" />
     <Content Include="Views\Meetings\Details.cshtml" />
     <Content Include="Views\Meetings\_Race.cshtml" />
@@ -523,6 +528,8 @@
     <Content Include="Views\Emails\_ViewStart.cshtml" />
     <Content Include="Views\Emails\ConfirmationEmail.cshtml" />
     <Content Include="Views\Account\_ConfirmationFailurePartial.cshtml" />
+    <Content Include="Views\Subscription\Subscribe.cshtml" />
+    <Content Include="Views\Subscription\Confirm.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

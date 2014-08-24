@@ -1,0 +1,57 @@
+﻿@model RaceDayDisplayApp.Models.SubscriptionModel
+
+@{
+    ViewBag.Title = "Subscription";
+}
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/subscription")
+}
+
+<h2>Subscription</h2>  
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary()
+
+    <h3>New Subscription</h3>
+    <div>
+        @for (int i = 0; i < Model.NewSubscriptions.Count; i++)
+        {
+            @Html.HiddenFor(m => m.NewSubscriptions[i].SubscriptionId)
+            <div data-price="@Model.NewSubscriptions[i].Price">
+                @Html.CheckBoxFor(m => m.NewSubscriptions[i].IsSelected, new { @class = "newSubscription" })
+                <img src="@Model.NewSubscriptions[i].ImageUrl" />
+                @Html.DisplayFor(m => m.NewSubscriptions[i].FullName)
+                <span>AUD @Model.NewSubscriptions[i].Price</span>
+                <span>@Model.NewSubscriptions[i].SubscriptionsCount / @Model.NewSubscriptions[i].MaxSubscriptions left</span>
+            </div>
+        }
+        <a href="" id="clearall"></a>
+    </div>
+    
+    <h3>Current Subscription</h3>
+    <div>
+        @for (int i = 0; i < Model.ExistingSubscriptions.Count; i++)
+        {
+            @Html.HiddenFor(m => m.ExistingSubscriptions[i].SubscriptionId)
+            @Html.HiddenFor(m => m.ExistingSubscriptions[i].StartDate)
+            @Html.HiddenFor(m => m.ExistingSubscriptions[i].EndDate)
+            <div class="existingSubscription" data-price="@Model.ExistingSubscriptions[i].Price">
+                <img src="@Model.ExistingSubscriptions[i].ImageUrl" />
+                @Html.DisplayFor(m => m.ExistingSubscriptions[i].FullName)
+                <span>AUD @Model.ExistingSubscriptions[i].Price</span>
+                <span>Started On @Model.ExistingSubscriptions[i].StartDate.ToShortDateString()</span>
+                <span>Ended On @Model.ExistingSubscriptions[i].EndDate.ToShortDateString()</span>
+                @Html.CheckBoxFor(m => m.ExistingSubscriptions[i].IsSelected, new { @class = "existingSubscription" })
+            </div>
+        }
+    </div>
+    
+    <h3>Total amount: <span class="totalAmount"></span></h3>
+    
+    <button type="submit"> Confirm </button>
+}
+

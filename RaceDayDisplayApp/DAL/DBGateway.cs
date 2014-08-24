@@ -734,6 +734,80 @@ namespace RaceDayDisplayApp.DAL
                 }
             }
         } 
+
+        public List<SubscriptionData> GetAvailableSubscriptions(int userId)
+        {
+            using (var conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                var subscriptions = conn.Query<SubscriptionData>(@"
+                    SELECT Subscription.Id as SubscriptionId, Subscription.fullname as FullName, Subscription.duration as Duration, 
+                    Subscription.unitPriceEUR as Price, Subscription.image_path as ImageUrl, Subscription.maxsubscriptions as MaxSubscriptions, 
+                    (SELECT count(UserSubscriptions.Id) as SubscriptionsCount FROM UserSubscriptions)
+                    FROM Subscription
+                    WHERE (SELECT COUNT(*) FROM UserSubscriptions WHERE UserId = @userId AND UserSubscriptions.SubscriptionId = Subscription.Id) = 0", new { userId });
+
+                return subscriptions.ToList();
+            }
+        }
+
+        public List<UserSubscription> GetUserSubscriptions(int userId)
+        {
+            using (var conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                var subscriptions = conn.Query<UserSubscription>(@"
+                    SELECT Subscription.Id as SubscriptionId, Subscription.fullname as FullName, Subscription.duration as Duration, 
+                    Subscription.unitPriceEUR as Price, Subscription.image_path as ImageUrl, Subscription.maxsubscriptions as MaxSubscriptions, 
+                    UserSubscriptions.StartDate as StartDate, UserSubscriptions.EndDate as EndDate
+                    FROM Subscription 
+                    INNER JOIN UserSubscriptions
+                    ON Subscription.Id = UserSubscriptions.SubscriptionId
+                    WHERE UserSubscriptions.UserId = @userId", new { userId });
+
+                return subscriptions.ToList();
+            }
+        }
+
+        public void SaveNewSubscriptions(List<UserSubscription> listSubscriptions, int userId)
+        {
+            using (var conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                foreach (var subscription in listSubscriptions)
+                {
+                    conn.Execute(@"INSERT INTO UserSubscriptions
+                              (UserId, SubscriptionId, StartDate, EndDate, PricePaid)
+                              VALUES (@userId, @subscriptionId, @startDate, @endDate, @pricePaid)",
+                              new { userId, subscriptionId = subscription.SubscriptionId, startDate = subscription.StartDate, 
+                                  endDate = subscription.EndDate, pricePaid = subscription.Price });
+                }
+            }
+        }
+
+        public void SaveExistingSubscriptions(List<UserSubscription> listSubscriptions, int userId)
+        {
+            using (var conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                foreach (var subscription in listSubscriptions)
+                {
+                    conn.Execute(@"UPDATE UserSubscriptions
+                              SET EndDate = @endDate
+                              WHERE UserId = @userId AND SubscriptionId = @subscriptionId",
+                              new
+                              {
+                                  userId,
+                                  subscriptionId = subscription.SubscriptionId,
+                                  endDate = subscription.EndDate,
+                              });
+                }
+            }
+        }
     }
 
 }
