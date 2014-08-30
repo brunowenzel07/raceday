@@ -3,7 +3,7 @@
 
 $(document).ready(function() {
 
-    bindCheckboxes();
+    //bindCheckboxes();
 
     $("#race_grid").bind('jqGridLoadComplete', function (e, data) {
         GridLoadComplete(e, data)
@@ -17,12 +17,17 @@ $(document).ready(function() {
         displayHideStats("#meeting-span", "#meeting-form", "#meeting-history")
     });
 
-    //click first button
-    $("#btn_0").click();
 });
 
 
+var currentGroup = 0; //last button pushed
+
+//this function is associated to the grid field group buttons and hides/shows groups of fields depending on LiveDataGrid.config
 function showFields(index, fields) {
+
+    currentGroup = index;
+
+    //set the button style as pressed
     $(".btn_hist").css('background-color', '#e1e0e1');
     $("#btn_" + index).css('background-color', '#cccccc');
 
@@ -33,18 +38,18 @@ function showFields(index, fields) {
         $("table th:nth-child(" + value + ")").show();
     });
 
-    //TODO
-    var columnsShow = [];
-    var columnsHide = [];
-    $(".chk_settings").each(function (index, li) {
-        if ($(this).is(":checked")) {
-            columnsShow.push(this.id.substring(4));
-        } else if ($(this).not(":checked")) {
-            columnsHide.push(this.id.substring(4));
-        }
-        jQuery("#race_grid").jqGrid('showCol', columnsShow);
-        jQuery("#race_grid").jqGrid('hideCol', columnsHide);
-    });
+    //TODO adapt this jqgrid code to show/hide the relevant columns
+    //var columnsShow = [];
+    //var columnsHide = [];
+    //$(".chk_settings").each(function (index, li) {
+    //    if ($(this).is(":checked")) {
+    //        columnsShow.push(this.id.substring(4));
+    //    } else if ($(this).not(":checked")) {
+    //        columnsHide.push(this.id.substring(4));
+    //    }
+    //    jQuery("#race_grid").jqGrid('showCol', columnsShow);
+    //    jQuery("#race_grid").jqGrid('hideCol', columnsHide);
+    //});
 
     resizeGrid();
 
@@ -103,8 +108,12 @@ function displayHideStats(spanSelector, formSelector, destPanelSelector) {
 
 }
 
+//after every ajax call this function is called
 function GridLoadComplete(e, data)
 {
+    //click first button
+    $("#btn_" + currentGroup).click();
+
     //update race info
     $.each(data.race, function (k, v) {
         $('#'+k).text(v);
@@ -153,17 +162,17 @@ function gridAfterInsertRow(rowid, rowdata, rowelem) {
 }
 
 
-function bindCheckboxes() {
-    //when a checkbox is clicked, a column is shown/hidden
-    $(".chk_settings").change(function () {
-        if ($(this).is(":checked")) {
-            jQuery("#race_grid").jqGrid('showCol', this.id.substring(4));
-        } else if ($(this).not(":checked")) {
-            jQuery("#race_grid").jqGrid('hideCol', this.id.substring(4));
-        }
-        resizeGrid();
-    });
-}
+//function bindCheckboxes() {
+//    //when a checkbox is clicked, a column is shown/hidden
+//    $(".chk_settings").change(function () {
+//        if ($(this).is(":checked")) {
+//            jQuery("#race_grid").jqGrid('showCol', this.id.substring(4));
+//        } else if ($(this).not(":checked")) {
+//            jQuery("#race_grid").jqGrid('hideCol', this.id.substring(4));
+//        }
+//        resizeGrid();
+//    });
+//}
 
 function currencyFormatter(cellvalue, options, rowObject) {
     return "$" + cellvalue;
@@ -264,20 +273,20 @@ function hideColumnsFirstTime(){
 //every time a new grid or settings are loaded, this function hides the unchecked columns
 function showHideColumns() {
 
-    //TODO this funcion has not use anymore
-    var columnsShow = [];
-    var columnsHide = [];
-    $(".chk_settings").each(function (index, li) {
-        if ($(this).is(":checked")) {
-            columnsShow.push(this.id.substring(4));
-        } else if ($(this).not(":checked")) {
-            columnsHide.push(this.id.substring(4));
-        }
-        jQuery("#race_grid").jqGrid('showCol', columnsShow);
-        jQuery("#race_grid").jqGrid('hideCol', columnsHide);
-    });
+    ////TODO this funcion has not use anymore
+    //var columnsShow = [];
+    //var columnsHide = [];
+    //$(".chk_settings").each(function (index, li) {
+    //    if ($(this).is(":checked")) {
+    //        columnsShow.push(this.id.substring(4));
+    //    } else if ($(this).not(":checked")) {
+    //        columnsHide.push(this.id.substring(4));
+    //    }
+    //    jQuery("#race_grid").jqGrid('showCol', columnsShow);
+    //    jQuery("#race_grid").jqGrid('hideCol', columnsHide);
+    //});
 
-    resizeGrid();
+    //resizeGrid();
 }
 
 
@@ -321,7 +330,7 @@ function defaultSettings() {
             success: function (data) {
                 $("#chks_container").empty();
                 $('#chks_container').append(data);
-                bindCheckboxes();
+                //bindCheckboxes();
                 showHideColumns();
             }
         });

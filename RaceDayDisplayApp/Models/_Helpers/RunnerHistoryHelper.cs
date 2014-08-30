@@ -12,7 +12,7 @@ namespace RaceDayDisplayApp.Models
     {
         public static string[] ControlFields = new[] { "Season" };//,  "SwampedLast?", "FU", "LU" };
 
-        static string fixedGroupName;
+        static Dictionary<string, string> alwaysVisibleGroups = new Dictionary<string,string>();
         static Dictionary<KeyValuePair<string, string>, List<string>> fields;
         static Dictionary<string, string> formatters;
 
@@ -49,7 +49,7 @@ namespace RaceDayDisplayApp.Models
                         fields.Add(new KeyValuePair<string, string>(countryCode, name), groupFields);
 
                         if (bool.Parse(g.Attribute("alwaysVisible").Value))
-                            fixedGroupName = name;
+                            alwaysVisibleGroups[countryCode] = name;
                     }
                     catch (Exception e)
                     {
@@ -121,8 +121,13 @@ namespace RaceDayDisplayApp.Models
             groups.ToList().ForEach(g => 
                 {
                     var aux = g.Value;
-                    if (fixedGroupName != null && g.Key != fixedGroupName)
-                        aux.AddRange(groups[fixedGroupName]);
+                    string fixedGroup;
+                    //add country-specific fixed fields
+                    if (alwaysVisibleGroups.TryGetValue(countryCode, out fixedGroup) && g.Key != fixedGroup)
+                        aux.AddRange(groups[fixedGroup]);
+                    //add country-independent fixed fields
+                    if (alwaysVisibleGroups.TryGetValue("", out fixedGroup) && g.Key != fixedGroup)
+                        aux.AddRange(groups[fixedGroup]);
                     
                     result.Add(g.Key, "['" + string.Join("','", aux) + "']");
                 });

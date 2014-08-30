@@ -5,14 +5,16 @@ using System.Linq;
 using System.Web;
 using System.Xml.Linq;
 using System.Linq;
+using System.Text;
+using RaceDayDisplayApp.Common;
 
 namespace RaceDayDisplayApp.Models
 {
     public static class LiveDataGridHelper
     {
-        public static string[] ControlFields = new[] { "Season" };//,  "SwampedLast?", "FU", "LU" };
+        public static string[] ControlFields = new string[0]; //set control fields, if any
 
-        static string fixedGroupName;
+        static Dictionary<string, string> alwaysVisibleGroups = new Dictionary<string, string>();
         static Dictionary<KeyValuePair<string, string>, List<string>> fields;
         static Dictionary<string, string> formatters;
 
@@ -49,7 +51,7 @@ namespace RaceDayDisplayApp.Models
                         fields.Add(new KeyValuePair<string, string>(countryCode, name), groupFields);
 
                         if (bool.Parse(g.Attribute("alwaysVisible").Value))
-                            fixedGroupName = name;
+                            alwaysVisibleGroups[countryCode] = name;
                     }
                     catch (Exception e)
                     {
@@ -104,26 +106,42 @@ namespace RaceDayDisplayApp.Models
             //get field groups for this country from config file and create a container for each group
             countryFields.ForEach(f => groups.Add(f.Key.Value, new List<int>(f.Value.Count()))); 
 
+            List<string> warningFields = new List<string>(); //to log a mismatch between config file and database fields
             int i=1;
             foreach (KeyValuePair<string, object> kvp in runnerHistoryItem) //loop through dynamic data
             {
                 if (!ControlFields.Contains(kvp.Key)) //filter control fields
                 {
+                    bool found = false;
+
                     foreach (var f in countryFields) //loop through field groups for this country
                     {
                         if (f.Value.Contains(kvp.Key)) //only add those fields contained in the config file
+                        {
                             groups[f.Key.Value].Add(i);
+                            found = true;
+                        }
                     }
+                    if (!found)
+                        warningFields.Add(kvp.Key);
                     i++;
                 }
             }
+
+            if (warningFields.Count > 0)
+                Log.Instance.Warn("The following Runner's attributes are not listed in the config file: " + string.Join(", ", warningFields));
 
             var result = new Dictionary<string, string>();
             groups.ToList().ForEach(g => 
                 {
                     var aux = g.Value;
-                    if (fixedGroupName != null && g.Key != fixedGroupName) //TODO allow more than one fixedGroupName
-                        aux.AddRange(groups[fixedGroupName]);
+                    string fixedGroup;
+                    //add country-specific fixed fields
+                    if (alwaysVisibleGroups.TryGetValue(countryCode, out fixedGroup) && g.Key != fixedGroup)
+                        aux.AddRange(groups[fixedGroup]);
+                    //add country-independent fixed fields
+                    if (alwaysVisibleGroups.TryGetValue("", out fixedGroup) && g.Key != fixedGroup)
+                        aux.AddRange(groups[fixedGroup]);
                     
                     result.Add(g.Key, "['" + string.Join("','", aux) + "']");
                 });

@@ -133,10 +133,10 @@ namespace RaceDayDisplayApp.Controllers
                 {
                     //TODO this does not work
                     if (gridSettings.SortOrder == "asc")
-                        runners = runners.OrderBy(o => o.GetType().GetProperty(gridSettings.SortColumn).GetValue(o, null)).ToList();
-                        //runners = runners.OrderBy(o => typeof(Runner).GetProperty(gridSettings.SortColumn).GetValue(o)).ToList();
+                        runners = runners.OrderBy(o => ((IEnumerable<KeyValuePair<string, object>>)o).First(kvp => kvp.Key == gridSettings.SortColumn).Value).ToList();
+                        //runners = runners.OrderBy(o => o.GetType().GetProperty(gridSettings.SortColumn).GetValue(o, null)).ToList();
                     else
-                        runners = runners.OrderBy(o => o.GetType().GetProperty(gridSettings.SortColumn).GetValue(o, null)).ToList();
+                        runners = runners.OrderByDescending(o => ((IEnumerable<KeyValuePair<string, object>>)o).First(kvp => kvp.Key == gridSettings.SortColumn).Value).ToList();
                         //runners = runners.OrderByDescending(o => typeof(Runner).GetProperty(gridSettings.SortColumn).GetValue(o)).ToList();
                 }
                 else
